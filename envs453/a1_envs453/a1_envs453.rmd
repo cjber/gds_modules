@@ -1,0 +1,643 @@
+---
+title: "The MAUP and UK Census Data Aggregation: Utilising Multi-level Models"
+
+# Use letters for affiliations
+author:
+  - name: 201374125
+    affiliation: a
+address:
+  - code: a
+    address: Department of Geography and Planning, University of Liverpool, Liverpool, L69 7ZX
+
+# For footer text  TODO(fold into template, allow free form two-authors)
+lead_author_surname: 201374125
+
+# Place DOI URL or CRAN Package URL here
+#doi: "https://cran.r-project.org/package=YourPackage"
+
+# Abstract
+abstract: |
+ The MAUP effects any spatial data that has some level of aggregation, using Multi-level models can help produce standard errors that more accurately represent the between-group variance in spatially aggregated data.
+
+# Paper size for the document, values of letterpaper and a4paper
+papersize: letter
+
+# Font size of the document, values of 9pt (default), 10pt, 11pt and 12pt
+fontsize: 9pt
+
+# Optional: One or more keywords
+keywords:
+  - Modifiable Aerial Unit Problem
+  - Multi-level Model
+  - Property Price
+  - Crime
+
+# Optional: Force one-column layout, default is two-column
+#one_column: true
+
+# Optional: Enables lineno mode, but only if one_column mode is also true
+#lineno: true
+
+# Optional: Enable one-sided layout, default is two-sided
+#one_sided: true
+
+# Optional: Enable section numbering, default is unnumbered
+numbersections: true
+
+# Optional: Specify the depth of section number, default is 5
+secnumdepth: 5
+
+# Optional: Skip inserting final break between acknowledgements, default is false
+skip_final_break: true
+
+# Optional: Bibliography 
+bibliography: /home/cjber/Dropbox/bib/library.bib
+biblio-style: apsr
+
+# Optional: Enable a 'Draft' watermark on the document
+watermark: false
+
+# Customize footer, eg by referencing the vignette
+footer_contents: "201374125"
+
+# Produce a pinp document
+output: pinp::pinp
+
+# Required: Vignette metadata for inclusion in a package.
+vignette: >
+  %\VignetteIndexEntry{YourPackage-vignetteentry}
+  %\VignetteKeywords{YourPackage, r, anotherkeyword}
+  %\VignettePackage{YourPackage}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results = FALSE, message = FALSE, cache = FALSE, warning = FALSE)
+```
+
+```{r}
+library(rgdal) # spatial tools
+library(maptools) # more spatial tools
+library(classInt) # spatial tools
+library(lme4) # lmer multi level models
+library(merTools) # modelling functions
+library(ggplot2) # visualisations
+library(sf) # for processing geopackage files/shapefiles
+library(tmap) # for plotting maps/choropleths
+library(RCurl) # api querying
+library(jsonlite) # api querying
+library(httr) # api querying
+library(dplyr) # tidy data tools
+library(data.table) # alternative data structures
+library(kableExtra) # extra table functions
+library(scales) # convert numbers to currency
+library(broom) # convert summaries into data.frames
+```
+
+```{r}
+liv <- st_read("./data/Liverpool/shapefiles/OA.shp")
+
+OA <- st_read("./data/Liverpool/shapefiles/Liverpool_oa11.shp")
+LSOA <- st_read("./data/Liverpool/shapefiles/Liverpool_lsoa11.shp")
+MSOA <- st_read("./data/Liverpool/shapefiles/Liverpool_msoa11.shp")
+
+livPop <- read.csv("./data/Liverpool/tables/CT0010_oa11.csv")
+livPop$minority <- rowSums(livPop[, 4:96]) / livPop[, 2]
+livPop <- livPop[, c(1, 2, 97)]
+colnames(livPop)[1] <- "OA_CD"
+
+liv <- merge(liv, livPop, by = "OA_CD")
+
+centre <- st_read("./data/names/NamedPlace.shp")
+
+centre <- centre[centre$distname == "LIVERPOOL", ]
+centre <- st_as_sf(centre)
+centre <- st_transform(centre, 27700)
+```
+
+```{r, warning=FALSE}
+
+livCentroid <- st_centroid(MSOA)
+
+MSOA$distCity <- st_distance(x = livCentroid, y = centre)
+MSOA$distCity <- as.numeric(MSOA$distCity)
+temp <- as.data.frame(MSOA)
+temp <- subset(temp, select = -geometry)
+liv <- merge(liv, temp, by.x = "MSOA_CD", by.y = "MSOA11CD")
+```
+
+```{r, eval=FALSE}
+pp <- read.csv("./data/pp-2018.csv", header = FALSE)
+
+pp <- pp[pp$V5 != "O", ] # exclude 'other', removes very expensive non residentials sales
+pp <- pp[pp$V15 != "B", ] # filter out non market sales (gavin said)
+pp <- pp[c("V2", "V3", "V4", "V12")]
+
+colnames(pp) <- c("price", "date", "postcode", "V12")
+
+pp$date <- lapply(pp$date, as.character)
+pp$date <- substr(pp$date, 1, nchar(pp$date))
+pp$date <- as.Date(pp$date, format = "%Y-%m-%d")
+
+pp <- subset(pp, date > "2018-01-01")
+
+pp <- pp[pp$V12 == "LIVERPOOL", ]
+pp <- pp[pp$postcode != "", ]
+
+write.csv(pp, file = "./data/pp.csv")
+```
+
+```{r, warning=FALSE, eval=FALSE}
+csv_files <- dir("./data/crime/", pattern = "*.csv$", recursive = T)
+csv_files <- paste0("./data/crime/", csv_files)
+crime <- bind_rows(lapply((csv_files), read.csv))
+
+crime <- crime[crime$Crime.type == c("Vehicle crime", "Criminal damage and arson", "Violence and sexual offences", "Burglary", "Robbery", "Theft from the person"), ]
+
+crime <- crime[, c(2, 5:7, 8)]
+
+
+write.csv(crime, file = "./data/crime.csv")
+```
+
+```{r}
+pp <- read.table("./data/pp.csv", sep = ",", header = TRUE)
+```
+
+```{r, eval=FALSE}
+pcd_list <- pp[!duplicated(pp$postcode), ]
+pcd_list <- as.vector(pcd_list$postcode)
+
+datalist <- list()
+
+for (i in 1:length(pcd_list))
+  tryCatch({
+    t
+    print(i) # ensure loop is working
+
+    pcd <- pcd_list[i]
+    postcodes_io <- "https://api.postcodes.io/postcodes/"
+    postcodes_io_results <- fromJSON(paste0(postcodes_io, pcd))
+    pcd <- data.frame(
+      pcd,
+      postcodes_io_results$result$longitude,
+      postcodes_io_results$result$latitude
+    )
+
+    datalist[[i]] <- pcd
+
+    if (i %% 50 == 0) {
+      date_time <- Sys.time()
+      while ((as.numeric(Sys.time()) - as.numeric(date_time)) < 2) {} # dummy while loop
+      cat(paste0("block: ", i / 10, "\n"))
+    }
+  }, error = function(e) {
+    cat("ERROR :", conditionMessage(e), "\n")
+  })
+
+
+postcodeTxt <- data.table::rbindlist(datalist, fill = TRUE)
+
+postcodeTxt <- postcodeTxt[!duplicated(postcodeTxt), ]
+
+write.csv(postcodeTxt, file = "./data/ppPostcodes.csv")
+```
+
+```{r}
+postcodes <- read.table("./data/ppPostcodes.csv", sep = ",", header = TRUE)
+postcodes[1] <- NULL
+colnames(postcodes)[1] <- "postcode"
+
+ppPostcodes <- merge(x = postcodes, y = pp, by = "postcode", all.x = TRUE)
+
+ppPostcodes <- ppPostcodes %>%
+  group_by(postcode) %>%
+  summarise(price = mean(price, na.rm = TRUE))
+
+ppPostcodes <- merge(x = ppPostcodes, y = postcodes, by = "postcode", all.x = TRUE)
+
+coordinates(ppPostcodes) <- ~ postcodes_io_results.result.longitude + postcodes_io_results.result.latitude
+
+proj4string(ppPostcodes) <- CRS("+init=epsg:4326") # set it to lat-long
+
+ppPostcodes <- st_as_sf(ppPostcodes)
+ppPostcodes <- st_transform(ppPostcodes, 27700)
+```
+
+```{r}
+crime <- read.csv("./data/crime.csv")
+crime$crime <- 1
+coordinates(crime) <- ~ Longitude + Latitude
+proj4string(crime) <- CRS("+init=epsg:4326") # set it to lat-long
+
+crime <- st_as_sf(crime)
+crime <- st_transform(crime, 27700)
+```
+
+```{r, warning=FALSE}
+crimeOA <- st_join(crime, OA) %>%
+  group_by(OA11CD) %>%
+  summarize(crime = sum(crime))
+
+crimeOA <- as_tibble(crimeOA)
+crimeOA <- subset(crimeOA, select = -geometry)
+
+colnames(crimeOA)[1] <- "OA_CD"
+
+#####
+priceOA <- st_join(ppPostcodes, OA) %>%
+  group_by(OA11CD) %>%
+  summarize(price = mean(price))
+
+priceOA <- as_data_frame(priceOA)
+priceOA <- subset(priceOA, select = -geometry)
+
+colnames(priceOA)[1] <- "OA_CD"
+
+liv <- merge(liv, crimeOA, by = "OA_CD")
+liv <- merge(liv, priceOA, by = "OA_CD")
+```
+
+```{r}
+# turn into normal dataframe and remove geometry
+livDf <- as_data_frame(liv)
+livDf <- subset(livDf, select = -geometry)
+# log house prices due to large scale and range (reference)
+livDf$logPrice <- log(livDf$price)
+# create crime per population
+livDf$crimePop <- livDf$crime / livDf$pop
+## Scale the data (normalise/standardise) as some data on very different scale (house prices)
+livDf[, 5:26] <- scale(livDf[, 5:26])
+```
+
+
+
+# Introduction
+
+## Property Price and Crime
+
+@Thaler1978 conducted the first study that considered the effects of crime on property price through a pricing model, and found that people are willing to pay a premium for properties in areas where crime is lower. @Hellman1979 similarly constructed a model from census data which utilised the inclusion of amenities to assess how the 'willingness to pay' for housing is affected by increases in the amenity level of a site, in addition to the level of crime. A study by @Lynch2001 found conflicting results and state that simply counting crime distribution, due to the difference in reporting behaviour, provides a distorted view of how crime varies over space.
+
+@Gibbons2008 considered the local variation in property prices in relation to crime and note that Macroeconomic and regional level models have highlighted what drives property prices at this scale, but localised variation in sub regional property prices are not explained by these frameworks.
+
+Empirical findings from crime property price studies show that typically cost of housing and crime are negatively correlated, but sometimes do not fully consider the selection of their spatial scale. Table \ref{t1} gives an overview of the different spatial scales selected for the comparison between property price and crime, ordered from the largest to smallest.
+
+\begin{table}[ht]
+    \caption{The Varying Spatial Scale of Property Price Research}\label{t1}
+\centering
+\begin{tabular}{ll}
+  \hline
+Reference & Scale \\ 
+  \hline
+\cite{Lynch2001} & City (Metropolitan)* \\ 
+\cite{Thaler1978} & City \\ 
+\cite{Hellman1979} & City Centre \\
+\cite{Gibbons2008} & City (Sub Regions) \\
+   \hline
+\multicolumn{1}{l}{\footnotesize\textit{*A study of 11 separate metropolitan areas}}
+\end{tabular}
+\end{table}
+
+## Multi Level Modelling and the MAUP
+
+Multi-level modelling can be used to produce statistical analysis on data that has some level of aggregation, and therefore may have an inherent hierarchical structure [@Dong2019]. This differs to basic linear modelling, where all residuals ($e _ i$) are assumed to have no correlation [@Steele2019]. With spatial data, the Modifiable Aerial Unit Problem (MAUP) arises with any level of point aggregation, meaning the shape and scale of the aggregation unit has a large influence on the resultant analysis [@Fotheringham1991]. In this case, individual properties are sold at a specific address, this is typically aggregated minimally at least to postcode, then in the examples above, into various sub-regional units, city level, metropolitan, and regional. Without implementing the use of a multi-level model, these hierarchical units are predetermined, typically due to government policy, which does not necessarily directly relate to the outcome variables being considered, and thus are considered to be used only to provide a usable level of aggregation and hierarchy, resulting in the MAUP [@Jones2017]. Multi-level modelling allows for an investigation of between group variability, by analysing macro and micro level models simultaneously. Meaning the effects of certain group level characteristics on individual outcomes can be assessed, which in turn reduces the effects of ecological fallacy [@Steele2019].
+
+```{r, warning=FALSE, fig1, fig.cap="\\label{fig:1} Influential Obs by Cooks distance"}
+model.1 <- lmer(logPrice ~ distCity + minority + S_Rent + crimePop + (1 | MSOA_CD), data = livDf)
+summary(model.1)
+
+cooksd <- cooks.distance(model.1)
+
+plot(cooksd, pch = "*", cex = 2) # plot cook's distance
+abline(h = 8 * mean(cooksd, na.rm = T), col = "red") # add cutoff line
+text(x = 1:length(cooksd) + 1, y = cooksd, labels = ifelse(cooksd > 8 * mean(cooksd, na.rm = T), names(cooksd), ""), col = "red") # add labels
+
+influential <- cooksd > 8 * mean(cooksd, na.rm = T) # influential row numbers
+
+extremeOutliers <- livDf[influential, ]
+extremeOutliers <- extremeOutliers[order(-extremeOutliers$crimePop), ]
+
+livDf <- livDf[!influential, ] # exclude very high crime areas (27/18 std dev above the mean) mainly businsesses with very few residents but very high number of postcodes
+```
+
+# Methodology
+
+## Data Sources
+
+This article analyses Price Paid Data (PPD)\footnote{HM Land Registry data \textcopyright Crown copyright and database right 2017. Data is licensed under the Open Government License v3.0.} for the Liverpool Local Authority District (LAD), provided by the \href{https://www.gov.uk/government/collections/price-paid-data}{HM Land Registry}. Data was downloaded in .csv format and manipulated entirely through $R$ [@RCoreTeam2018] to ensure full reproducibility (See Appendix I). In addition, census data provided population and ethnicity estimates which were collected during the 2011 Census (27th March 2011), commissioned by the UK government for the Office of National Statistics [@ONS2011]. Crime data was downloaded from the \href{https://data.police.uk}{Open Police Data} website.
+
+Shapefiles containing varying resolutions of census geography were provided by the \href{https://www.cdrc.ac.uk/}{Consumer Data Research Centre} (CDRC), ranging from the smallest resolution 'Output Areas' (OA), 'Lower Super Output Areas' (LSOA), to 'Middle Super Output Areas (MSOA). These areas are defined by the ONS to provide statistics for smaller areas during the UK census [@Dong2019]. Output area classifications are determined for each census, primarily considering homogeneity within areas, suggesting heterogeneity between areas [@Fotheringham1991].
+
+Price paid data was provided at street level, but aggregated to postcode in $R$ to ensure easy manipulation. Postcodes were checked for validity and their coordinates obtained from the free open source \href{postcodes.io}{Postcodes API} giving a total `r nrow(ppPostcodes)` separate postcodes with price paid data attached. Crime data was provided with coordinate data so no postcodes were required, with a total of `r nrow(crime)` data points.
+
+## Predictor Variables
+
+Proximity to the city centre as suggested in @Cheshire1995a, is a simplified method that aggregates both the consideration of proximity to amenities [e.g. @Gibbons2008; @Hellman1979], and the general effect of increased property price trending toward city centres due to high demand.
+
+Minority groups and levels of immigration  are shown to reduce property price [@Sa2011], and Socially Rented properties are typically a lower than average property value.
+
+## Null Model
+
+First a null MLM was run, exuding any predictor variables but allowing for intercept variance at MSOA level, expressed below:
+
+\begin{equation}\label{eq:null}
+\overline{y} _ { i , j } = \beta _ { 0 } + \mu _ { 0 , j } + \epsilon _ { i , j }
+\end{equation}
+
+Where:
+\begin{itemize}[label=]
+\itemsep0em
+    \item $\overline{y} _ { i , j }$: is the average log property sale price per ${i}$ (OA) and ${j}$ (MSOA)
+    \item $\beta _ { 0 }$: is the intercept
+    \item $\mu _ { 0 , j }$: is the random part (Level 2: MSOA)
+    \item $\epsilon _ { i , j }$: is the random part (Level 1: OA)
+\end{itemize}
+
+## Random Intercept Multi-level Model
+
+Individual points that were determined to have a significant effect on the model were identified through the use of Cook's Distance [@Loy2013].
+
+Given the literature, and logical reasoning that crime is likely to directly reduce property price, and never increase it, a random intercept model was chosen. The second model (see Table \ref{tab:t2}) includes the proportion of minority groups, crime as a proportion of the OA population, and includes an MSOA scale predictor variable (`distCity`) representing the distance of the centre of each MSOA to the city centre.
+
+\begin{equation}\label{eq:mlm}
+  \begin{aligned}
+    \overline{\log ( {PropertyPrice} )} _ { i , j }
+    = & \beta _ { 0 } + \beta _ { 1 } * minority _ { i , j } \\
+    + & \beta _ { 2 } * S _ { - } R e n t _ { i , j } \\
+    + & \beta _ { 3 } * \text {crime} _ { i , j } \\
+    + & \gamma * d i s t C i t y _ { j } + \mu _ { 0 , j } + \epsilon _ { i , j }
+  \end{aligned}
+\end{equation}
+
+Where:
+\begin{itemize}[label=]
+\itemsep0em
+    \item $\gamma$: is the overall regression coefficient between $PropertyPrice$ and $distCity$
+\end{itemize}
+
+```{r, fig2, fig.cap="\\label{fig:fesim} Pattern of Fixed Intercepts (Model 1)"}
+model.1 <- lmer(logPrice ~ minority + S_Rent + distCity + crimePop + (1 | MSOA_CD), data = livDf)
+fe.eff <- FEsim(model.1)
+MSOA_re <- REsim(model.1)
+
+# create a matrix for multiple graph plots
+require(gridExtra)
+plotFEsim(fe.eff) +
+  theme_bw() +
+  labs(
+    x = "Median model coefficients and CIs",
+    y = "Average Property Sale Price"
+  ) +
+  coord_flip()
+```
+
+# Data Descriptions
+
+```{r}
+sd <- paste0("£", formatC(sd(pp$price), big.mark = ",", format = "f", digits = 2))
+mean <- paste0("£", formatC(mean(pp$price), big.mark = ",", format = "f", digits = 2))
+```
+
+
+PPD were extracted from 2018 onwards giving a total of `r nrow(pp)` property transactions within the Liverpool region. Due to a very large standard deviation with this dataset (`r sd`) relative to the mean (`r mean`), to reduce homoskedasticity in the model estimate, prices were log transformed [@Dong2019].
+
+Crime data was extracted from 2018 onwards and filtered to include what were considered to be only crimes that pose a significant financial cost to victims, first considered in @Cohen1990 and reiterated in @Lynch2001 as an important distinction when considering the relation of crime and property value (See Appendix I). All data was standardised due to the significant variation in scale to allow direct comparison [@Eames1993]
+
+# Results and Discussion
+
+```{r, eval=FALSE}
+sample.20 <- sample(unique(livDf$MSOA_CD), 20, replace = FALSE)
+
+ggplot(livDf[livDf$MSOA_CD %in% sample.20, ], aes(x = crimePop, y = logPrice)) + geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~MSOA_CD) +
+  xlab("Crimes per Population") +
+  ylab("Log Property Price") +
+  theme_bw()
+```
+
+```{r, warning=FALSE}
+livOA <- data.table(liv)
+livLS <- data.table(livOA[, c(3, 5:24)])
+livLS$crime <- livLS[, sum(crime), by = LSOA_CD][, 2]
+livLS$price <- livLS[, mean(price), by = LSOA_CD][, 2]
+
+livMS <- data.table(liv[c(2, 5:24)])
+livMS$crime <- livMS[, sum(crime), by = MSOA_CD][, 2]
+livMS$price <- livMS[, mean(price), by = MSOA_CD][, 2]
+```
+
+A general increase in correlation between two variables at higher level of aggregation results directly due to the way correlation is calculated, see Equation \ref{eq:cor} [@Fotheringham1991]. This is reflected in these data; correlation between crime and property price at $OA: `r round(cor(liv$crime, liv$price),2)`$, $LSOA: `r round(cor(livLS$crime, livLS$price),2)`$, and $MSOA: `r round(cor(livMS$crime, livMS$price),2)`$.
+
+\begin{equation}\label{eq:cor}
+r _ { x y } = \frac { \operatorname { cov } ( x , y ) } { s _ { x } s _ { y } }
+\end{equation}
+
+Cooks distance [see @Loy2013] reveals that several points have a very significant influence on the model (Figure \ref{fig:1}), inclusion of these points led to a model which was unable to function (residual errors showed zero standard deviation). This is mainly due to some extreme outliers in the crime data. One data point, `r round(head(extremeOutliers$crimePop, 1),2)` standard deviations above the mean may be the result of issues with the data quality, so identified points were removed.
+
+## Null Model
+
+```{r, warning=FALSE}
+model.null <- lmer(logPrice ~ 1 + (1 | MSOA_CD), data = livDf)
+summary(model.null)
+
+VPC <- 0.6466 / (0.3412 + 0.6466)
+VPC
+```
+
+The Null model estimate results reveal that MSOA-level variance is 0.647, and OA-level variance is 0.312, giving a Variance Partition Coefficient (VPC) of $`r round(VPC, 2)`$. Therefore around 65% of the variation in property price is due to differences between MSOAs, suggesting that it is necessary to utilise a Multi-level model to simultaneously look at property price at the OA and MSOA scale.
+
+Comparing the influence of Crime estimate on Property Price in a single-level linear model ($\text{Crime} = -0.12, \text{SE} = 0.04$) to the output of a multi-level model ($\text{Crime} = -0.047, \text{SE} = 0.028$) shows the extent to which an incorrect model without considering the MAUP can affect results.
+
+```{r}
+# Compare linear to multi level model
+model.null <- lmer(logPrice ~ crimePop + (1 | MSOA_CD), data = livDf)
+summary(model.null)
+
+model.lm <- lm(logPrice ~ crimePop, data = livDf)
+summary(model.lm)
+```
+
+
+```{r, warning=FALSE}
+model.1 <- lmer(logPrice ~ minority + S_Rent + distCity + crimePop + (1 | MSOA_CD), data = livDf)
+summary(model.1)
+
+VPC <- 0.02362 / (-0.04036 + 0.13062 - 0.19526 - 0.06893 + 0.02362)
+VPC
+```
+
+## Multi-level model with Predictor variables (Model 1)
+
+The VPC for the full MLM is `r round(VPC, 2)`, as expected this value is far lower with the inclusion of predictor variables, representing the factors that effect the between-MSOA variance, shown graphically on Figure \ref{fig:fesim}.
+
+```{r}
+### For valid likelihood-based model comparisons, the MLM needs to be estimated by
+### using the ML method rather than the Restricted ML (the default estimation in lme4)
+
+anova(model.null, model.1)
+
+## Model without dist city effects
+
+model.2 <- lmer(logPrice ~ crimePop + minority + S_Rent + (1 | MSOA_CD), data = livDf)
+
+summary(model.2)
+
+anova(model.null, model.2, model.1)
+
+pchisq(1.970, df = 1, lower.tail = FALSE)
+
+## inclusion of city dist has no significant benefit to the model
+```
+
+
+
+
+In order to simplify the model an $ANOVA$ test was run comparing the model with, and without the `distCity` MSOA level predictor variable (Table \ref{tab:t2}). Given the Median model regression coefficients (fixed effects) suggested that this variable had no significant effect on the model (Figure \ref{fig:fesim}; Table \ref{tab:t2}). The result of the $ANOVA$ revealed a non-significant difference between the two models ($pchisq$ $=0.160$). Therefore this variable was removed giving the new model:
+
+\begin{equation}\label{eq:mlm2}
+  \begin{aligned}
+    \overline{\log ( {PropertyPrice} )} _ { i , j }
+    = & \beta _ { 0 } + \beta _ { 1 } * minority _ { i , j } \\
+    + & \beta _ { 2 } * S _ { - } R e n t _ { i , j } \\
+    + & \beta _ { 3 } * crime _ { i , j } \\
+    + & \mu _ { 0 , j } + \epsilon _ { i , j }
+  \end{aligned}
+\end{equation}
+
+## Final Model (Model 2)
+
+```{r}
+model.2 <- lmer(logPrice ~ crimePop + minority + S_Rent + (1 | MSOA_CD), data = livDf)
+
+summary(model.2)
+
+VPC <- 0.02793 / (-0.04162 - 07608 - 0.19547 + 0.02793)
+VPC
+```
+
+
+```{r}
+MSOA_re <- REsim(model.2)
+MSOA <- merge(MSOA, MSOA_re, by.x = "MSOA11CD", by.y = "groupID", all.x = TRUE)
+```
+
+```{r}
+uk <- st_read("./data/gbr.gpkg", layer = "gadm36_GBR_3")
+
+
+uk <- st_as_sf(uk)
+uk <- st_transform(uk, 27700)
+```
+
+```{r, fig3, fig.cap="\\label{fig:map} Pattern of Random Intercepts (Model 2)"}
+livRegion <- st_bbox(ppPostcodes) %>%
+  st_as_sfc()
+
+# select only polygons from England and Wales (same as census data)
+inset <- subset(uk, NAME_1 == "England" | NAME_1 == "Wales")
+
+insetEx <- st_bbox(inset) %>%
+  st_as_sfc()
+
+m1 <- tm_shape(uk, bbox = liv) + tm_fill()
+
+m2 <- m1 + tm_shape(MSOA) +
+  tm_polygons(
+    col = "mean",
+    title = "",
+    palette = "RdYlGn",
+    midpoint = 0,
+    n = 4, # number of bins
+    style = "jenks"
+  ) +
+  tm_layout(
+    frame.lwd = 2, legend.position = c("left", "bottom"),
+    inner.margins = 0.1
+  ) +
+  tm_compass(type = "arrow", position = c("left", "top")) +
+  tm_scale_bar()
+
+ukMap <- tm_shape(uk, bbox = insetEx) + tm_fill() +
+  tm_shape(livRegion) + tm_borders(lwd = 1) +
+  tm_layout(frame.lwd = 2)
+
+library(grid)
+m2
+print(ukMap, vp = viewport(.7, .82, width = 0.25, height = 0.25))
+```
+
+```{r,t2, results=TRUE}
+table <- tidy(anova(model.null, model.1, model.2))
+table <- table[c("term", "df", "AIC", "statistic", "p.value")]
+table <- table[order(table$term, decreasing = TRUE), ]
+table$term <- c("Null Model", "Model 1", "Model 2")
+
+# tell Kable to not show anything for NA values
+options(knitr.kable.NA = "")
+# Table 2
+kable(table,
+  digits = 2, caption = "ANOVA Comparison Between Models",
+  longtable = FALSE, booktabs = TRUE,
+  linesep = "", format = "latex",
+  row.names = FALSE,
+  col.names = c(
+    "Model",
+    "df",
+    "AIC",
+    "Statistic",
+    "P Value"
+  )
+)
+```
+
+The Group level random effects were recalculated after removal of `distCity`, and used to produce Figure \ref{fig:map}. This figure reveals the group level variance (MSOA level), influenced by between group heterogeneity. The VPC for this model is essentially `r round(VPC, 2)`, suggesting explanatory variables chosen are sufficient to explain the between MSOA variation in property price. This then reveals that Figure \ref{fig:map} provides an estimate for the variation in random effects between the property price at MSOA scale.
+
+The variability (standard deviation) of the MSOA level random effect is 0.73, and the residual variability is 0.57 (Table \ref{tab:t3}). This suggests that there is still a large amount of random deviation outside the scope of the chosen predictor variables.
+
+Fixed effects show that despite the high residual variability, chosen predictor variables do reduce the property prices, with the highest estimate given by Social Rented (Table \ref{tab:t3}). Suggesting that above all, the proportion of socially rented properties in an area most significantly reduces the average property price. The low effect due to crime could be due to differences in reporting between areas [@Lynch2001], or due to high property prices focusing towards city centres, where crime is high [@Cheshire1995a].
+
+```{r}
+model.lm <- lm(logPrice ~ crimePop, data = livDf)
+summary(model.lm)
+```
+
+
+```{r, t3, results=TRUE}
+table <- tidy(model.2)
+table$term <- c("Property Price", "Crime", "Minority", "Social Rented", "MSOA: Std Dev", "Residual Std Dev")
+
+# tell Kable to not show anything for NA values
+options(knitr.kable.NA = "")
+# Table 2
+kable(table,
+  digits = 2, caption = "Multi-level Model Summary",
+  longtable = FALSE, booktabs = TRUE,
+  linesep = "", format = "latex",
+  row.names = FALSE,
+  col.names = c(
+    "Term",
+    "Estimate",
+    "Std Error",
+    "Statistic",
+    "Group"
+  )
+) %>%
+  # add line after row 5
+  row_spec(4, hline_after = T)
+```
+
+```{r}
+model.null <- lmer(logPrice ~ crimePop + (1 | MSOA_CD), data = livDf, REML = FALSE)
+model.2 <- lmer(logPrice ~ crimePop + minority + S_Rent + (1 | MSOA_CD), data = livDf, REML = FALSE)
+
+summary(model.null)
+anova(model.null, model.2)
+
+VPC <- 0.02793 / (-0.04162 - 07608 - 0.19547 + 0.02793)
+VPC
+```
+
+
+
+

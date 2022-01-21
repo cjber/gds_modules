@@ -1,0 +1,741 @@
+<<>>=
+source("../scripts/functions.r")
+lidar_tab <- fread("../data/point/points.csv")
+time_taken <- read.csv("../scripts/time_taken.csv")
+time_taken <- time_taken$x
+@
+
+\lettrine{R}{esults} for the overall methodology are presented in this chapter, covering the initial preprocessing of LiDAR and other data, following onto the width extraction of roads, in addition to other geometric features. The primary goal is to critique the effectiveness of the proposed methodology, and provide a baseline for future improvements, particularly in road classification and width extraction, while presenting the quantifiable results in a way that relates to the overall quality of each road. Outlined in detail therefore is sensitivity analysis of the road classification models, presenting both qualitative and quantitative assessments of accuracy. Assessment of improvements made to road centreline locations is also covered, before a detailed look at the final results of the analysis, demonstrating how road feature extraction may inform the overall quality of a road, comparing the extracted data to aerial imagery for a visual assessment of the results.
+
+As noted in Section \ref{sec:overview}, computation time is considered an important aspect of this analysis. The total time taken, including all data preprocessing, perpendicular sample line extraction, LiDAR sample extraction, construction of linear models, reprocessing of road centrelines, road feature extraction, and further analysis is $\Sexpr{round(time_taken, 2)}$ minutes.
+
+\section{Data Preprocessing}
+
+Table \ref{tab:lidartab} indicates that there are likely some points with noise, particularly reflected by the highest intensity value ($\Sexpr{max(lidar_tab$Intensity)}$) relative to the standard deviation ($\Sexpr{round(sd(lidar_tab$Intensity),0)}$), with 99\% of observations within the range of \Sexpr{round(min(lidar_tab$Intensity), 0)} to \Sexpr{quantile(lidar_tab$Intensity, .99)}. As noted in previous LiDAR classification methods, intensity is often subject to noise, therefore a simplistic noise exclusion technique \citep{lidR} was implemented, as described in Section \ref{subsec:noise}.
+
+<<hist_lidar, fig.cap="Post noise filtering LiDAR point cloud distribution; of \\textbf{(A)} Intensity, and \\textbf{(B)} Luminescence", fig.showtext=TRUE, fig.height = 3>>=
+showtext_auto()
+font_add_google("Roboto", "Roboto")
+font_add_google("Roboto Slab", "Roboto Slab")
+
+clean_las <- fread("../data/point/points_clean.csv")
+
+hist_i <- ggplot(clean_las, aes(x = Intensity)) +
+  geom_histogram(aes(y = ..density..), colour = "black", fill = "white", bins = 30) +
+  geom_density(aes(x = Intensity), fill = "#FF6666", alpha = .2, size = 1) +
+  theme_classic() +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.line = element_blank(),
+    axis.text = element_text(size = 9, family = "Roboto"),
+    axis.title = element_text(size = 10, family = "Roboto Slab"),
+    axis.text.y = element_blank(),
+    legend.title = element_blank(),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    panel.border = element_rect(colour = "black", fill = NA, size = 1)
+  ) +
+  labs(x = paste("Intensity", "Values"), y = "Distribution") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+hist_lum <- ggplot(clean_las, aes(x = lum)) +
+  geom_histogram(aes(y = ..density..), colour = "black", fill = "white", bins = 30) +
+  geom_density(aes(x = lum), fill = "#FF6666", alpha = .2, size = 1) +
+  theme_classic() +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.line = element_blank(),
+    axis.text = element_text(size = 9, family = "Roboto"),
+    axis.title = element_text(size = 10, family = "Roboto Slab"),
+    axis.text.y = element_blank(),
+    legend.title = element_blank(),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    panel.border = element_rect(colour = "black", fill = NA, size = 1)
+  ) +
+  labs(x = paste("Luminescence", "Values"), y = "Distribution") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+plot_grid(
+  hist_i,
+  hist_lum,
+  labels = "AUTO",
+  label_size = 20,
+  ncol = 2,
+  hjust = -1.4,
+  label_fontfamily = "Roboto Slab"
+)
+@
+<<fig.show = 'hide'>>=
+las <- catalog("../data/point")
+roads_buff <- read_sf("../data/derived/roads/roads_buff.gpkg", quiet = TRUE)
+aerial <- raster("../data/derived/aerial/aerial_crop.tif")
+
+rd_f <- "road_6"
+las <- lasclip(las, extent(roads_buff[roads_buff$road_id == rd_f, ]))
+aerial <- raster::crop(aerial, extent(roads_buff[roads_buff$road_id == rd_f, ]))
+aerial <- aggregate(aerial, fact = 8)
+
+aerial <- as(aerial, "SpatialPixelsDataFrame")
+aerial <- as.data.frame(aerial)
+colnames(aerial) <- c("value", "x", "y")
+
+chm <- grid_canopy(las, res = 2, p2r())
+
+chm <- as(chm, "SpatialPixelsDataFrame")
+chm <- as.data.frame(chm)
+colnames(chm) <- c("value", "x", "y")
+
+las_lp <- lasfilter(las, NumberOfReturns == ReturnNumber)
+chm_lp <- grid_canopy(las_lp, res = 2, p2r())
+
+chm_lp <- as(chm_lp, "SpatialPixelsDataFrame")
+chm_lp <- as.data.frame(chm_lp)
+colnames(chm_lp) <- c("value", "x", "y")
+
+las_lp <- lasground(las_lp, csf())
+
+#### Create Point DSM
+# interpolate ground points to create raster dtm. Uses Classification
+# very large number of points, therefore idw used as opposed to kriging
+dsm_lp <- grid_terrain(las_lp, 2, knnidw(k = 10, p = 2))
+# normalise heights using dtm
+norm_lp <- lasnormalize(las_lp, dsm_lp)
+
+dsm_lp <- grid_canopy(norm_lp, res = 2, p2r())
+
+dsm_lp <- as(dsm_lp, "SpatialPixelsDataFrame")
+dsm_lp <- as.data.frame(dsm_lp)
+colnames(dsm_lp) <- c("value", "x", "y")
+
+las_lp <- grid_canopy(norm_lp, res = 2, p2r())
+
+las_lp <- as(las_lp, "SpatialPixelsDataFrame")
+las_lp <- as.data.frame(las_lp)
+colnames(las_lp) <- c("value", "x", "y")
+
+# Define your own new metrics
+myMetrics <- function(z, i) {
+  metrics <- list(
+    zmean = mean(z),
+    imean = mean(i)
+  )
+}
+
+metrics <- grid_metrics(norm_lp, ~ myMetrics(Z, Intensity), res = 2)
+
+metrics <- as(metrics, "SpatialPixelsDataFrame")
+metrics <- as.data.frame(metrics)
+colnames(metrics) <- c("zmean", "imean", "x", "y")
+roads <- roads_buff[roads_buff$road_id == "road_6", ]
+
+chm_gg <- ggplot() +
+  geom_raster(data = chm, aes(x = x, y = y, fill = value), alpha = 1) +
+  geom_sf(data = roads, colour = alpha("red", .3), fill = "black", alpha = 0.1) +
+  scale_fill_viridis() +
+  coord_sf() +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  ), legend.position = "none") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+dsm_lp_gg <- ggplot() +
+  geom_raster(data = dsm_lp, aes(x = x, y = y, fill = value), alpha = 1) +
+  scale_fill_viridis() +
+  coord_fixed() +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  ), legend.position = "none") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+las_i_gg <- ggplot() +
+  geom_raster(data = metrics, aes(x = x, y = y, fill = imean), alpha = 1) +
+  scale_fill_viridis() +
+  coord_fixed() +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  ), legend.position = "none") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+aerial_gg <- ggplot() +
+  geom_raster(data = aerial, aes(x = x, y = y, fill = value), alpha = 1) +
+  scale_fill_viridis() +
+  coord_fixed() +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  ), legend.position = "none") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+@
+
+<<>>=
+one_return <- clean_las %>%
+  filter(Classification == 2, NumberOfReturns == 1) %>%
+  select(Intensity) %>%
+  unlist() %>%
+  as.numeric() %>%
+  mean()
+
+mult_return <- clean_las %>%
+  filter(Classification == 2, NumberOfReturns > 1) %>%
+  select(Intensity) %>%
+  unlist() %>%
+  as.numeric() %>%
+  mean()
+@
+
+<<fig_lp, fig.cap = "LiDAR point clouds for one selected road aggregated into 2m$^2$ grids; \\textbf{(A)} Base point cloud $z$ values, road location indicated with a 30m buffer \\textbf{(B)} Normalised point cloud $z$ values for only last returns ($lpz$) \\textbf{(C)} Normalised point cloud $Intensity$ values for last returns, \\textbf{(D)} Aerial data combined to 1 band", fig.showtext=TRUE, fig.pos = "b">>=
+plot_grid(
+  chm_gg,
+  dsm_lp_gg,
+  las_i_gg,
+  aerial_gg,
+  labels = "AUTO",
+  label_size = 20,
+  ncol = 4,
+  label_fontfamily = "Roboto Slab"
+)
+@
+
+Following intensity noise filtering, the highest intensity value was now $\Sexpr{max(clean_las$Intensity)}$, with a standard deviation of $\Sexpr{round(sd(clean_las$Intensity), 0)}$. Figure \ref{fig:hist_lidar} \textbf{(A)} gives the distribution of Intensity values for all points within the study area, showing two clear spikes in intensity, at at value of around 50, with another around 350. This is reflected similarly in the Luminescence values, with two peaks at around 50 and 120 (Figure \ref{fig:hist_lidar} \textbf{(B)}).
+
+Figure \ref{fig:fig_lp} gives the results of further LiDAR preprocessing, comparing Figure \ref{fig:fig_lp} \textbf{(A)} and Figure \ref{fig:fig_lp} \textbf{(B)}, shows how last pulse LiDAR filtering allows for the removal of the majority of tree canopies, leaving only ground points that are considered hard surfaces, and as such are the lowest point the laser pulse has penetrated. Additionally, Figure \ref{fig:fig_lp} \textbf{(B)} shows how a digital terrain model, created through interpolation techniques, using only the base point cloud may be used to normalise the points, giving a digital surface model which only shows the true height of surface objects, without having to consider the variation in lie of the land. However, Figure \ref{fig:fig_lp} \textbf{(C)} indicates that while filtering for last pulse returns may appear to remove much of the canopy, reflected in the $z$ values, the intensity values for points that have penetrated the canopy are lower than those that did not (See the tree just below the centre of the road). This particularly creates issues in the distinction between road and non road in neighbouring areas where the intensity "shadow" created removes the distinct difference in intensity. This suggests that for ground points with multiple returns, the intensity values are likely far less reliable for road classification. Quantitative analysis of this limitation reveals that for ground classified points with a single return the average intensity value is $\Sexpr{round(one_return,2)}$, while for ground classified points with multiple returns, the average intensity value is $\Sexpr{round(mult_return,2)}$.
+
+\section{Perpendicular Sampling}
+
+<<sample_lines>>=
+las <- catalog("../data/point/")
+pt_records <- las@data$Number.of.point.records
+
+sampled_las <- fread("../data/derived/model_data/sampled_las.csv")
+
+sample_lines <- st_read("../data/derived/roads/sample_lines.gpkg", quiet = TRUE)
+roads <- st_read("../data/derived/roads/roads_line.gpkg", quiet = TRUE)
+reduc <- 100 - (nrow(sampled_las) / pt_records * 100)
+@
+
+
+Using the 30m buffer from known road locations, and sample line extraction, the number of points from the original LiDAR point cloud for the 1km$^2$ area was reduced from $\Sexpr{pt_records %>% comma()}$ to $\Sexpr{nrow(sampled_las) %>% comma()}$ giving a reduction in number of points by $\Sexpr{round(reduc, 2)}$\%. Additionally, including sample lines allowed for filtering based on features of each sample, allowing for samples fully obscured by canopy to be identified through the number of returns, and excluded easily if required. See \textbf{Appendix B}, Figure \ref{fig:sample_fig} for an overview of all the sample lines produced in this analysis.
+
+\section{Linear Probability Model Sensitivity Analysis}
+
+Selected based on literature, and correlation analysis of the variables (See \textbf{Appendix B}, Table \ref{tab:corr}), the first model was constructed to include all variables of importance from the LiDAR point cloud, $z$, Intensity, and Number of Returns. Additionally, luminescence from aerial imagery was included, and the minimum distance of a point from the known road centreline location.
+
+
+<<lmdistributions, fig.cap = "Linear model probability distributions for the maximal model (LM 1); showing vertical lines at the 95th, 90th, and 80th quantile of the distribution", fig.height = 5>>=
+lm_preds <- fread("../data/derived/model_data/linearmodels.csv") %>%
+  select(c(lm1_pred)) %>%
+  melt() # longtable
+
+lm1 <- lm_preds[lm_preds$variable == "lm1_pred", ]
+lm1_quant <- quantile(lm1$value, .95) %>%
+  as.numeric()
+lm1_quant90 <- quantile(lm1$value, .9) %>%
+  as.numeric()
+lm1_quant80 <- quantile(lm1$value, .8) %>%
+  as.numeric()
+
+ggplot(lm_preds, aes(x = value)) +
+  geom_histogram(aes(y = ..density..), colour = "black", fill = "white", bins = 30) +
+  geom_density(aes(x = value), fill = "#FF6666", alpha = .2, size = 1) +
+  geom_vline(xintercept = lm1_quant, size = 1, colour = "red") +
+  geom_vline(xintercept = lm1_quant90, size = 1, colour = "red") +
+  geom_vline(xintercept = lm1_quant80, size = 1, colour = "red") +
+  theme_classic() +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.line = element_blank(),
+    axis.text = element_text(size = 8),
+    axis.text.y = element_blank(),
+    legend.title = element_blank(),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    panel.border = element_rect(colour = "black", fill = NA, size = 1)
+  ) +
+  labs(x = "Linear Model Probability", y = "Distribution") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  xlim(c(-0.25, .25))
+@
+
+
+This first (maximal) model was constructed as;
+
+\begin{equation}
+\begin{aligned}
+\mathrm{Road}_{t} = \alpha 
+    &+ \beta_{1}  \mathrm{Intensity}_{t} \\
+    &+ \beta_{2}  \mathrm{Luminescence}_{t}    \\
+    &+ \beta_{3}  \mathrm{Z}_{t} \\
+    &+ \beta_{4}  \mathrm{NumberOfReturns}_{t} \\
+    &+ \beta_{5}  \mathrm{Dist}_{t} + \epsilon
+\end{aligned}
+\end{equation}
+
+As proposed in Chapter \ref{ch:methods}, Section \ref{sec:lpm}, the road outcome variable was given as points that fell within a 2m buffer of the known road centreline locations. As such, this meant that a fair number of false negative points are expected to have occurred, where points outside 2m of a road centreline location would be incorrectly classified as non-road. Due to this, the classification of non-road and road was not a simple selection of points that were above a 50\% threshold prediction as being road. To determine an appropriate cutoff for road predictions a histogram was produced which gave insight into the distribution of the linear prediction values (Figure \ref{fig:lmdistributions}).
+
+
+Figure \ref{fig:lmdistributions} shows that there is a clear separation between the majority of points, and higher probability values. This therefore gives insight into the true divide between true road and non-road points, allowing for a qualitative analysis to select the most appropriate quantile of probability values. Three quantiles were chosen, the 95th, 90th and 80th, as indicated on Figure \ref{fig:lmdistributions}. 
+
+<<quant_selection>>=
+sampled_las <- fread("../data/derived/model_data/linearmodels.csv")
+road_lm <- fread("../data/derived/model_data/linearmodels.csv") %>%
+  as.data.frame() %>%
+  st_as_sf(coords = c("X", "Y"), crs = 27700)
+roads <- st_read("../data/derived/roads/roads_line.gpkg", quiet = TRUE)
+centrelines <- st_read("../data/derived/roads/roads_line.gpkg", quiet = TRUE) %>%
+  st_set_crs(27700)
+sample_lines <- st_read("../data/derived/roads/sample_lines.gpkg", quiet = TRUE)
+
+# example road section
+
+road_lm <- road_lm[road_lm$road_id == rd_f, ]
+sample_lines <- sample_lines[sample_lines$road_id == rd_f, ]
+centrelines <- centrelines[centrelines$road_id == rd_f, ] %>%
+  st_crop(sample_lines)
+
+jpgs <- Sys.glob("../data/aerial/*.jpg")
+jpgs <- lapply(jpgs, brick)
+aerial <- lapply(jpgs, function(x) {
+  return(tryCatch(crop(x, sample_lines), error = function(e) NULL))
+})
+
+aerial <- aerial %>%
+  compact() %>%
+  brick()
+road_lm <- fread("../data/derived/model_data/linearmodels.csv") %>%
+  as.data.frame() %>%
+  st_as_sf(coords = c("X", "Y"), crs = 27700)
+sample_lines <- st_read("../data/derived/roads/sample_lines.gpkg", quiet = TRUE)
+
+road_lm1 <- road_lm[road_lm$lm1_dum == 1, ]
+road_lm90 <- road_lm[road_lm$lm1_dum90 == 1, ]
+road_lm80 <- road_lm[road_lm$lm1_dum80 == 1, ]
+
+
+q95 <- ggRGB(aerial) +
+  geom_sf(data = road_lm1[road_lm1$road_id == rd_f, ], colour = "green") +
+  geom_sf(data = centrelines, colour = "red", alpha = 1) +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  )) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+q90 <- ggRGB(aerial) +
+  geom_sf(data = road_lm90[road_lm90$road_id == rd_f, ], colour = "green") +
+  geom_sf(data = centrelines, colour = "red", alpha = 1) +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  )) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+q80 <- ggRGB(aerial) +
+  geom_sf(data = road_lm80[road_lm80$road_id == rd_f, ], colour = "green") +
+  geom_sf(data = centrelines, colour = "red", alpha = 1) +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  )) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+@
+
+<<quant_fig, fig.cap = "Comparison between linear prediction quantiles; \\textbf{(A)} 95th quantile, \\textbf{(B)} 90th quantile, \\textbf{(C)} 80th quantile.", fig.showtext=TRUE, fig.pos = "b">>=
+plot_grid(
+  q95,
+  q90,
+  q80,
+  labels = "AUTO",
+  label_size = 20,
+  ncol = 3,
+  label_fontfamily = "Roboto Slab",
+  hjust = 0
+)
+@
+
+Figure \ref{fig:quant_fig} reveals that qualitatively, the optimal choice for a quantile filtering of the linear probability distribution is likely the 95th quantile (Figure \ref{fig:quant_fig} \textbf{(A)}). However, observation of the southern section of Figure \ref{fig:quant_fig} \textbf{(A)} reveals that inaccurate centreline locations have led to an incomplete linear model analysis. To compensate for this, a further method proposed aims to improve the accuracy of the given road centreline locations. Additionally, Figure \ref{fig:quant_fig} \textbf{(A)} reveals that for the 95th quantile probability values, shadow from road hedgerows appears to reduce the model accuracy, as noticeable towards the centre of the road. For this reason, a second model was constructed for later comparison, which removes the $luminescence$ information provided by the aerial imagery;
+
+\begin{equation}
+\begin{aligned}
+\mathrm{Road}_{t} = \alpha 
+    &+ \beta_{1}  \mathrm{Intensity}_{t} \\
+    &+ \beta_{2}  \mathrm{Z}_{t} \\
+    &+ \beta_{3}  \mathrm{NumberOfReturns}_{t} \\
+    &+ \beta_{4}  \mathrm{Dist}_{t} + \epsilon
+\end{aligned}
+\end{equation}
+
+\section{Corrected Centreline Extraction}
+
+To improve road centreline location accuracy, the 90th quantile results from the first linear probability analysis were used, due to there being a more complete selection of points, but without compromising the true location of roads by including too many outside points.
+
+New road centrelines are given on Figure \ref{fig:fig_noisecent} \textbf{(A)}. Particular improvements are given where the road curves between two open fields, but the original centreline was given as a straight line, covering the hedgerow, and no road surface.
+
+<<road_lines>>=
+cent1 <- st_read("../data/derived/roads/cent_iteration1.gpkg", quiet = TRUE)
+cent1 <- cent1[cent1$road_id == "road_6", ]
+cent1 <- cent1[cent1$road_id == "road_6", ] %>%
+  st_crop(aerial)
+
+ggcent <- ggRGB(aerial) +
+  geom_sf(data = centrelines, colour = "red", size = 1) +
+  geom_sf(data = cent1, colour = "green", size = 1) +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  )) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+@
+
+<<>>=
+cent0 <- st_read("../data/derived/roads/roads_line.gpkg", quiet = TRUE)
+cent0 <- cent0[cent0$road_id == "road_6", ] %>%
+  st_crop(aerial)
+cent1 <- st_read("../data/derived/roads/cent_iteration1.gpkg", quiet = TRUE)
+cent1 <- cent1[cent1$road_id == "road_6", ] %>%
+  st_crop(aerial)
+
+cent0_las <- fread("../data/derived/model_data/linearmodels.csv") %>%
+  as.data.frame() %>%
+  st_as_sf(coords = c("X", "Y"), crs = 27700)
+cent_las <- fread("../data/final_data/cent_lm.csv") %>%
+  as.data.frame() %>%
+  st_as_sf(coords = c("X", "Y"), crs = 27700)
+
+cent1_las <- cent_las[cent_las$road_id == "road_6" & cent_las$lm1_dum == 1, ]
+centi_las <- cent_las[cent_las$road_id == "road_6" & cent_las$I_dum == 1, ]
+
+cent1_fil <- split(cent1_las, cent1_las$sample_id)
+cent1_fil <- cent1_fil %>% compact()
+cent1_fil <- lapply(cent1_fil, filter_samples)
+cent1_fil <- do.call(rbind, cent1_fil)
+
+cent0_las <- cent0_las[cent0_las$road_id == "road_6" & cent0_las$lm1_dum == 1, ]
+
+cent0_fil <- split(cent0_las, cent0_las$sample_id)
+cent0_fil <- cent0_fil %>% compact()
+cent0_fil <- lapply(cent0_fil, filter_samples)
+cent0_fil <- do.call(rbind, cent0_fil)
+
+centi_fil <- split(centi_las, centi_las$sample_id)
+centi_fil <- centi_fil %>% compact()
+centi_fil <- lapply(centi_fil, filter_samples)
+centi_fil <- do.call(rbind, centi_fil)
+
+
+gg_cent0 <- ggRGB(aerial) +
+  geom_sf(data = cent0_las, colour = "red") +
+  geom_sf(data = cent0_fil, colour = "green") +
+  geom_sf(data = cent0, colour = "red") +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  )) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+gg_cent1 <- ggRGB(aerial) +
+  geom_sf(data = cent1_las, colour = "red") +
+  geom_sf(data = cent1_fil, colour = "green") +
+  geom_sf(data = cent1, colour = "red") +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  )) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+gg_centi <- ggRGB(aerial) +
+  geom_sf(data = centi_las, colour = "red") +
+  geom_sf(data = centi_fil, colour = "green") +
+  geom_sf(data = cent1, colour = "red") +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  )) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+@
+
+<<fig_noisecent, fig.showtext=TRUE, fig.pos = "b", results = 'asis', fig.cap = "Comparison between original and derived centrelines showing differences in linear models; showing \\textbf{(A)} Comparison between original (red) and derived road centrelines (green). \\textbf{(B)} Second linear model (LM 2) applied to original centrelines. \\textbf{(C)} Second linear model (LM 2) applied to derived centrelines. \\textbf{(D)} Individual linear model (LM i) applied to derived centrelines. Each linear model probability quantile is selected as 95\\%, green points indicate road classified points, red indicate road classified points, removed through noise isolation filtering.", fig.scap = "Comparison between original and derived centrelines showing differences in linear models.">>=
+plot_grid(
+  ggcent,
+  gg_cent0,
+  gg_cent1,
+  gg_centi,
+  labels = "AUTO",
+  label_size = 20,
+  ncol = 4,
+  label_fontfamily = "Roboto Slab"
+)
+@
+
+Qualitative comparison between the Linear Probability Model based off the original centreline locations reveals an improvement in overall road detection, particularly towards the edge of roads, while additional samples are achieved in areas which previously had no coverage due to the incorrect centreline placement (Figure \ref{fig:fig_noisecent} \textbf{(A)}). However, it appears that in areas where there are higher levels of linear predictive inaccuracy, the new centrelines are less accurate. Thankfully, noise exclusion techniques employed have removed samples that fall within these areas, particularly noticeable at the northern end of Figure \ref{fig:fig_noisecent} \textbf{(C)}. Figure \ref{fig:fig_noisecent} also gives information regarding the distance based noise exclusion technique, which has allowed for the exclusion of isolated points accurately on Figure \ref{fig:fig_noisecent} \textbf{(B)}. Improved centreline locations allowed for individual linear models (Figure \ref{fig:fig_noisecent} \textbf{(D)}). While it was assumed that individual linear models would potentially produce more accurate width estimations, it is hard to differentiate between the global and individual linear models (Figure \ref{fig:fig_noisecent} \textbf{(C)} and \textbf{(D)}).
+
+\section{Final Model Analysis}
+
+For direct comparison between the two selected global linear probability models, centering and scaling of the predictor variables allowed for an easier interpretation of results, without affecting any statistical inferences. This was considered necessary as both $p$ values and standard errors produced by global models offered little in terms of interpretability due to the very large number of points involved in this study. Centering and scaling was obtained through the production of beta coefficients with results given on Table \ref{tab:coeftest}. The removal of luminescence had little effect on the other predictor coefficients, due to the very small influence of this coefficient, reflected by the normalised value (0.01), and the qualitative analysis of the issues due to shadows, as such, it was considered an unnecessary addition. The other coefficients all give insight into their influence of the road outcome, for example for every 1 increase in the standard deviation in $dist$, the likelihood a point is to be a road point decreases by a standard deviation of 0.33. This therefore suggests that the inclusion of the $dist$ coefficient is important, despite not being considered in other supervised road detection techniques.
+
+Table \ref{tab:estwidths} gives a normalised comparison between each linear model, and its associated estimated road width. This gives insight into the effectiveness of various linear probability models for each road, and road type. While average values all give relative accuracy in the region of 70\%, it appears that at present, the method for centreline improvements does not appear to improve road width estimates by much.
+
+<<coeftest, results = 'asis'>>=
+cent1_lm <- fread("../data/derived/model_data/cent1_lm.csv") %>%
+  select(c(road_id, Intensity, lum, dists, Z, NumberOfReturns, road))
+
+f1 <- as.formula("road ~ Intensity + dists + Z + NumberOfReturns + lum ")
+f2 <- as.formula("road ~ Intensity + dists + Z + NumberOfReturns")
+
+lm1 <- lm(data = cent1_lm, formula = f1)
+lm1 <- lm1 %>%
+  lm_beta() %>%
+  as_tibble()
+
+lm2 <- lm(data = cent1_lm, formula = f2)
+lm2 <- lm2 %>%
+  lm_beta() %>%
+  as_tibble()
+
+lm2[nrow(lm2) + 1, ] <- NA
+
+names <- c("Intensity", "dists", "Z", "NumberOfReturns", "lum")
+
+coefs <- cbind(names, lm1, lm2)
+names(coefs) <- c("Variable", "LM 1", "LM 2")
+@
+
+
+
+<<>>=
+road_est <- st_read("../data/osroads/roads_estwidth.gpkg", quiet = TRUE) %>%
+  st_drop_geometry() %>%
+  na.omit()
+
+# width comparison
+widths <- fread("../data/final_data/final.csv") %>%
+  select(-c(
+    len,
+    V1,
+    mean_angle,
+    max_angle,
+    tot_z,
+    mean_int,
+    range_int,
+    tot_pts
+  )) %>%
+  merge(road_est, by = c("road_id")) %>%
+  na.omit() %>% 
+  select(-roadFunction.y)
+
+normalise_widths <- function(x, y) {
+  ifelse(x > y, 100 - ((x / y) * 100 - 100), x / y * 100)
+}
+
+norm_widths <- widths %>%
+  mutate_at(3:ncol(widths), ~ normalise_widths(., estWidth)) %>%
+  select(-estWidth)
+
+norm_means <- widths %>%
+  mutate_at(3:ncol(widths), ~ normalise_widths(., estWidth)) %>%
+  summarise_at(vars(1:length(widths)), funs(mean), na.rm = T) %>%
+  select(-estWidth)
+
+norm_means$road_id <- "Means:"
+
+norm_widths$road_id <- gsub("road_", "", norm_widths$road_id)
+
+norm_widths <- norm_widths %>%
+  arrange(as.numeric(road_id)) %>%
+  rbind(norm_means)
+
+@
+
+
+
+<<estwidths, results = 'asis'>>=
+
+options(knitr.kable.NA = "")
+t1 <- kable(coefs, format = "latex", booktabs = TRUE, digits = 2, linesep = "") %>% kable_styling(font_size = 9)
+t2 <- kable(norm_widths, format = "latex", booktabs = TRUE, digits = 2, col.names = c(
+    "ID",
+    "Class",
+    "LM $i$",
+    "LM 1",
+    "LM 2",
+    "LM 0"
+  ), escape = F, linesep = ""
+) %>% kable_styling(font_size = 9) %>% 
+  row_spec(nrow(norm_widths), bold = T) %>%
+  row_spec(nrow(norm_widths) - 1, hline_after = T) %>% 
+  add_footnote(
+           label = c("\\textbf{LM $i$:} Individual Linear Models", "\\textbf{LM 1:} Linear Model inc. lum", "\\textbf{LM 2:} Linear Model ex. lum", "\\textbf{LM 0:} Linear Model 1 with original road centrelines"), 
+  escape = FALSE, notation = "none")
+  
+
+cat(c("\\begin{table}[!b]
+    \\begin{minipage}{.45\\linewidth}
+    \\caption{Model Coefficients, Comparison between Linear Probability Models 1 and 2}\\label{tab:coeftest}
+      \\centering",
+        t1,
+    "\\end{minipage}%
+    \\begin{minipage}{.5\\linewidth}
+      \\centering
+    \\caption{Comparison between each linear probability model for every road, values given as a percentage in relation to estimated true road width.}\\label{tab:estwidths}",
+        t2,
+    "\\end{minipage} 
+\\end{table}"
+))  
+@
+
+\section{Road Assessment}
+
+
+<<final_data, results = 'asis'>>=
+road <- st_read("../data/derived/roads/roads_line.gpkg", quiet = TRUE)
+final_data <- fread("../data/final_data/final.csv") %>%
+  select(-c(
+    V1,
+    mean_angle,
+    mean_int,
+    lm2_mean,
+    lm0_mean,
+    lm1_mean
+  ))
+
+final_data <- final_data %>%
+  arrange(as.numeric(road_id)) %>%
+  mutate(max_angle = replace_na(max_angle, 0)) %>%
+  merge(road, by = c("road_id", "roadFunction")) %>%
+  mutate(length = as.numeric(st_length(geom)))
+
+final_data$road_id <- gsub("road_", "", final_data$road_id)
+@
+
+<<final>>=
+final_norm <- final_data %>%
+  select(-c(geom, len.x, len.y)) %>%
+  na.omit()
+final_norm$reliability <- final_norm$tot_pts / final_norm$length
+
+range_norm <- function(x) {
+  (x - min(x)) / (max(x) - min(x))
+}
+
+# normalised comparison relative to known
+final_norm[, 3:6] <- final_norm[, 3:6] %>%
+  mutate_if(is.character, as.numeric) %>%
+  mutate(lmi_mean = 1 / lmi_mean) %>%
+  lapply(range_norm) %>%
+  as.data.frame()
+
+final_norm <- final_norm %>%
+  mutate(qual_index = select(., max_angle:lmi_mean) %>% rowSums()) %>%
+  mutate(qual_index = 1 - qual_index) %>%
+  arrange(desc(qual_index)) %>%
+  select(-c(length, tot_pts))
+
+qual_index <- final_norm %>%
+  select(road_id, reliability, qual_index)
+
+summary_data <- final_data %>%
+  select(-c(geom, length, tot_pts, len.x, len.y))
+
+summary_data <- merge(summary_data, qual_index, by = "road_id") %>%
+  arrange(desc(qual_index))
+@
+
+As LM $i$ gave the highest mean accuracy for roads (Table \ref{tab:estwidths}), it was selected for the final road width predictions. From this, Table \ref{tab:rqi} gives the full results of the road geometric extraction, along with an estimate of overall road quality given by the Road Quality Index (RQI). Qualitative assessment of the RQI may be achieved through observation of the highest and lowest values (Figure \ref{fig:rqi_compare}). It appears to produce reliable results, as the road with the highest RQI is straighter and wider than the road with the lowest RQI, and is likely flat given it is neighboured by houses.
+
+<<rqi, results = 'asis'>>=
+make_table(summary_data,
+  cap = "Overall Features Extracted from Roads in the Study Area, in descending order by RQI value",
+  col_names = c(
+    "Road ID",
+    "Road Function",
+    "Max Angle",
+    "Total $Z$",
+    "Intensity",
+    "Width \\textbf{(LM $i$)}",
+    "Reliability $(\\mathbf{P}_{n} / \\mathbf{L}$)",
+    "RQI"
+  )
+) %>% 
+kable_styling(latex_options = "hold_position")
+@
+
+<<>>=
+jpgs <- Sys.glob("../data/aerial/*.jpg")
+jpgs <- lapply(jpgs, brick)
+roads <- st_read("../data/derived/roads/roads_line.gpkg", quiet = TRUE)
+cents <- st_read("../data/derived/roads/cent_iteration1.gpkg", quiet = TRUE)
+bbox <- st_read("../data/derived/roads/sample_lines.gpkg", quiet = TRUE)
+
+bbox_t <- bbox[bbox$road_id == paste0("road_", head(summary_data$road_id, 1)), ]
+bbox_b <- bbox[bbox$road_id == paste0("road_", tail(summary_data$road_id, 1)), ]
+
+ta <- lapply(jpgs, function(x) {
+  return(tryCatch(crop(x, bbox_t), error = function(e) NULL))
+})
+ta <- ta %>%
+  compact() %>%
+  brick()
+ba <- lapply(jpgs, function(x) {
+  return(tryCatch(crop(x, bbox_b), error = function(e) NULL))
+})
+ba <- ba %>%
+  compact() %>%
+  brick()
+
+gg_ta <- ggRGB(ta) +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  )) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+gg_ba <- ggRGB(ba) +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  )) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+@
+<<rqi_compare, fig.cap = "Visual comparison between the RQI of roads. \\textbf{(A)} highest RQI \\textbf{(B)} lowest RQI", fig.scap = "Visual comparison between the RQI of roads.", fig.showtext=TRUE>>=
+plot_grid(
+          gg_ta,
+          gg_ba,
+  labels = "AUTO",
+  label_size = 20,
+  ncol = 2,
+  label_fontfamily = "Roboto Slab",
+    hjust = 0,
+  axis = "l"
+)
+@

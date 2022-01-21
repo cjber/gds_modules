@@ -1,0 +1,223 @@
+% Captions in floating environments
+\usepackage{titling}
+\usepackage{authblk}
+\usepackage{framed}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{type1cm}
+\usepackage{lettrine}
+\usepackage{natbib}
+\usepackage{pgfplots}
+\usepackage{float}
+\pgfplotsset{compat=1.16}
+
+% captions
+\usepackage[font=footnotesize,
+            labelfont=bf,
+            textfont=it,
+            margin=.5cm
+            ]{caption}
+
+%\setlength{\parskip}{1em}
+\edef\restoreparindent{\parindent=\the\parindent\relax}
+\usepackage{parskip}
+\restoreparindent
+
+% todo notes
+\usepackage{todonotes}
+
+% sans font
+\usepackage[defaultsans]{droidsans}
+
+% margins
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing
+
+% pagestyle
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+\fancypagestyle{newchapter}{%
+\fancyhf{} % clear all header and footer fields
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\rfoot{\ruleline{\fontsize{9}{9}\bfseries Page \thepage\ of \pageref{LastPage}}}
+}
+
+\fancypagestyle{firststyle}{
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headsep}{10pt}
+\renewcommand{\footrulewidth}{0pt}
+\lhead{\rulelinel{\fontsize{9}{9}\bfseries \leftmark}}
+\rfoot{\ruleline{\fontsize{9}{9}\bfseries Page \thepage\ of \pageref{LastPage}}}
+\setlength{\footskip}{20pt}
+}
+
+\fancypagestyle{preamble}{
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\lfoot{\rulelinel{\fontsize{9}{9}\bfseries \thepage}}
+}
+
+\fancypagestyle{ack}{
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\lfoot{\rulelinel{\fontsize{9}{9}\bfseries \thepage}}
+}
+
+\fancypagestyle{empty}{
+\fancyhf{}
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{.4pt}
+}
+
+% For subcaptions in figures
+\usepackage{subcaption}
+
+% For sidewaysfigure
+%\usepackage{rotfloat}
+
+% For professional looking tables
+\usepackage{booktabs} 
+
+%\usepackage{multirow}
+\usepackage{multicol}
+%\usepackage{longtable}
+%\usepackage{tabularx}
+
+% For \FloatBarrier
+\usepackage[section,below]{placeins}
+
+% Linebreaks in tables
+\usepackage{makecell}
+\usepackage{wrapfig}
+
+% Hyperlinks
+\definecolor{darkblue}{rgb}{0.0,0.0,0.4}
+\definecolor{darkred}{rgb}{0.5,0.0,0.0}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks = true,
+    linkcolor = darkred,
+    anchorcolor = darkred,
+    citecolor = darkred,
+    urlcolor = darkblue
+}
+\urlstyle{sf}
+% main font
+%\usepackage{XCharter} %% cf http://www.khirevich.com/latex/font/
+\usepackage[bitstream-charter]{mathdesign}
+% For underscores that correspond to the encoding
+\usepackage[T1]{fontenc}
+
+% Table of content settings
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{2}
+\usepackage{tocbasic}
+\addtotoclist[report.cls]{toc}
+\renewcommand*{\tableofcontents}{\listoftoc[{\contentsname}]{toc}}% ToC under control of tocbasic
+\AfterTOCHead[toc]{\thispagestyle{preamble}\pagestyle{ack}}
+\AfterStartingTOC[toc]{\clearpage}
+
+% Allowed percentages of page a float can use
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\floatpagefraction}{0.75}
+
+% Figure names
+\renewcommand{\figurename}{Fig.}
+
+% Used for knitr images from Rnw files
+\newcommand{\subfloat}[2][default for first parameter: need a sub-caption]{\subcaptionbox{#1}{#2}}
+
+% Typesetting commands
+\newcommand{\R}{\textbf{\textsf{R}}}
+
+%%% My additions %%%
+\newcommand*\ruleline[1]{\par\noindent\raisebox{.8ex}{\makebox[\linewidth]{\hrulefill\hspace{1ex}\raisebox{-.6ex}{#1}\hspace{1ex}}}}
+
+\newcommand*\rulelinel[1]{\par\noindent\raisebox{.8ex}{\makebox[\linewidth]{\hrulefill\hspace{1ex}\raisebox{-.6ex}{#1}\hspace{1ex}\hrulefill}}}
+
+% change chapters
+\usepackage{titlesec}
+
+\titleformat{\chapter}
+{\Large\bfseries}
+{}
+{0.5em}
+{\titlerule\, \thechapter. \thispagestyle{newchapter}}
+
+\titleformat{name=\chapter,numberless}
+{\Large\bfseries}
+{}
+{0.5em}
+{\titlerule\enspace \thispagestyle{preamble}}
+[]
+
+% sections
+\titleformat{\section}
+{\large\bfseries}
+{}
+{0.5em}
+{\thesection. }
+[]
+
+\titleformat{name=\section,numberless}
+{\large\bfseries}
+{}
+{0.5em}
+{}
+[]
+
+% subsections
+\titleformat{\subsection}
+{\normalsize\itshape\bfseries}
+{}
+{0.5em}
+{\thesubsection. }
+[]
+
+% subsections
+\titleformat{\subsubsection}
+{\small\itshape}
+{}
+{0.5em}
+{\thesubsubsection. }
+[]
+
+\providecommand{\keywords}[1]{\footnotesize\textbf{\textit{Keywords:}} #1}
+
+\newcommand{\copyrightfont}{\linespread{1}\normalfont\rmfamily\fontsize{7}{8}\selectfont}
+\newcommand{\ackfont}{\rmfamily\bfseries\fontsize{9}{9}\selectfont}
+\renewcommand\Authfont{\normalfont\sffamily\bfseries\fontsize{11}{11}\selectfont}
+\newcommand{\datesfont}{\linespread{1}\normalfont\sffamily\fontsize{10}{8}\selectfont}
+\newcommand{\titlefont}{\linespread{1}\normalfont\rmfamily\fontsize{22pt}{24pt}\selectfont}
+
+% bib
+\setlength{\bibsep}{10pt}
+\renewcommand*{\bibfont}{\normalfont\rmfamily\fontsize{9.5}{10}\selectfont} % set font to be sans serif
+
+\pagestyle{firststyle}
+
+\renewcommand*\footnoterule{}
+
+\usepackage{multicol}
+\usepackage{etoolbox}
+\usepackage{relsize}
+\patchcmd{\thebibliography}
+  {\list}
+  {\begin{multicols}{2}\smaller\list}
+  {}
+  {}
+\appto{\endthebibliography}{\end{multicols}}
+
+\appto\appendix{\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}}
+
+% reinstate the correct level for list of tables and figures
+\appto\listoffigures{\addtocontents{lof}{\protect\setcounter{tocdepth}{1}}}
+\appto\listoftables{\addtocontents{lot}{\protect\setcounter{tocdepth}{1}}}
+

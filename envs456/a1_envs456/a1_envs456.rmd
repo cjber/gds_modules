@@ -1,0 +1,672 @@
+---
+title: "UK Police API: Mapping Variation in Crime"
+author: '201347125'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  bookdown::html_document2:
+    number_figures: true
+    number_sections: false
+    toc: true
+    smooth_scroll: true
+    toc_float: true
+    css: theme/style.css
+    code_folding: hide
+    includes:
+      before_body: header.html # header img
+
+# i prefer a master bib location
+bibliography: ../../../bib/library.bib
+biblio-style: ../../../bib/uol.csl
+---
+
+```{r logo, echo=F}
+# may include this in the header in future
+htmltools::img(
+  src = "theme/logo.jpg",
+  alt = "logo",
+  style = "position:absolute; top:0; right:5; padding:20px;\n                        width:220px;opacity: 0.5;"
+)
+```
+
+```{r setup, include=F}
+# set default chunk options
+knitr::opts_chunk$set(echo = F, message = F, cache = F) # careful with cache
+```
+
+```{r library}
+
+library(tidyverse) # data wrangling
+library(jsonlite) # convert json to dataframe
+library(sf) # new spatial tools
+library(rgdal) # additional spatial tools
+library(tmap) # map visualisations
+library(leaflet) # interactive maps
+library(leaflet.extras) # extra leaflet functions
+library(gganimate) # animated ggplots
+library(viridis) # colour schemes
+library(kableExtra) # table formatting
+library(rgeos) # spatial tools
+
+# wd to source location
+setwd("/home/cjber/Dropbox/uni/ENVS456/a1/")
+```
+
+```{r monthsSetup}
+# create list of 12 months in 2018
+months <- seq(as.Date("2018-01-01"),
+  as.Date("2018-12-01"),
+  by = "months"
+) %>%
+  substr(1, 7) # remove date
+```
+
+```{r liv}
+# sf read in liv MSOA shapefile as mercator
+livSHP <- st_read("./shapefiles/Liverpool_msoa11.shp",
+  quiet = T
+) %>%
+  st_transform(4326)
+```
+
+```{r apiRegion}
+# create vector of liv bbox
+livRegion <- st_bbox(livSHP) %>%
+  as.vector()
+
+index <- c(2, 1, 4, 3) # specify new col order (lat lon)
+livRegion <- livRegion[order(index)] # reorder the columns
+
+index <- c(1, 4, 3, 2) # swap lat and lon order (four coords of square box)
+livRegion <- c(livRegion, livRegion[order(index)])
+
+# combine each lat and lon with comma sep
+livRegion[1] <- paste(livRegion[1:2], collapse = ",")
+livRegion[2] <- paste(livRegion[3:4], collapse = ",")
+livRegion[3] <- paste(livRegion[5:6], collapse = ",")
+livRegion[4] <- paste(livRegion[7:8], collapse = ",")
+
+
+index <- c(4, 2, 3, 1) # order for square coords matters (clockwise)
+livRegion <- livRegion[order(index)] # reorder the columns
+
+
+# remove last 5 items and collapse all with : seperator
+livRegion <- paste(livRegion[1:4], collapse = ":") %>%
+  toString()
+```
+
+```{r api, eval=F}
+# base police API url
+url <- c("https://data.police.uk/api/crimes-street/all-crime")
+
+# create empty data.frame
+df <- data.frame()
+
+# loop over each month in list into api url and combine to data.frame
+for (i in 1:length(months))
+{
+  month <- months[i] # iterate through months
+  results <- fromJSON(paste0(url, "?poly=", livRegion, "&date=", month),
+    flatten = T
+  ) # combine url
+  df <- rbind(df, results) # append all to df
+}
+
+# retain useful cols
+df <- df[, c(
+  "category", "month", "location.latitude",
+  "location.longitude"
+)]
+
+# write to csv to avoid running loop again
+write.csv(df, file = "./data/crime.csv")
+```
+
+```{r crimeSetup}
+# read saved csv
+crime <- read.csv("./data/crime.csv")
+# retain useful cols
+crime <- crime[, c("category", "month", "location.latitude", "location.longitude")]
+```
+
+```{r crimeSHP}
+crime$crime <- 1 # crime count for aggregating
+
+# convert to spatial object
+crime <- st_as_sf(crime,
+  coords = c(
+    "location.longitude",
+    "location.latitude"
+  ),
+  crs = "+init=epsg:4326"
+)
+
+crimePoints <- crime %>%
+  st_join(livSHP, left = F) %>% # spatial join with livSHP
+  na.omit() # remove na produced by join (points outside lsoas)
+```
+
+```{r, crimePoly, cache=T, eval=F}
+# spatial join crime/shp keep polys, sum crime
+crimePoly <- livSHP %>%
+  st_join(crime, left = F) %>%
+  group_by(month, MSOA11CD) %>%
+  summarise(crime = sum(crime))
+
+# save data as this is expensive
+save(crimePoly, file = "./shapefiles/crimePoly.RData")
+```
+
+```{r, quantiles}
+# load in crimePoly
+load(file = "./shapefiles/crimePoly.RData")
+
+no_classes <- 6 # specify 6 bins
+labels <- c() # empty vector
+
+# find quantiles for each msoa
+quantiles <- quantile(crimePoly$crime,
+  probs = seq(0, 1, length.out = no_classes + 1)
+)
+
+# define custom labels, remove decimal etc
+labels <- c()
+for (idx in 1:length(quantiles)) {
+  labels <- c(labels, paste0(round(quantiles[idx + 1], 0)))
+}
+
+# remove final label
+labels <- labels[1:length(labels) - 1]
+
+# new variable in dataset with quantiles
+crimePoly$crime_quantiles <- cut(crimePoly$crime,
+  breaks = quantiles,
+  labels = labels,
+  include.lowest = T
+)
+```
+
+```{r, theme}
+## function with my preferred ggplot2 theme settings (for maps)
+theme_map <- function(...) {
+  theme_minimal() +
+    theme(
+      text = element_text(family = "Ubuntu Regular", color = "#22211d"),
+      axis.line = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      panel.grid.minor = element_line(color = "#ebebe5", size = 0.2),
+      panel.grid.major = element_line(color = "#ebebe5", size = 0.2),
+      #    panel.grid.minor = element_blank(),
+      plot.background = element_rect(fill = "#f5f5f2", color = NA),
+      panel.background = element_rect(fill = "#f5f5f2", color = NA),
+      legend.background = element_rect(fill = "#f5f5f2", color = NA),
+      panel.border = element_blank(),
+      ...
+    )
+}
+```
+
+# Introduction
+
+This report collects freely available crime data for the Liverpool Local Authority District (LAD) in order to produce web maps. The geography of crime will be explored in addition to its temporal dynamics and whether the pattern of crime varies across months in 2018. An explanation for the observed patterns will refer to the findings of previous literature.
+
+Code to produce figures is included inline and minimised (click the  <font color="#1B2C7C">'Code'</font> buttons), data preprocessing is shown as an appendix. For full reproducibility the .Rmd and raw data are included.
+
+## Data Description
+
+This report analyses crime data extracted from the [Open Police Data API](https://data.police.uk) [@Police2019] for the 12 months of 2018. Data was provided with WGS 84 (GPS) coordinates and filtered to only include points with fall within the Liverpool Local Authority District (LAD). The data itself is obfuscated slightly with a spatial jitter, where actual crime locations are transferred to snap points to prevent a specific crime location from being identifiable (see @Bridwell2007; Figure \@ref(fig:dups)). This process is outlined by @Police2019:
+
+- The location of each crime is compared against a master list of “snap points” to find the nearest.
+
+- The coordinates of the crime are then replaced with the coordinates of the snap point.
+
+- If the nearest snap point is over 20 km away, coordinates of zero are assigned so that the crime is not shown on the subsequent map.
+
+```{r, dups, fig.align="center", fig.cap="Crime reports sharing the exact coordinates (first 1000 points)", echo=T}
+# find duplicate points
+crimePoints$duplicate <- duplicated(crimePoints$geometry)
+
+# plot duplicate points
+ggplot() +
+  geom_sf(data = livSHP, alpha = 0.8, size = 0) +
+  geom_sf(
+    data = crimePoints[1:1000, ], # subset for readability
+    aes(color = duplicate, fill = duplicate)
+  ) +
+  scale_color_manual(values = c("#999999", "#E69F00"), guide = F) +
+  scale_fill_manual(
+    values = c("#999999", "#E69F00"),
+    name = "",
+    guide = guide_legend(
+      direction = "horizontal",
+      keyheight = unit(5, units = "mm"),
+      keywidth = unit(70 / length(labels),
+        units = "mm"
+      ),
+      title.hjust = 0.5,
+      label.hjust = 1,
+      nrow = 1,
+      byrow = T,
+      label.position = "bottom"
+    )
+  ) +
+  theme_map() +
+  theme(legend.position = "bottom")
+```
+
+Shapefiles containing census geography were downloaded from the  [Consumer Data Research Centre](https://www.cdrc.ac.uk/) [@cdrc2019], in this assessment primarily the largest geography has been utilised; 'Middle Super Output Areas' (MSOA), in an effort to reduce the inaccuracy introduced by snap points.
+
+Figure \@ref(fig:dups) highlights the extent at which points are obfuscated, showing points that share exact coordinates (snap points), in total `r round((sum(crimePoints$duplicate) / nrow(crimePoints)),3)*100`% of the `r nrow(crimePoints)` total crime points used in this report share the same coordinates as one or more other point. For this reason it was considered more reliable to choose aggregation that is less likely to result in point inaccuracy through aggregation into an incorrect polygon, as suggested in @Tompson2015.
+
+```{r, heatmap, fig.cap="Interactive Heatmap showing a sample of crime from January 2018", echo=T}
+
+crimePointsSP <- crimePoints %>% # change to use sp
+  as_Spatial()
+crimePointsSP <- crimePointsSP[1:2000, ] # more managable
+
+# create specific color scheme for each crime category
+color_scheme <- viridis::cividis(n_distinct(crimePointsSP@data$category))
+pal <- colorFactor(color_scheme, crimePointsSP@data$category)
+
+# leaflet heat map
+crimePointsSP %>%
+  leaflet(width = "100%") %>%
+  # add basemap
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  # leaflet circles
+  addCircleMarkers(
+    fillColor = ~ pal(category), # use color scheme
+    stroke = FALSE,
+    fillOpacity = 0.8,
+    clusterOptions = markerClusterOptions(),
+    popup = ~ as.character(category),
+    group = "Markers"
+  ) %>%
+  # heatmap from leaflet.extra
+  addHeatmap(
+    radius = 8,
+    group = "Heatmap"
+  ) %>%
+  # corner minimap with toggle
+  addMiniMap(
+    tiles = providers$CartoDB.Positron,
+    toggleDisplay = TRUE
+  ) %>%
+  # button to return to default zoom
+  addEasyButton(easyButton(
+    icon = "fa-crosshairs", title = "Reset Zoom",
+    onClick = JS("function(btn, map){map.setZoom(11);}")
+  )) %>%
+  # layer control
+  addLayersControl(
+    overlayGroups = c("Heatmap", "Markers"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+```
+
+# Analysis
+
+## *Heatmap*
+
+Figure \@ref(fig:heatmap) gives an overview of the typical distribution of crime within Liverpool, taking a small random sample of total crimes reported from 2018 (total crime becomes too hard to interpret). Both the heatmap and markers may be toggled off to allow for individual interpretation and the map in the bottom right gives context within the UK but may be minimised. 
+
+The basic trend appears to show that there is increased crime towards the city centre, this is typical of many cities, due to the higher concentration of people. In particular, Liverpool is widely considered a popular tourist destination [@Shukla2006], with popular night-life, so it is to be expected that a disproportionate level of crime is focused towards these areas, often fuelled by alcohol consumption [@Calafat2011]. In addition there appears to be a divide between the southern end of the Liverpool LAD and the northern end, as crime reports are more sparse towards the south.
+
+## *Choropleth Maps*  {.tabset .tabset-fade .tabset-pills}
+
+**Click the buttons to switch between figures.**
+
+### Interactive Choropleth {#leaf}
+```{r, echo=T}
+# turn sf to sp
+livSP <- crimePoly %>%
+  as_Spatial()
+# simplify geometry to reduce memory usage
+livSimSP <- livSP %>%
+  gSimplify(tol = 0.0005, topologyPreserve = F)
+
+# re add @data
+livSimSP <- SpatialPolygonsDataFrame(livSimSP, data = livSP@data)
+
+# create quantile scale
+qpal <- colorQuantile("magma", livSimSP$crime, n = 6, reverse = T)
+
+# init map + prevent scrolling/dragging
+map <- leaflet(
+  width = "100%", livSimSP,
+  options = leafletOptions(
+    preferCanvas = T,
+    zoomControl = F,
+    minZoom = 11,
+    maxZoom = 11,
+    dragging = F
+  )
+) %>%
+  addProviderTiles(providers$CartoDB.Positron) # basemap
+
+# loop to create 12 groups toggleable
+for (i in 1:length(months)) {
+  month <- months[i]
+  # find values for current month
+  crimeMonth <- livSimSP[livSimSP$month == month, ]
+
+  labels <- sprintf(
+    "<strong>%s</strong><br/>%g crimes",
+    crimeMonth$MSOA11CD, crimeMonth$crime
+  ) %>% lapply(htmltools::HTML)
+
+  map <- map %>%
+    addPolygons(
+      fillColor = ~ qpal(crimeMonth$crime),
+      data = livSimSP,
+      weight = 2,
+      opacity = .5,
+      color = "grey",
+      fillOpacity = 0.7,
+      label = labels,
+      labelOptions = labelOptions( # hover labels
+        style = list(
+          "font-weight" = "normal",
+          padding = "3px 8px"
+        ),
+        textsize = "10px",
+        direction = "auto"
+      ),
+      highlight = highlightOptions( # highlight in white
+        opacity = 1,
+        weight = 5,
+        color = "white",
+        bringToFront = T
+      ),
+      group = month, # current month = group name
+    )
+}
+
+map <- map %>%
+  addLayersControl( # layers are toggleable
+    baseGroups = months,
+    options = layersControlOptions(collapsed = T)
+  ) %>%
+  addLegend(
+    pal = qpal,
+    values = ~ crimeMonth$crime,
+    title = "Number of Crimes",
+    position = "bottomright",
+    # function gives values rather than percentage
+    labFormat = function(type, cuts, p) {
+      n <- length(cuts)
+      paste0(cuts[-n], " &ndash; ", cuts[-1])
+    }
+  )
+```
+```{r, toggle, fig.cap="Interactive Choropleth with Month Selection"}
+map
+```
+
+### Video Choropleth {#video}
+
+```{r, timeSetup, eval=F, echo=T}
+a <- ggplot() +
+  geom_sf(data = crimePoly, aes(fill = crime_quantiles, group = month)) +
+  # animate through months
+  transition_states(month,
+    transition_length = 1,
+    state_length = 1
+  ) +
+  theme_map() + # custom function
+  ## aesthetics only below
+  theme(legend.position = "bottom") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Month: {closest_state}",
+    subtitle = "MSOA Level"
+  ) +
+  scale_fill_viridis(
+    option = "magma",
+    name = "Number of Crimes",
+    discrete = T,
+    direction = -1,
+    guide = guide_legend(
+      direction = "horizontal",
+      keyheight = unit(2, units = "mm"),
+      keywidth = unit(8, units = "mm"),
+      title.position = "top",
+      title.hjust = 0.5,
+      label.hjust = 1,
+      nrow = 1,
+      byrow = T,
+      reverse = F,
+      label.position = "bottom"
+    )
+  )
+
+# set animation options
+animate(a,
+  fps = 30,
+  duration = 10,
+  renderer = ffmpeg_renderer(
+    options = list(pix_fmt = "yuv420p", loop = 0)
+  )
+)
+
+anim_save("./figs/gganim1.mp4", animation = last_animation())
+```
+
+<center>
+
+```{r, time, fig.align="center", fig.cap="Choropleth showing variation in crime through months"}
+htmltools::HTML('<video controls>
+  <source src="./figs/gganim1.mp4" type="video/mp4">
+</video>')
+# bit messy but video on its own is not recognised as a figure
+knitr::include_graphics("./figs/blank.png")
+```
+
+</center>
+
+
+##
+
+Figure \@ref(fig:toggle) is another interactive map built with leaflet for R that aggregates the number of crimes into MSOAs and allows toggling between months (top right). Highlighting over an MSOA will display information regarding the number of crimes, and the name of that particular MSOA. This choropleth utilises MSOA scale aggregation of the crime points, with quantile bins which allows for an interpretable colour scale. Again, for each month, there is a concentration of very high crime focused towards the city centre, with a band of low crime towards the southern end of the LAD.
+
+It is also possible to explore the variation in crime between months with the use of the new package gganimate [@Pedersen2019]. Figure \@ref(fig:time) is an mp4 video that shows the variation in crime between each month in 2018, sharing a scale also allows for direct comparison between months. The main benefit for the use of Figure \@ref(fig:time) over Figure \@ref(fig:toggle) is that the mp4 is much more lightweight, and much simpler to produce with fewer lines of code. I also find it to be more visually appealing at the cost of less interactivity.
+
+## Choropleth Analysis
+
+Both figures show that interestingly, the most areas of very high crime (highest bin) appear in October/November but with relatively few in December (see Table \@ref(tab:highCrime)). It should be noted that this does not imply higher levels of crime during these months, just that there are more MSOAs that have high levels of crime, i.e. crime is more spread out in the months running up to December. In these months, as many of these high crime MSOAs lie outside the city centre, it is likely that they do not represent necessarily the types of crime associated with the night-life culture.
+
+```{r, highCrime, fig.align="center", echo=T}
+# find num highest bin per month
+highCrimeM <- crimePoly %>%
+  subset(crime_quantiles == "722") %>%
+  group_by(month) %>%
+  count(month)
+
+# remove geometry
+highCrimeM$geometry <- NULL
+
+# plot table
+kable(highCrimeM,
+  caption = "Total Number of MSOA with highest Crime bin by Month.",
+  col.names = c("Month", "Number of High Crime MSOA")
+) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = F, position = "float_right"
+  )
+```
+
+One issue with this aggregation is that the final bin using a quantile method gives a very large range of 124 - 720 crimes. This results due to two MSOA in particular, E02006932 and E02006932 (see Figure \@ref(fig:toggle)), both of which consistently have very high incidences of reported crime in relation to all other MSOAs. It has been suggested that areas which have displayed what are believed to be erroneous levels of crime can be attributed to reported crimes for which their location was unknown, leading to the location of the crime being reported as happening at the local police station [@Tompson2015]. However, choosing quantile binning, given the size of the final bin, the likely erroneous MSOAs do not significantly impact the visualisation, still allowing for interpretation.
+
+
+## Variation in Specific Crime
+
+Figure \@ref(fig:type) makes it clear that by far the two most dominant types of crime are 'violent crime', and 'anti-social-behaviour'. Typically these types of crime come with the night-life and drinking culture that is associated with many city centres [@Calafat2011]. However, it could be said that these categories aggregate a range of crimes moreso than other categories that describe more specific crimes [@Tompson2015]. The general trend appears to show that both these types of crime are lower during the winter months, with higher reported crime during the summer. Again, this is likely attributed mostly due to the drinking culture typical of British cities, of which these crimes are typical. There is little recent literature that appears to confirm a seasonable variation in crime rates,  however @Lewis1975 found lower crime rates do correlate with winter months, although do not attribute this to the physical attributes of the seasons. Instead it seems likely that tourism population, and a general populations willingness to participate in the nightlife culture may result in this observed variation between winter and summer months. @Li2013 analysed venue popularity with [Foursquare](https://foursquare.com/) data and found typically venues are more popular in summer months.
+
+There appears to be three defined groupings on Figure \@ref(fig:type), the fewest crimes being theft and robbery. A medium grouping of drugs offences, shoplifting, burglary, criminal damage and vehicle crime, and the much higher grouping of violent crime and anti social behaviour. These groupings I believe largely reflect the level of aggregation in definitions of the type of crime above anything else, as suggested in @Tompson2015, specifically they note that violent crime includes all assaults, and can include crimes ranging from murder to assault with no injury.
+
+```{r, typeSetup, eval=F, echo=T} 
+# find count of each category for each MSOA per month
+crimeCount <- crime
+
+crimeCount$geometry <- NULL # remove geom
+
+## need to convert to a date for animation to work
+crimeCount$month <- as.Date(paste0(crimeCount$month, "-01"))
+# aggregate counts per category per month
+crimeCount <- aggregate(cbind(crimeCount[0], count = 1), crimeCount, length)
+# shorten name lengths
+crimeCount$category <- substr(crimeCount$category, 1, 16)
+
+# plot types of crime over months
+a <- ggplot(crimeCount, aes(month, count, group = category)) +
+  geom_line() +
+  geom_segment(aes(xend = as.Date("2018-12-01"), yend = count), # dotted lines
+    linetype = 2, colour = "grey"
+  ) +
+  geom_point(size = 2) +
+  geom_text(aes(x = as.Date("2018-12-10"), label = category),
+    hjust = 0, size = 3, check_overlap = T
+  ) + # exlude when overlap
+  # allow text to show after graph and set x labs
+  scale_x_date(
+    date_breaks = "2 month", date_labels = "%b",
+    limits = as.Date(c("2018-01-01", "2019-01-30"))
+  ) +
+  # animate by month
+  transition_reveal(month) +
+  ## aesthetics
+  theme_minimal() +
+  theme(
+    text = element_text(family = "Ubuntu Regular", color = "#22211d"),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    panel.grid.minor = element_line(color = "#ebebe5", size = 0.2),
+    panel.grid.major = element_line(color = "#ebebe5", size = 0.2),
+    plot.background = element_rect(fill = "#f5f5f2", color = NA),
+    panel.background = element_rect(fill = "#f5f5f2", color = NA),
+    legend.background = element_rect(fill = "#f5f5f2", color = NA),
+    panel.border = element_blank()
+  )
+
+# animation settings
+animate(a,
+  fps = 30,
+  duration = 10,
+  renderer = ffmpeg_renderer(
+    options = list(pix_fmt = "yuv420p", loop = 0)
+  )
+)
+
+anim_save("./figs/gganim2.mp4", animation = last_animation())
+```
+
+<center>
+
+```{r, type, fig.align="center", fig.cap="Variation in Types of Crime Across 2018"}
+htmltools::HTML('<video controls>
+  <source src="./figs/gganim2.mp4" type="video/mp4">
+</video>')
+## bit messy but video on its own is not recognised as a figure
+knitr::include_graphics("./figs/blank.png")
+```
+
+</center>
+
+
+
+# Conclusion
+
+New open crime data can be used to give insight into spatial and temporal trends, and categorised crime allows for an in depth discussion of the culture that influences patterns in crime, particularly regarding the night-life and drinking culture in many UK cities.
+
+However, care should be taken when interpreting the aggregation of certain crimes, and the wide variation in reported crimes for each category suggests there is likely some level of ambiguity and potential for error in some instances, e.g. is ‘theft from the person’ sometimes reported as ‘violent crime’? Some are unambiguous, ‘burglary’ and ‘shoplifting’ for example, and likely provide a more accurate representation of the true levels of crime. The 'snap points' employed to obfuscate exact crime locations are likely to cause inaccuracy when looking at fine level aggregation, although, given there appears to be a reasonably large number of snap points (Figure \@ref(fig:dups)), this is likely minimised.
+
+# References {-}
+
+<div id="refs"></div>
+
+# Appendix I: Preprocessing {-}
+
+#### University of Liverpool Logo
+
+```{r ref.label='logo', echo = T, eval = F}
+
+```
+
+#### Default Chunk Options
+
+```{r ref.label='setup', echo = T, eval = F}
+
+```
+
+#### Required Packages
+
+```{r ref.label='library', echo = T, eval = F}
+
+```
+
+#### Sequence of Months
+
+```{r ref.label='monthsSetup', echo = T, eval = F}
+
+```
+
+#### Read in MSOAs
+
+```{r ref.label='liv', echo = T, eval = F}
+
+```
+
+#### Find Coordinates for Liverpool Crime
+
+```{r ref.label='apiRegion', echo = T, eval = F}
+
+```
+
+#### For Loop: Police API
+
+```{r ref.label='api', echo = T, eval = F}
+
+```
+
+#### Read in Crime Data
+
+```{r ref.label='crimeSetup', echo = T, eval = F}
+
+```
+
+#### Spatial Join Crime to MSOAs
+
+```{r ref.label='crimeSHP', echo = T, eval = F}
+
+```
+
+#### Create MSOA Polygons with Crime
+
+```{r ref.label='crimePoly', echo = T, eval = F}
+
+```
+
+#### Create Quantiles for Crime Polygons
+
+```{r ref.label='quantiles', echo = T, eval = F}
+
+```
+
+#### Default Map ggplot2 Theme Function
+
+```{r ref.label='theme', echo = T, eval = F}
+
+```
+
+
+# Appendix II: Template {-}
+
+This template was largely produced by myself but takes aspects of the epuRate R Markdown template by [Holtzy](https://github.com/holtzy/epuRate). Fonts are inspired by the Typora theme [Ursine](https://theme.typora.io/theme/Ursine/).
+
+Thanks mostly to [Yihui](https://bookdown.org/yihui/rmarkdown/) for his contributions to R Markdown, making it what it is today.

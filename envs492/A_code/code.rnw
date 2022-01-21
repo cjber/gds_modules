@@ -1,0 +1,107 @@
+    All code is hosted on my personal \href{https://github.com/cjber/}{GitHub account}, along with my complete dotfiles, used in conjunction with the Linux distribution Manjaro, and the i3 window manager. All writing and code was produced using \href{https://neovim.io}{Neovim} with my personal configuration to implement integrated development environment (IDE) style features for writing R code, while also providing essential features for writing in \LaTeX{}. Neovim has the benefit of being both highly customisable, and lightweight, which allows for much lower system utilisation compared with R Studio when working with large datasets. One essential Vim plugin to mention is \href{https://github.com/jalvesaq/Nvim-R}{Nvim-R}, providing an \R{} REPL connection to vim, and other useful functions. 
+
+This dissertation was written using \LaTeX{} combined with the \texttt{rnoweb} file type \citep{ihaka2011}, for \textit{Literate Programming}\footnote{See \cite{knuth1984}; \textit{“Let us change our traditional attitude to the construction of programs: Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do.”}}. The template is built from scratch but takes much inspiration (and code) from the \href{https://github.com/asardaes/R-LaTeX-Template}{R-LaTeX-Template}.
+
+\section{Packages and Machine Environment}
+
+
+<<session>>=
+## Return the machine CPU
+cat("Machine:     "); print(get_cpu()$model_name)
+
+## Return number of true cores
+cat("Num cores:   "); print(detectCores(logical = FALSE))
+
+## Return number of threads
+cat("Num threads: "); print(detectCores(logical = TRUE))
+
+## Return the machine RAM
+cat("RAM:         "); print (get_ram()); cat("\n")
+
+x <- sessionInfo()
+x$loadedOnly <- NULL
+print(x, locale = F)
+@
+\newpage
+
+\section{Referenced Functions}
+\subsection{LiDAR Clean} \label{code:lidr_clean}
+<<lidr_clean, echo = TRUE, eval = FALSE>>=
+@
+\subsection{Extract Buffer} \label{code:extract_buff}
+<<extract_buff, echo = TRUE, eval = FALSE>>=
+@
+\subsection{Filter LAS Noise} \label{code:las_filter_noise}
+<<las_filter_noise, echo = TRUE, eval = FALSE>>=
+@
+
+\subsection{Combine Catalog} \label{code:comb_ctg}
+<<comb_ctg, eval = FALSE, echo = TRUE>>=
+@
+
+\subsection{Road Angles}\label{code:road_angles}
+<<road_angles, eval = FALSE, echo = TRUE>>=
+@
+
+\subsection{Height Change}\label{code:height_change}
+<<height_change, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Compute Samples} \label{code:compute_samples}
+<<compute_samples, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Euclidean Distance} \label{code:euc}
+<<euc, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Perpendicular Sampling} \label{code:perp}
+<<perp, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Clip Samples} \label{code:clip_samples}
+<<clip_samples, echo = TRUE, eval = FALSE>>=
+@
+\subsection{Greyscale} \label{code:greyscale}
+<<greyscale, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Compute Individual Linear Model} \label{code:lm_compute}
+<<lm_compute, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Filter Samples}\label{code:filter_samples}
+<<filter_samples, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Max Dist}\label{code:max_dist}
+<<max_dist, eval = FALSE, echo = TRUE>>=
+@
+
+\subsection{Adjacent Length}\label{code:adjacent_length}
+<<adjacent_length, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Find Distances} \label{code:find_dists}
+<<find_dists, echo = TRUE, eval = FALSE>>=
+@
+\subsection{Mid Points}\label{code:mid_pts}
+<<mid_pts, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Beta Coefficients} \label{code:lm_beta}
+<<lm_beta, echo = TRUE, eval = FALSE>>=
+@
+
+\section{Additional Functions}
+
+\subsection{Catalog to Dataframe} \label{code:ctg_to_df}
+<<ctg_to_df, echo = TRUE, eval = FALSE>>=
+@
+\subsection{Filter Returns}\label{code:filter_returns}
+<<filter_returns, eval = FALSE, echo = TRUE>>=
+@
+\subsection{True Centrelines}\label{code:true_cents}
+<<true_cents, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Max Lines}\label{code:max_lines}
+<<max_lines, eval = FALSE, echo = TRUE>>=
+@
+\subsection{Model Comparison}\label{code:model_comparison}
+<<model_comparison, eval= FALSE, echo = TRUE>>=
+@
+\subsection{Formatting} \label{code:make_table}
+<<make_table, echo = TRUE, eval = FALSE>>=
+@
+

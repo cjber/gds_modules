@@ -1,0 +1,316 @@
+---
+title: Identifying Atmospherics that Influence Consumer Choice in Retail
+
+# Use letters for affiliations
+author:
+  - name: 201374125
+    affiliation: a
+address:
+  - code: a
+    address: Department of Geography and Planning, University of Liverpool, Liverpool, L69 7ZX
+
+# For footer text  TODO(fold into template, allow free form two-authors)
+lead_author_surname: 201374125
+
+# Place DOI URL or CRAN Package URL here
+#doi: "https://cran.r-project.org/package=YourPackage"
+
+# Abstract
+abstract: |
+ Word Count: 3578 
+
+# Paper size for the document, values of letterpaper and a4paper
+papersize: letter
+
+# Font size of the document, values of 9pt (default), 10pt, 11pt and 12pt
+fontsize: 9pt
+
+# Optional: Force one-column layout, default is two-column
+#one_column: true
+
+# Optional: Enables lineno mode, but only if one_column mode is also true
+#lineno: true
+
+# Optional: Enable one-sided layout, default is two-sided
+#one_sided: true
+
+# Optional: Enable section numbering, default is unnumbered
+numbersections: true
+
+# Optional: Specify the depth of section number, default is 5
+secnumdepth: 5
+
+# Optional: Skip inserting final break between acknowledgements, default is false
+skip_final_break: true
+
+# Optional: Bibliography 
+bibliography: /home/cjber/Dropbox/bib/library.bib
+biblio-style: apsr
+
+# Optional: Enable a 'Draft' watermark on the document
+watermark: false
+
+# Customize footer, eg by referencing the vignette
+footer_contents: "201374125"
+
+# Produce a pinp document
+output: pinp::pinp
+
+# Required: Vignette metadata for inclusion in a package.
+vignette: >
+  %\VignetteIndexEntry{YourPackage-vignetteentry}
+  %\VignetteKeywords{YourPackage, r, anotherkeyword}
+  %\VignettePackage{YourPackage}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+
+```{r, echo=FALSE}
+library(kableExtra)
+```
+
+
+# Literature Review
+
+
+The rapid expansion of home broadband technology in the UK has allowed for the internet to become a significant part of the economic infrastructure [@Caio2008] bringing with it an abundance of commercial applications [@Ballantine2005], such as online retail stores.
+
+In the context of technology adoption, the Theory of Reasoned Action (TRA) has been used to explain consumer behaviour [@Taylor1995], where consumer behaviour is only influenced by an individuals intention, and the intention itself is influenced by the individuals attitudes and what they consider to be a subjective norm [@Ajzen1980]. Subsequent papers have outlined the Technology Acceptance Model (TAM) based on the TRA, by which the likelihood of an individual consumer adopting a certain technology may be determined [@Davis1993]. Controlling for outside factors, an individual will always adopt a certain technology with what they deem to have the highest usefulness, not necessarily favouring ease of use [@Davis1989]. In terms of online retail, @Devaraj2002 found that the TAM is heavily influenced by the ease of use and usefulness above other factors.
+
+Consumer based research has outlined key drivers that influence consumer choices when presented with an online retail setting, the interface design and its effect on consumer behaviour [@Eroglu2003;@Park2003], and a higher level of interactivity and information provided by an online shopping environment having a positive effect on consumer satisfaction [@Ballantine2005]. Online stores are able to provide higher quality and detailed information more readily when compared physical stores, which reduces a consumers 'search cost' [@Bakos1997], and the higher quality of information online allows for more informed consumer decisions, leading to higher satisfaction [@Peterson1997]. @Park2003 found that consumers value the extensive product information available online, including product testimonials such as reviews from other purchasers.
+
+Online retail, however suffers from various limitations, all products may not be available for purchase online [@Szymanski2000], and when stores become too large, the online site becomes difficult to navigate for consumers [@Lohse1998]. In addition, online transactions for some consumers are viewed with concern, and may be reluctant to provide their private information online [@Liao2002; @Elliot2013]. However, with the advent of the new EU General Data Protection Regulation (GDPR), consumers may have an altered attitude to providing their personal information.
+
+Atmosphere in physical retail has been assessed as being purposefully designed to influence a specific response in shoppers to encourage purchasing, through store layout and design [@Kotler1973; @Rossiter1982], where store layout and display of products encourages additional spending. Music [@Yalch1990] and crowding [@Eroglu2000] are also determined as factors that influence consumer decision making in physical retail. In physical retail the spatial interaction theory is the hypothesis that consumers will make certain trade-offs when selecting a shopping location in favour of one that is closer [@Clarkson1996], a concept that doesn't apply to online retail.
+
+There is concern over certain aspects of store design when used to influence consumer decision making, for example a past study has looked into the proportion of unhealthy food that children are likely to to choose due to their location close to the checkout in supermarkets [@Horsley2013]. This study found that the overwhelming majority of products at a supermarket checkout are unhealthy, which they suggest has an impact on childhood obesity rates.
+
+Much like a physical store, past studies have drawn comparisons between components considered atmospherics in physical stores, and components of online stores. Asking; what role do atmospherics have on online shopping? [@Eroglu2003]. @Eroglu2001 developed a model of various atmospheric effects they defined in online stores, much like a model of the atmospherics of physical stores [e.g. @Keen2004]. While online atmospheric characteristics lack physicality and olfactory cues, online retailers can much more diversely manipulate visual cues in order to tailor atmospheres to induce a desired response from a customer [@Eroglu2001]. This study found that customer involvement and atmospheric responsiveness both influence customer response, and they note that model usage to determine strategic importance of real or virtual stores will be of building importance.
+
+\begin{table*}[ht]
+  \caption{Rationale for a mixed methods approach in market research}\label{t1}
+\centering
+\begin{tabular}{lp{10cm}}
+  \hline
+Category & Description \\ 
+  \hline
+Triangulation & Both quantitative and qualitative research can be combined to triangulate findings to mutually corroborate. \\ 
+Offset & Both methods have their own strengths and weaknesses, combining them allows to offset the weakness and draw strengths. \\ 
+Completeness & The research topic will have a more comprehensive backing through both methodologies. \\
+Process & Quantitative methods provide structures in social research but qualitative provides the process. \\ 
+Different Research Questions & Both types of research may be used to answer different research questions. \\ 
+Explanation & One may be used to explain findings from the other. \\ 
+Unexpected Results & When one provides surprising results, this may be answered by the other. \\ 
+Instrument Development & Qualitative research may be used to develop questionnaire items, allowing for better wording or more comprehensive answers. \\ 
+Sampling & One may assist with the choice of sampling with the other. \\ 
+Credibility & Both approaches assist with the credibility of the other. \\ 
+Context & Qualitative research may allow for a contextual understanding of variables observed in a study. \\ 
+Illustration & Qualitative data may be used to illustrate quantitative findings. \\ 
+Utility & With an applied focus, combining approaches will be more useful to practitioners \\ 
+Confirm and discover & Qualitative data may be used to develop a hypothesis then use quantitative data to test them. \\ 
+Diversity of views & Combining researcher and participants perspectives. \\ 
+Enhancement & Building on the findings of one method. \\ 
+   \hline
+ & \multicolumn{1}{r}{\footnotesize\textit{\cite{Bryman2006}}}
+\end{tabular}
+\end{table*}
+
+While these papers have outlined the factors in determining consumer decisions in both physical retail and online retail, few papers combine consumer opinions on both mediums. With the rapid expansion of online retail in recent years, the factors determining consumer preference over online or physical retail may be determined.
+
+Most retailing has shifted to an increased use of the internet, and many retailers have spent large amounts to provide an internet based alternative, while past studies have found many consumers still prefer retail stores [@Keen2004].
+
+Typically, market based research has moved away from purely quantitative data collection, with the inclusion of interview-based research, which is the dominant methodology in commercial research [@Vogel2012]. This paper will assess consumer opinions towards online retail in relation to physical retail, and assess what key factors drive an individual to choose one over the other, combining qualitative information to inform the production of a quantitative 'self-completion' questionnaire [termed @Bryman2015].
+
+The overall aim of this study is to assess public opinion of online retail in comparison to physical retail.
+
+- Question 1: What demographic, if any, favours online retail over physical retail?
+
+- Question 2: What drives a persons selection between the two types of retail store?
+
+
+>*Null Hypothesis: Consumers will show no preference over online or physical retail.*
+
+# Methods
+
+```{r, echo=FALSE, cache=TRUE}
+
+tbl <- data.frame(
+Category = c("Triangulation", "Offset", "Completeness", "Process", "Different research questions", "Explanation",
+             "Unexpected Results", "Instrument development", "Sampling", "Credibility", "Context", "Illustration",
+             "Utility", "Confirm and discover", "Diversity of views", "Enhancement"),
+Description = c(
+"Both quantitative and qualitative research can be combined to triangulate findings to mutually corroborate.",
+"Both methods have their own strengths and weaknesses, combining them allows to offset the weakness and draw strengths.",
+"The research topic will have a more comprehensive backing through both methodologies.",
+"Quantitative methods provide structures in social research but qualitative provides the process.",
+"Both types of research may be used to answer different research questions.",
+"One may be used to explain findings from the other.",
+"When one provides surprising results, this may be answered by the other.",
+"Qualitative research may be used to develop questionnaire items, allowing for better wording or more comprehensive answers.",
+"One may assist with the choice of sampling with the other.",
+"Both approaches assist with the credibility of the other.",
+"Qualitative research may allow for a contextual understanding of variables observed in a study.",
+"Qualitative data may be used to illustrate quantitative findings.",
+"Qualitative data may be used to develop a hypothesis then use quantitative data to test them.",
+"Combining researcher and participants perspectives.",
+"Building on the findings of one method.",
+"Building on the findings of one method.")
+)
+
+#kable(tbl, caption = "Rationale for a mixed methods approach in market research",
+#      longtable = FALSE, booktabs = TRUE,
+#      linesep = '', format = "latex") %>%
+#column_spec(2, width = "35em") %>%
+#kable_styling(font_size = 9)
+
+#library(xtable)
+#xtable(tbl)
+
+```
+
+
+Purely quantitative information may be used to answer the first question, potentially either with data provided by various retail stores, or from basic demographic information. Demographic information will be collected as part of the final questionnaire and an assessment will determine a detailed breakdown of the demographics in favour of each retail medium. However, the reasoning behind choice of one store over the other cannot be answered without first considering a qualitative approach. Given just this information, the research aim is not covered, and the observed variation in demographic preference may result due to contextual effects rather than compositional ones [@Macintyre1993]; i.e. instead of assessing a demographic preference over one type of retail store, only the convenience of one over the other would be assessed. For example, an individuals proximity to a retail store; people further away are more likely to shop online. While this is useful information, it is limited, and in order to fully assess the reasons for demographic preference, a mixed methods approach must be used [@Bryman2015]. 
+
+## Methodology in Market Research
+
+This paper takes an approach that is primarily associated with market research, but with a focus on academia. Typically market research now primarily uses mixed methods [@Vogel2012]. While market research may have once consisted purely of qualitative methods such as focus groups and interviews, incorporating a academic research methodology will allow for a deeper understanding of the topic, without the time constraints associated with commercial research. The vast majority of academic approaches in market research rely on a mixed methods approach where qualitative information is preliminarily used to inform decisions when processing and collecting quantitative information [@Harrison2013]. Qualitative methods primarily consist of interviews with members of the public, and quantitative methods are usually in the form of questionnaires [@Chrzanowska2017].
+
+New technology now allows for new  methodologies that are widely suitable to market research. For example online interviewing and questionnaires allow for a large amount of data to be collected [@Vogel2012], and will be the primary source of quantitative data used in this study.
+
+Table \ref{t1} summarises the benefits of mixed methods outlined in @Bryman2006. Table \ref{t2} outlines when mixed methods should be favoured over a single approach [from @Creswell2011]. In particular, the mixed approach will be used in this paper to inform what questions need to be asked, and to explain the results of quantitative information provided by various retail stores (Table \ref{t2}).
+
+```{r, echo=FALSE, cache=TRUE}
+
+tbl <- data.frame(
+Mixed = c("If more than one data source is required", "To explain preliminary results", "To generalize preliminary findings", "When a second method will enhance the study"),
+Description = c(
+"One type of data may not always tell the whole story.
+One data type may not address the research question.
+Qualitative and quantitative results contradict each other.
+Different perspectives are required if different populations differ.",
+"A second data type will explain the results",
+"Researchers may not know the questions needed to be asked, what variables need to be measured, or theories that may guide the study.",
+"Provide either quantifiable results to enhance qualitative results, or vice versa.")
+)
+
+#kable(tbl, caption = "When to employ mixed methods",
+#      longtable = FALSE, booktabs = TRUE,
+#      linesep = '', format = "latex") %>%
+#column_spec(2, width = "25em") %>%
+#kable_styling(font_size = 9)
+
+```
+\begin{table*}[ht]
+  \caption{When to employ mixed methods}\label{t2}
+\centering
+\begin{tabular}{lp{10cm}}
+  \hline
+Mixed & Description \\ 
+  \hline
+If more than one data source is required & One type of data may not always tell the whole story.
+One data type may not address the research question.
+Qualitative and quantitative results contradict each other.
+Different perspectives are required if different populations differ. \\ 
+To explain preliminary results & A second data type will explain the results \\ 
+To generalize preliminary findings & Researchers may not know the questions needed to be asked, what variables need to be measured, or theories that may guide the study. \\ 
+When a second method will enhance the study & Provide either quantifiable results to enhance qualitative results, or vice versa. \\ 
+   \hline
+ & \multicolumn{1}{r}{\footnotesize\textit{\cite{Creswell2011}}}
+\end{tabular}
+\end{table*}
+
+## Research Design
+
+The primary dependent variable in this study is that of the demographic of participants and their independent overall favour of online or physical retail stores. To answer question 2, the focus will be on interpreting what factors in both physical and online retail are considered to influence consumer decisions, termed 'atmospherics':
+
+> *“the conscious designing of space to create certain buyer effects, specifically, the designing of buying environments to produce specific emotional effects in the buyer that enhance purchase probability” [@Kotler1973]*
+
+Consumers decisions may be either what products they feel they are influenced to purchase, the amount they are encouraged to spend (perhaps above their intention), and overall what drives them to choose one retail medium over the other.
+
+In order to ensure measurement validity, questionnaires will be submitted to persons who have emails associated with various retail stores, ones that have both online and offline versions, those purely offline and those purely online. 
+
+From Table \ref{t1}, the qualitative information gathered will be used in an 'Instrument Development' methodology, where consumer answers to interview questions will be used to develop a questionnaire that will inform what drives consumer decisions in relation to online against physical retail. This is often referred to as an exploratory design, which is most commonly used in marketing research [@Harrison2011]. The exploratory design will use qualitative information gathered from a set of interviews of members of the public to refine the theory regarding what drives consumers choice between the retail mediums, and which demographics prefer one over the other. Specifically the experimental design will resemble the taxonomy development model, in which qualitative findings are used to develop items for a quantitative survey instrument [@Creswell2007], in this case a questionnaire.
+
+Interviews will be semi-structured and allow for interviewees own input to aid with the understanding of consumers perceptions of the two types of retail. Semi-structured interviews can reveal the deeper understandings, feelings and values of an individual [@Yates2004]. For example the morality of choosing online retail over physical may be assessed, in particular, the UK high street has seen a dramatic reduction in footfall this year, leading to the closure of many businesses and high streets that are becoming abandoned [@IPSOS2018].
+
+@Kvale1996 suggests a series of criteria that should be followed when preparing interview questions and conducting an interview. In order to be suitably familiar with the focus of the interview, preliminary interviews will be conducted that allow for additional knowledge of public perception to build on subsequent interviews. This is similar to the 'Instrument Development' methodology from Table \ref{t1} but uses qualitative information to build on further qualitative questioning. While semi-structured, allowing for some interviewee direction with questioning, the interview itself will follow a structure that is repeated for each individual. An interview guide will be followed, listing all questions that will be covered, questions may deviate from exact wording if necessary but all questions will be asked [@Bryman2015]. @Kvale1996 suggest nine types of question and an effort should be made to try and include all of them (Table \ref{t3}), particularly a focus in a semi-structured interview should be on follow-up questions, in which the interviewee is encouraged to elaborate on a certain answer. @Bryman2015 notes that listening is a key technique that allows for the success of a semi-structured interview, allowing for interviewer participation to aid with interviewee direction, but without being too intrusive. This technique will allow for determining the suitability of additional questions to include in either subsequent interviews, or in the questionnaire to be developed. 
+
+## Interview and Questionnaire Design
+
+\begin{table*}[ht]
+  \caption{Examples of questions to ask in the semi-structured interviews}\label{t3}
+\centering
+\begin{tabular}{clp{10cm}}
+  \hline
+ & Types & Questions \\ 
+  \hline
+1 & Introducing questions & 'Have you ever shopped online?'; 'When did you first/last shop online?' \\ 
+  2 & Follow-up questions & Encourage elaboration on the answer, e.g. Repeating significant words in an answer may encourage explanation \\ 
+  3 & Probing questions & 'Why do you prefer to shop online/offline?' \\ 
+  4 & Specifying questions & 'Which shop do you prefer and why?' \\ 
+  5 & Direct Questions & 'Do you enjoy the shopping experience in store/online?' \\ 
+  6 & Indirect questions & Do your friends enjoy online shopping?', followed by 'Do you agree with them?' \\ 
+  7 & Structuring questions & 'I would like to move on to a new topic' \\ 
+  8 & Silence & Allows for the interviewee to reflect and elaborate on an answer \\ 
+  9 & Interpreting questions & To clarify an answer by an interviewee \\ 
+   \hline
+ & & \multicolumn{1}{r}{\footnotesize\textit{\cite{Bryman2015}}}
+\end{tabular}
+\end{table*}
+
+Sampling will be undertaken through two levels, firstly the *sampling of context* as outlined in @Bryman2015. This level will determine areas in which participants are targeted for preliminary qualitative interviews. The aim will be to select four varying areas in which there are different kinds of social mix [@Savage2005]. Due to study limitations, this context sampling will only be performed within the Liverpool region and therefore will not represent a demographic social mix of the United Kingdom, but a social mix of people sharing homogeneity with a common heritage, but with heterogeneity in terms of demographics.
+
+*Sampling of participants* will again mirror @Savage2005 and select persons based on the electoral register. Within the four chosen areas random households will be chosen and semi-structured interviews arranged. The aim will be to examine the variation between people who share areas but have different demographics, and to compare areas with different social mixes.
+
+All questionnaires will be submitted to persons within the Liverpool region, due to cost limitations this study cannot be expanded further, however the sample size will be sufficient to be representative of the population within the city. In total at least 100 interviews will be conducted over several weeks to ensure a suitable foundation is created for the questionnaire. Ten of these interviews will be preliminary and used to determine further questioning [suggested @Bryman2015]. Once all questions are considered to justifiably cover the scope of this study, the questionnaire will be produced and sent out to persons with an email associated with various retail stores and returned by a greater number of participants.
+
+As interviews will be conducted with members of the public, special care will be taken to consider the understanding of questions, as such they will be free of any academic or marketing jargon. Interviews will be split into three sections, firstly focusing on online retail, then physical retail, and finally comparative opinions between the two. Questions themselves will primarily focus on consumers opinion on ease of use and usefulness of online retail [@Devaraj2002], consumers opinion on the quality of information available online [@Park2003], and opinions on safety and privacy [@Liao2002;@Elliot2013]. Atmospherics in online retail stores will be considered, primarily consumer opinions on how the visual cues influence their purchasing decisions, or ease of use [@Eroglu2001].
+
+Questions regarding physical stores will focus on the atmospherics, and how consumers value physical store design in terms of atmosphere [@Yalch1990;@Eroglu2000;@Kotler1973]. Consumer satisfaction is commonly considered in market research in retail, influenced by factors unique to online retail, such as the wider range of information available online, leading to higher satisfaction [@Peterson1997], good site design which leads to a more satisfying shopping experience [@Manes1997; @Pastrick1997], and security of transactions, @Age1999 found that 75% of customers consider transaction security as a major consideration when purchasing online, these concerns were also mirrored in interviews conducted by @Szymanski2000. Factors unique to physical retail that influence consumer satisfaction are described in @Kotler1973, who coins the term atmospherics. For example there is a widespread belief that music enhances store atmospherics and consumer satisfaction, however a literature review by @Yalch1990 found that there is little evidence to support this. Other atmospherics in physical retail include lighting [@Golden1986], scent [@Spangenberg2005;@Spangenberg2003], and colour [@Crowley1993].
+
+```{r, echo=FALSE, cache=TRUE}
+tbl <- data.frame(
+Types = c("Introducing questions",
+"Follow-up questions",
+"Probing questions",
+"Specifying questions",
+"Direct Questions",
+"Indirect questions",
+"Structuring questions",
+"Silence",
+"Interpreting questions"),
+Questions = c("'Have you ever shopped online?'; 'When did you first/last shop online?'",
+              "Encourage elaboration on the answer, e.g. Repeating significant words in an answer may encourage explanation",
+              "'Why do you prefer to shop online/offline?'",
+              "'Which shop do you prefer and why?'",
+              "'Do you enjoy the shopping experience in store/online?'",
+              "Do your friends enjoy online shopping?', followed by 'Do you agree with them?'",
+              "I would like to move on to a new topic",
+              "Allows for the interviewee to reflect and elaborate on an answer",
+              "To clarify an answer by an interviewee")
+)
+
+#kable(tbl, caption = "Examples of questions to ask in the semi-structured interview",
+#      longtable = FALSE, booktabs = TRUE,
+#      linesep = '', format = "latex") %>%
+#column_spec(2, width = "30em") %>%
+#kable_styling(font_size = 9)
+
+```
+
+
+Consumers will be asked whether they believe these aspects of store design influence their purchasing decisions, and their opinion on this as a marketing technique [@Kotler1973 explores this in terms of physical retail; @Szymanski2000 in online retail].
+
+The concept of the TAM [@Devaraj2002] will inform one line of questioning, where consumers perception of their acceptance of technology will inform whether this affects their use of online stores.
+
+@Bryman2015 notes that self completion questionnaires should have very few open questions, and be easy to follow as they lack supervision and direction that would be provided with a similar method of data collection such as a structured interview. @Bryman2015 also notes that questionnaires should be kept short, this will be considered when structuring the questionnaire, and qualitative analysis will provide the basis for which aspects of questioning are deemed to most important and to be included. Questionnaires have been primarily chosen over structured interivews in order to be able to administer them in great numbers to provide enough detailed information for formal quantiative analysis. Using online questionnaires as proposed in @Vogel2012 means that questionnaires may be sent out both in bulk and returned quickly, unlike traditional postal questionnaires.
+
+To provide closed responses, possible questionnaire responses will be adapted from the environment proposed by @Mehrabian1974 combined with the environmental quality scale proposed by @Fisher1974. For example a question may be: *“How likely is it that you would visit an online store?”* with *“very unlikely - very likely.”* as a scale of possible responses. 
+
+## Qualitative and Quantitative Analysis
+
+Qualitative semi-structured interviews will provide a very large amount of unstructured data through audio recordings of interviews and notes taken by the interviewer. Analysis will be performed through a grounded theory approach [@Fisher1974], the most widely used approach to analysing qualitative data [@Bryman2015].
+
+Data 'coding' will be used, in which the qualitative data will be categorised as it is collected [unlike quantitative data, @Charmaz2007]. This allows for an iteration in the shape of the data as it is processed, as the codes are not fixed and may change. Themes in the interviews will be extracted to build analytical categories. For example a common theme may be that people mention that they find returning items through online shopping to be harder than in physical retail. This would form the basis for a direction of questioning in further interviews (iteration).
+
+Once interviews are complete, the questionnaire will be produced and quantitative analysis will be performed through the R statistical software [@Team2016] to produce a demographic analysis of all the answers contained within the questionnaire, and aid with the overall aim of the study. Results will then be assessed using a MANOVA model to determine the multivariate conditions (atmospheres) that influence shopper preference [@Borgen1978].

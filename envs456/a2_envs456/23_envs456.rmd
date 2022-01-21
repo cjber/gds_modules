@@ -1,0 +1,77 @@
+---
+title: "Assessment 2: CartoDB IMD Map"
+author: '201347125'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  bookdown::html_document2:
+    number_figures: true
+    number_sections: false
+    toc: true
+    smooth_scroll: true
+    toc_float: true
+    css: theme/style.css
+    code_folding: hide
+
+# i prefer a master bib location
+bibliography: /home/cjber/Dropbox/bib/zlib.bib
+biblio-style: /home/cjber/Dropbox/bib/uol.csl
+---
+
+# Embedded Map
+
+<iframe width="150%" height="1200" frameborder="0" src="https://gdsl.carto.com/u/cillian-envs456-19/builder/3ce9fb67-667f-4b15-8d40-f4a3d7de1331/embed" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+# Web Based Map
+
+**Also available at https://gdsl.carto.com/u/cillian-envs456-19/builder/3ce9fb67-667f-4b15-8d40-f4a3d7de1331/embed which may be easier to navigate.**
+
+# Discusson
+
+The dark base map was created using [Mapbox](https://www.mapbox.com/), removing some unnecessary labels such as points of interest, and altering the font to my preference. The base layer of the CartoDB map provides an outline of the Liverpool Local Authority District. The [Indices of Multiple Deprivation](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2015) is the primary focus of this map, aggregated into 10 deciles. Included for this layer is a widget which gives an overview of the distribution of IMD deciles within Liverpool (primarily low, indicating higher deprivation), additionally the colour scheme was selected as diverging, due to the large number of bins (10), this allowed for a clearer differentiation between each decile. The code to produce 10 bins in CartoDB is given:
+
+```{css}
+#layer {
+  polygon-fill: ramp([deciles], (
+#a50026,
+#d73027,
+#f46d43,
+#fdae61,
+#fee08b,
+#d9ef8b,
+#a6d96a,
+#66bd63,
+#1a9850,
+#006837), quantiles);
+  polygon-opacity: 0.75;
+}
+#layer::outline {
+  line-width: 1;
+  line-color: #000000;
+  line-opacity: 0.5;
+}
+```
+
+These deciles were included from a source that didn't include geometry, so were combined with the existing LSOA geometry within CartoDB with the code below:
+
+```{css}
+SELECT dec_1.deciles,
+e08000012_1.lsoa11cd,
+e08000012_1.the_geom_webmercator, 
+e08000012_1.cartodb_id
+FROM dec_1,
+e08000012_1
+WHERE dec_1.lsoa11cd = e08000012_1.lsoa11cd
+```
+
+
+In addition to the IMD Deciles, a Local Indicators of Spatial Association (LISA) analysis was run in CartoDB to indicate clusters of unusually high or low IMD Scores. Using similar colours to IMD Deciles the outline for this layer is white as opposed to black to remove confusion between the layers. Additionally it is advised to observe this layer only with IMD Deciles toggled off.
+
+Crime points have been added and aggregated into hex bins to give an overview of the distribution of crime within Liverpool, by default only the top and bottom 5 LSOAs by number of crimes have been included. The colour of each bin indicates the number of crimes, shown with a number inside each. The widget for this layer allows for the selection of particular types of crime.
+
+Finally Liverpool city centre was included as a point and buffered to 4km, with each kilometer shown by a black band. This gives some insight into how the proximity towards the city centre appears to influence both crime and the level of deprivation. For example, at the very centre crime is high but deprivation appears to be relatively low, outside the very centre of the city crime is high as well as deprivation. Additionally Liverpool shows a clear divide between the north and south, where the south shows both low levels of crime and low deprivation, parallel to the north with high crime and deprivation.
+
+There is an abundance of literature that associates crime and deprivation [e.g. @dorling2000a], where income inequality and social relations encourage the higher levels of crime. Additionally a study within Liverpool found that fear of crime from residents within Liverpool's tower blocks is most apparent in the areas highlighted in this map, [@green2002], this study also showed that it is likely that fear of crime has negative consequences on mental health. One particular highlight I have aimed to detail with this map is the relatively low levels of deprivation towards Liverpool's city centre, despite the high levels of crime. It is likely that this may be attributable to the tourist population that regularly visit the city for its nightlife culture, and a detailed look into the types of crime found towards the city centre reflects that of typical crimes related to drinking and drugs offenses [@pizam1999].
+
+# References {-}
+
+<div id="refs"></div>

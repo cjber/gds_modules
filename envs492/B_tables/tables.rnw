@@ -1,0 +1,95 @@
+<<sampledlas>>=
+sampled_las <- fread("../data/derived/model_data/sampled_las.csv")
+
+corr <- sampled_las %>%
+  select(c(
+    Z, gpstime, Intensity, ReturnNumber, NumberOfReturns,
+    ScanDirectionFlag, EdgeOfFlightline, ScanAngleRank,
+    road, lum, dists
+  ))
+
+# Create a matrix of all correlations between continuous variables
+correlation.matrix <- cor(corr, method = "spearman")
+
+# Sort by highest correlations in relation to Unemployed
+corResults <- cor.results(correlation.matrix,
+  sort.by = "abs.r", data = corr,
+  var.name = "road"
+)
+# Show only two numbers after the decimal
+corResults <- format(corResults, digits = 2)
+
+# Combine significance column with r values (asterisks)
+corResults$r <- paste(corResults$r, corResults$sig.)
+
+# Drop the columns of the dataframe
+corResults <- select(corResults, -c("x", "p.value", "sig."))
+
+# Rename all columns
+names(corResults) <- c(
+  "Variable", "Rho", "Lower CI †",
+  "Upper CI †"
+)
+@
+
+<<corr, results = 'asis'>>=
+
+make_table(corResults, # align col 1 left, rest centred
+  cap = "Spearman's rank correlation coefficients for all variables in relation to the road outcome variable"
+) %>%
+  footnote(
+    general_title = " ",
+    general = c(
+      "* Significant at the 0.05 level;",
+      "** Significant at the 0.01 level;",
+      "*** Significant at the 0.001 level;",
+      "† 95% Confidence Interval"
+    )
+  ) %>%
+  row_spec(c(1, 2, 4, 6, 7), bold = T)
+@
+
+<<rd_bends>>=
+roads <- st_read("../data/derived/roads/roads_line.gpkg", quiet = TRUE) %>%
+  mutate(len = as.numeric(st_length(geom))) %>%
+  st_cast("POINT") %>%
+  group_by(road_id) %>%
+  summarise(
+    num_bend = n() - 2,
+    len = mean(len) / 1000,
+    roadFunction = unique(roadFunction)
+  )
+
+rd_bends <- roads %>%
+  mutate(bend_km = num_bend / len) %>%
+  st_drop_geometry() %>%
+  select(-roadFunction) %>%
+  arrange(desc(bend_km))
+
+rd_bends$road_id <- gsub("road_", "", rd_bends$road_id)
+make_table(rd_bends,
+  cap = "Estimated number of bends per road",
+  col_names = c(
+    "Road ID",
+    "Number of Bends",
+    "Road Length (km)",
+    "Bends per Kilometer"
+  )
+)
+@
+
+<<sample_fig, fig.cap="Sample lines extracted based on known road locations", fig.pos = "t">>=
+las <- catalog("../data/point/")
+pt_records <- las@data$Number.of.point.records
+
+sampled_las <- fread("../data/derived/model_data/sampled_las.csv")
+
+sample_lines <- st_read("../data/derived/roads/sample_lines.gpkg", quiet = TRUE)
+roads <- st_read("../data/derived/roads/roads_line.gpkg", quiet = TRUE)
+
+ggplot() +
+  geom_sf(data = sample_lines) +
+  geom_sf(data = roads) +
+  theme_map()
+@
+

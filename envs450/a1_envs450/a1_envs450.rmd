@@ -1,0 +1,448 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    fig_height: 4
+    fig_width: 5
+    citation_package: natbib
+    fig_caption: yes
+    latex_engine: pdflatex
+    template: /home/cjber/Dropbox/templates/rmd/ms.tex
+title: "Assignment 1"
+subtitle: "Descriptive and Inferential Statistics"
+thanks: "This document was produced using R Markdown, the template is adapted from the files available on the Github page: https://github.com/svmiller"
+author:
+- name: "201374125"
+  affiliation: University of Liverpool
+abstract: "This analysis focuses on the hours worked per week and the level of education in a survey of individuals provided by the UK Data Service. From this, a conclusion is drawn regarding how overall work ethic links with the suitability of employment for graduates."
+keywords: "Work Ethic; Work Suitability; Hours Worked; Graduates"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+#spacing: double
+bibliography: /home/cjber/Dropbox/bib/library.bib
+biblio-style: apsr
+header-includes:
+   - \usepackage{booktabs}
+---
+
+```{r Setup, eval=FALSE, include=FALSE}
+# Initial Setup
+ENVS450 <- "/home/cjber/Dropbox/rlib/ENVS450.tar.gz"
+install.packages(ENVS450, repos = NULL, type = "source")
+install.packages("ggplot2")
+install.packages("gridExtra")
+install.packages("car")
+install.packages("ggmosaic")
+```
+
+```{r Setup2, echo=FALSE, include=FALSE}
+
+library(ggplot2)
+library(car)
+library(ggmosaic)
+qlfs <- "/home/cjber/Dropbox/university/ENVS450/Assignment1/data/QLFS 2012 Q1 Adults (Assignment 1).RData"
+load(qlfs)
+
+ls(qlfs)
+
+# Lets compare HighestQual by HoursWorked
+summary(qlfs$HoursWorked)
+meta.data$HoursWorked
+levels(qlfs$HighestQual) # Degree vs No degree, remove all people 70+ from study.
+meta.data$HighestQual
+```
+
+# Introduction
+
+Selected for this analysis are the two attributes, `HoursWorked`, and `HighestQual` from the Quarterly Labour Force Survey `(qlfs)` data set provided by the UK Data Service. The aim of this analysis is to determine the relationship between graduates and non graduates, and the amount of time spent working per week. The time spent working per week is used as a method to determine overall job satisfaction and work ethic from objective quantitative data. Previous studies have found that workers satisfaction levels decline strongly with their level of education through various subjective techniques [e.g. @Clark1996], while others have utilised Labour Force Survey (LFS) data in other ways to determine job satisfaction and found the opposite to be true [@Battu2000].
+
+In the United Kingdom many students now see their degree as having a declining role in employment outcomes due to an overly competitive graduate market [@Tomlinson2008], which has resulted from a rapid expansion of universities and new graduates in recent years [@Chevalier2006].
+
+# Univariate Description
+
+##`HoursWorked:`
+
+`HoursWorked` is numeric with values from -7 to 97, representing the number of hours worked in the past week. The data is atomic, meaning some numeric values represent a character string. From `meta.data$HoursWorked`, the value -7 represents a "Non-working adult" and the value 97 represents "97 or more". This variable contains `r sum(is.na(qlfs$HoursWorked))` *NA* values. After removing the value -7 for non working adults, the mean value is 35.7 (data is symmetrical, skew: -0.18). The variance of Hours Worked is 207.8, with a standard deviation of 14.4. The interquartile range is 16.
+
+```{r echo=FALSE, include=FALSE}
+
+valid.HoursWorked <- qlfs$HoursWorked != -7
+valid.HoursWorked <- qlfs$HoursWorked[valid.HoursWorked]
+mean(valid.HoursWorked, na.rm = TRUE)
+skew(valid.HoursWorked)
+# std dev and variance hours worked
+std.dev(valid.HoursWorked, sample = TRUE)^2
+std.dev(valid.HoursWorked, sample = TRUE)
+
+# iqr hours worked of working adults
+quantile(valid.HoursWorked, 0.25, na.rm = TRUE)
+quantile(valid.HoursWorked, 0.75, na.rm = TRUE)
+
+IQR <- quantile(valid.HoursWorked, 0.75, na.rm = TRUE) - quantile(valid.HoursWorked, 0.25, na.rm = TRUE)
+
+IQR
+```
+
+##`HighestQual:`
+
+`meta.data$HighestQual` shows that `HighestQual` stands for Highest Qualification, categorical (factor) data with 7 levels: "Aged 70+", "Degree or equivalent", "Higher education", "GCE A Level or equiv", "GCSE grades A-C or equiv", "Other qualifications" and "No qualification". The mode average for this variable is "Degree or equivalent". The proportion misclassified for Highest Qualification is 0.181, meaning that a minimum 18.1% of the survey respondents could change to result in an equal distribution of each category.
+
+```{r echo=FALSE, include=FALSE}
+
+# Proportion misclassified HighestQual
+proportion.misclassified(qlfs$HighestQual)
+```
+
+```{r HighestQual Post-stratification, echo=FALSE, include=FALSE}
+# Sort NA values in HighestQual using Post-stratification
+valid.cases <- !is.na(qlfs$AgeGroup) & !is.na(qlfs$HighestQual) & !is.na(qlfs$HoursWorked)
+
+valid.count <- tally(~AgeGroup,
+  data = qlfs[valid.cases, ], format = "count", # identified valid qlfs
+  margin = "col"
+)
+
+true.count <- tally(~AgeGroup, qlfs, format = "count", margin = "col")
+df <- data.frame(
+  AgeGroup = c(levels(qlfs$AgeGroup), "Total"),
+  Valid = as.vector(valid.count),
+  True = as.vector(true.count)
+)
+df$Weight <- df$True / df$Valid
+
+qlfs <- merge(qlfs, df[, c("AgeGroup", "Weight")], by = "AgeGroup") # Add Weighting to qlfs
+qlfs <- qlfs[order(qlfs$Case_ID), ] # sort by Case_ID
+
+qlfs$Weight[!valid.cases] <- NA # remove NA values
+sum(qlfs$Weight, na.rm = TRUE)
+```
+
+# Post-Stratification
+
+Non-response, represented by any *NA* values observed in both categories may result in a bias representation of the total population, unless correction is performed prior to analysis [@Crockett2011]. Non-response is typically imbalanced, and will randomly vary by respondent type, based on their demographic. Trends show a declining response rate in the QLFS, which indicates a greater need for non-response consideration [@Crockett2011].
+
+Correction can be obtained through weighting, known as Post-Stratification, which in this case, corrects the non-equal response of individuals based on their age group. The overall distribution of the Age Groups observed in this dataset were used to determine the likely category a non-response would belong to. Given my variables both had good response, the weightings do not affect the survey results, but are still included throughout. The worst response by age group, for example, was the 16-25 group, any response from an individual in this age group was assigned a weighting of 1.13.
+
+```{r, include=FALSE}
+
+data.frame(
+  AgeGroup = c(levels(qlfs$AgeGroup), "Total"),
+  Weight = df$Weight
+)
+```
+
+
+
+```{r HighestQual recode, include=FALSE}
+# Recode qlfs$HighestQual
+old.categories <- levels(qlfs$HighestQual)
+new.categories <- c("Degree", "No Degree", "70+")
+qlfs$DegreeYN <- recode(qlfs$HighestQual, "
+                             old.categories[c(2)]=new.categories[1];
+                             old.categories[c(3,4,5,6,7)]=new.categories[2];
+                             old.categories[1]=new.categories[3]")
+
+qlfs$DegreeYN <- factor(qlfs$DegreeYN, levels = c("Degree", "No Degree")) # Removed 70+, assume mostly non working, not sure why it's defined as a seperate category
+
+# check its worked
+tally(~DegreeYN, data = qlfs, na.rm = TRUE)
+```
+
+# Recoding
+
+Once the weightings were obtained, the categories for `HighestQual` were recoded from 7 into 2; "Degree" and "No Degree", as my analysis concerns only the difference between graduates and non graduates. All non working adults have been excluded from the data as my analysis only concerns work ethic in relation to hours worked. `"Aged 70+"` has been excluded from either category as the data appears to exclude degree information for this age range, however most persons aged over 70 will not be working.
+
+```{r Categorise HoursWorked, include=FALSE}
+breaks <- c(-10, 0, 34, 39, Inf) # ad hoc breaks
+
+qlfs$Hours.Cat <- group.data(qlfs$HoursWorked, breaks)
+
+l <- c("Non working", "Part-time (0-35)", "Full-time (35-40)", "Overtime (40+)")
+levels(qlfs$Hours.Cat) <- l
+
+# Select the population base, only working adults
+qlfs$working.adult <- !is.na(qlfs$Hours.Cat) & !(qlfs$Hours.Cat == "Non working") # defines working adults
+qlfs$popbase.Hours.Cat <- qlfs$Hours.Cat # don't overwrite data
+qlfs$popbase.Hours.Cat[!qlfs$working.adult] <- NA # if not working adult, set to NA
+qlfs$popbase.Hours.Cat <- droplevels(qlfs$popbase.Hours.Cat) # drop redundant non working adult level
+```
+
+`HoursWorked` was first classified into levels, altering it from a numeric variable into categorical. Initially a quantile breakdown for classes was chosen, after removing the "Non-working adult" -7 value, giving levels: "0, 23, 37, 40, 45, 97" in addition to a level for "Non-working adult". These values indicated a breakdown similar to that of part-time work, full-time work and overtime work. The number of categories were reduced to reflect typical working patterns, giving: "Non working", "Part-time (0-35)", "Full-time (35-40)", "Overtime (40+)".
+
+The UK government website [gov.uk](https://www.gov.uk/part-time-worker-rights) states:
+
+>*A part-time worker is someone who works fewer hours than a full-time worker. There is no specific number of hours that makes someone full or part-time, but a full-time worker will usually work 35 hours or more a week.*
+
+For this reason, the minimum full time hours for this analysis were selected as 35 and any persons working over 40 hours a week were considered to be working overtime.
+
+# Results
+
+Persons who hold a degree qualification tend to work longer hours, with 52% working above 40 hours a week, compared with 42% of those who do not hold a degree (Table \ref{tab:tab1}). Additionally people working part time are less likely to hold a degree qualification (25% with a degree, 35% without).
+
+```{r tab1, echo=FALSE}
+
+## TABLE ##
+joint.count <- tally(popbase.Hours.Cat ~ DegreeYN, data = qlfs, margin = "joint", dp = 0, weights = "Weight", na.rm = TRUE)
+joint.percent <- tally(popbase.Hours.Cat ~ DegreeYN, data = qlfs, format = "percent", margin = "joint", dp = 0, weights = "Weight", na.rm = TRUE)
+
+# append totals columns and rows
+total.count.col <- joint.count[, "Total"]
+total.count.row <- joint.count[ "Total", ]
+total.percent.col <- joint.percent[, "Total"]
+total.percent.row <- joint.percent["Total", ]
+
+total.percent.col <- total.percent.col[-4]
+
+by.col <- tally(popbase.Hours.Cat ~ DegreeYN, data = qlfs, format = "percent", margin = "col", dp = 0, na.rm = TRUE)
+by.col <- by.col[-4, ]
+
+table0 <- cbind(by.col, "All Persons" = total.percent.col)
+table <- rbind(table0, "Total Persons (=100%)" = total.count.row)
+
+library(knitr)
+kable(table, caption = "Degree Qualification, by Hours Worked", longtable = FALSE, booktabs = TRUE, format = "latex")
+```
+
+@Hirano2011 defines work ethic as commitment to paid work, through career outlook and non financial work commitment, both determined through qualitative interview questioning, 85% of employees with a degree agreed with the statement that their current job was part of a long term employment strategy, significantly higher than those without a degree. @Battu2000 used quantitative data from an older LFS dataset, using the proportion of persons in a specific job with a degree to determine how likely an individual working there is over-qualified, linking over-qualification to lower work ethic. Both these papers link job satisfaction with work ethic; similarly, my analysis determines work ethic through number of hours worked per week, with these results (Table \ref{tab:tab1}; Figure \ref{fig:1}) suggesting graduates typically have a high job satisfaction. This rejects the idea of an 'abandonment thesis'  [@Satisfaction2003a] and implies that graduate job opportunities are not as low as found in various papers [e.g. @Tomlinson2008]. In order to confirm that many graduates are in work for which they are not over-qualified, a further variable from the QLFS dataset must be used (See below).
+
+```{r, echo=FALSE, fig.cap="\\label{fig:1} Degree Qualification, by Hours Worked"}
+
+# table0 <- tally(popbase.Hours.Cat ~ DegreeYN, data = qlfs, na.rm = TRUE)
+# mosaicplot( t(table0), color=TRUE, main=NULL, las=1, xlab="", ylab="")
+
+
+ggplot(data = qlfs) +
+  geom_mosaic(aes(x = product(DegreeYN), fill = popbase.Hours.Cat), na.rm = TRUE, colour = "black", size = .3) +
+  scale_fill_brewer(palette = "Greys") +
+  xlab("Hours Worked") +
+  ylab("Percentage") +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.line = element_blank(),
+    axis.text = element_text(size = 7),
+    legend.title = element_blank(),
+    strip.background = element_blank()
+  )
+```
+
+A significant proportion of all persons work over 40 hours a week (Figure \ref{fig:1}), with very few working within what is generally considered to be typical hours for full time work. Despite various changes to legislation, there remains the culture that encourages long working hours across multiple disciplines throughout the UK [@Barnard2003].
+
+
+
+# Chi-squared Test
+
+There is a statistically significant association between hours worked per week and degree qualification.
+$$(X^2 = 512.05; p = 0.000)$$
+This survey takes a small sample from the overall UK population, meaning this observed distribution of variables may only be due to sampling noise. The Chi Squared test is implemented in order to determine if this observed distribution is due to random sample noise, or if this sample reflects that of the whole UK population. In this case, the distribution of number of hours worked, in relation to the qualification of a respondent.  The significant test result here shows that our observed distribution is not due to random noise. The test however does not indicate any relationship or strength of relationship between variables and, due to the relatively large number of samples used in this data set, the Chi Square test was very likely to give a significant statistic [@Mchugh2013]. Therefore, an additional variable is added below, in order to determine the practical significance of the relationship between these two variables.
+
+
+```{r, echo=FALSE}
+
+results <- chisq.test(table0)
+```
+
+# Confidence Intervals
+
+```{r Confidence Intervals, echo=FALSE}
+# Load data file
+simulator_filename <- "data/ENVS450 CI Simulators.R"
+
+# Read the contents of datafile 'filename' into memory.
+source(simulator_filename)
+```
+
+```{r, echo=FALSE}
+
+# Create a table of the % distribution
+df <- tally(
+  data = qlfs, popbase.Hours.Cat ~ DegreeYN, format = "percent", margin = "row",
+  na.rm = TRUE
+)
+
+library(reshape2)
+df <- melt(df)
+df <- df[-c(7:9), ] # drop totals
+
+# Create the table of the count of respondents
+denominator <- tally(
+  data = qlfs, popbase.Hours.Cat ~ DegreeYN, format = "count", margin = "row",
+  na.rm = TRUE
+)
+denominator <- melt(denominator)
+denominator <- denominator[-c(7:9), ] # drop totals
+denominator <- denominator[, "value"]
+
+pc <- df[, "value"]
+# standard error of %
+std.error <- ((pc * (100 - pc)) / denominator)^0.5
+
+# upper and lower bounds of 95% confidence interval
+CI.95pct.lower.bound <- pc - (1.96 * std.error)
+CI.95pct.upper.bound <- pc + (1.96 * std.error)
+
+library(reshape2)
+library(grid) ## for unit(), to squash panels
+df <- data.frame(df, std.error, CI.95pct.lower.bound, CI.95pct.upper.bound)
+
+u <- df$CI.95pct.upper.bound[c(2, 5)]
+l <- df$CI.95pct.lower.bound[c(2, 5)]
+```
+
+Confidence intervals are implemented into the visualisation of the results below to indicate the likely range of the given data value, and the percentage confidence for that range [@Cumming2005a]. The Confidence Intervals used in Figure \ref{fig:2} below indicate a confidence of 95%. The dotted lines show that while the percentage for each category in hours worked is inversely proportional for "Degree" and "No Degree", due to these being the only assigned categories, the confidence interval varies between them. The larger confidence interval, observed in people who work full time with a degree, against those who work full time without a degree, is primarily due to the lower sample size of this variable.
+
+```{r, echo=FALSE, fig.cap="\\label{fig:2} Confidence Intervals of Hours Worked, by Degree Qualification."}
+
+ggplot(df, aes(x = popbase.Hours.Cat, y = value)) +
+  geom_segment(aes(x = popbase.Hours.Cat, xend = popbase.Hours.Cat, y = CI.95pct.lower.bound, yend = CI.95pct.upper.bound)) +
+  geom_point(aes(fill = DegreeYN), shape = 21, size = 1.5, colour = "black") +
+  # theme
+  scale_fill_brewer(palette = "Greys") +
+  xlab("Hours Worked") +
+  ylab("Percentage") +
+  theme_classic() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.line = element_blank(),
+    axis.text = element_text(size = 7),
+    legend.title = element_blank(),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    panel.border = element_rect(colour = "black", fill = NA)
+  ) +
+  geom_hline(yintercept = u, linetype = "dotted", alpha = .5) +
+  geom_hline(yintercept = l, linetype = "dotted", alpha = .5)
+```
+
+The large number of respondents used to produce Figure \ref{fig:2} means that the confidence intervals are relatively short and that there is no overlap between the confidence intervals of any variable. We can be at least 95% confident that a significantly higher proportion of people with a degree work overtime more than they work part time or full time, with the inverse being true for those without a degree.
+
+```{r echo=FALSE}
+# Recode qlfs$NSSEC
+old.categories <- levels(qlfs$NSSEC)
+new.categories <- c("Professional", "Non-Professional", "Never Worked")
+qlfs$Jobs <- recode(qlfs$NSSEC, "
+                             old.categories[c(1,2)]=new.categories[1];
+                             old.categories[c(3,4,5,6,7)]=new.categories[2];
+                             old.categories[8]=new.categories[3]")
+
+qlfs$Jobs <- factor(qlfs$Jobs, levels = c("Professional", "Non-Professional"))
+```
+
+# Adding "Type of Work"
+
+```{r, echo=FALSE}
+# new weightings
+# Sort NA values in HighestQual using Post-stratification
+valid.cases <- !is.na(qlfs$AgeGroup) & !is.na(qlfs$HighestQual) & !is.na(qlfs$HoursWorked) & !is.na(qlfs$NSSEC)
+
+valid.count <- tally(~AgeGroup,
+  data = qlfs[valid.cases, ], format = "count", # identified valid qlfs
+  margin = "col"
+)
+
+true.count <- tally(~AgeGroup, qlfs, format = "count", margin = "col")
+df <- data.frame(
+  AgeGroup = c(levels(qlfs$AgeGroup), "Total"),
+  Valid = as.vector(valid.count),
+  True = as.vector(true.count)
+)
+df$Weight2 <- df$True / df$Valid
+
+qlfs <- merge(qlfs, df[, c("AgeGroup", "Weight2")], by = "AgeGroup") # Add Weighting to qlfs
+qlfs <- qlfs[order(qlfs$Case_ID), ] # sort by Case_ID
+
+qlfs$Weight2[!valid.cases] <- NA # remove NA values
+```
+
+Figure \ref{fig:3} adds a third dimension to the data, with the addition of the category `qlfs$NSSEC` which categorises the type of work for each respondent. Again new weightings were obtained through Post-Stratification to provide a better representation of respondents who chose not to answer their type of work. This variable has been recoded from 9 into just 2, "Professional"" and "Non-Professional" work, non working adults are again excluded. Professional work reflects a career that typically would require specific qualifications, such as a degree.
+
+Given this data has fewer valid respondents per category, the Confidence Intervals are wider than the graph above. Where the confidence intervals overlap, the data could potentially be the same value. This isn't to say that there isn't a significant difference between the two values however, as for example, with Professional work and full time hours, the intervals between those with a degree and those without has a very low proportional overlap. @Cumming2005a state that for two values that have confidence intervals that just touch end to end, in a large set of data, the p value is around 0.006, far lower than the p = 0.05 that would suggest a statistically significant difference.
+
+Figure \ref{fig:3} shows that a far higher proportion of people who work in non-professional jobs work part-time, and that there is no significant difference between those who hold a degree and those who do not. For full time hours there is no difference between professional and non-professional jobs. A far higher number of people who work over 40 hours a week work in a professional job, and since there is no overlap in confidence intervals between people with a degree and without a degree, a significantly higher proportion of people with a degree work overtime hours in a professional career than those who do not have a degree.
+
+```{r tab2, echo=FALSE, warning=FALSE}
+
+## TABLE ##
+joint.count <- tally(Jobs ~ DegreeYN, data = qlfs, margin = "joint", dp = 0, weights = "Weight2", na.rm = TRUE)
+joint.percent <- tally(Jobs ~ DegreeYN, data = qlfs, format = "percent", margin = "joint", dp = 0, weights = "Weight2", na.rm = TRUE)
+
+# append totals columns and rows
+total.count.col <- joint.count[, "Total"]
+total.count.row <- joint.count[ "Total", ]
+total.percent.col <- joint.percent[, "Total"]
+total.percent.row <- joint.percent["Total", ]
+total.percent.col <- total.percent.col[-3]
+
+by.col <- tally(Jobs ~ DegreeYN, data = qlfs, format = "percent", margin = "col", dp = 0, na.rm = TRUE)
+by.col <- by.col[-3, ]
+
+table0 <- cbind(by.col, "All Persons" = total.percent.col)
+table <- rbind(table0, "Total Persons (=100%)" = total.count.row)
+
+library(knitr)
+kable(table, caption = "Degree Qualification, by Job Type", longtable = FALSE, booktabs = TRUE, format = "latex")
+```
+
+Graduates typically develop the skills that are required for many professional careers [@Krimm2001], as such, it is to be expected that many graduates have selected a degree in which their interest lies, subsequently moving into a career that is relevant to their degree with a high work ethic. This result suggests a higher work satisfaction, and work ethic for graduates in professional work [@Hirano2011].
+
+Lower job satisfaction in graduates may arise from over-qualification in work [@Battu2000;@Cabral2005] and studies have found this to be true, as expectation from recent graduates go unrealised in work that they are overqualified for [@TSANG1991]. However, @Battu2000 found that generally graduate work satisfaction is high, with results suggesting that many graduates avoid work for which they are over-educated. Table \ref{tab:tab2} reflects this, as 74% of respondents with a degree work in a professional career, combined with the proportionally higher number of graduates working overtime in professional work (Figure \ref{fig:3}).
+
+```{r echo=FALSE, fig.cap="\\label{fig:3} Type of Work, by Degree Qualification and Hours Worked"}
+
+# Create a table of the % distribution
+df <- tally(Jobs ~ popbase.Hours.Cat + DegreeYN,
+  data = qlfs, format = "percent", margin = "row",
+  na.rm = TRUE, weights = "Weight2"
+)
+
+library(reshape2)
+df <- melt(df)
+df <- df[-c(7, 8, 15, 16), ] # drop totals
+
+# Create the table of the count of respondents
+denominator <- tally(Jobs ~ popbase.Hours.Cat + DegreeYN,
+  data = qlfs, format = "count", margin = "row",
+  na.rm = TRUE, weights = "Weight2"
+)
+denominator <- melt(denominator)
+denominator <- denominator[-c(7, 8, 15, 16), ] # drop totals
+denominator <- denominator[, "value"]
+
+pc <- df[, "value"]
+# standard error of %
+std.error <- ((pc * (100 - pc)) / denominator)^0.5
+
+# upper and lower bounds of 95% confidence interval
+CI.95pct.lower.bound <- pc - (1.96 * std.error)
+CI.95pct.upper.bound <- pc + (1.96 * std.error)
+
+library(reshape2)
+library(grid) ## for unit(), to squash panels
+df <- data.frame(df, std.error, CI.95pct.lower.bound, CI.95pct.upper.bound)
+
+ggplot(df, aes(x = Jobs, y = value)) +
+  geom_segment(aes(x = Jobs, xend = Jobs, y = CI.95pct.lower.bound, yend = CI.95pct.upper.bound)) +
+  geom_point(aes(fill = DegreeYN), shape = 21, size = 2, colour = "black") +
+  facet_wrap(~popbase.Hours.Cat, nrow = 1) +
+  # theme
+  scale_fill_brewer(palette = "Greys") +
+  theme_classic() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.line = element_blank(),
+    axis.text = element_text(size = 7),
+    legend.title = element_blank(),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    panel.border = element_rect(colour = "black", fill = NA)
+  )
+```
+
+The suggestion that an increasing number of graduates has lead to an over-saturated graduate job market [e.g. @Delom1998; @Tomlinson2008], is refuted by @Battu2000 who find that, due to an influx of new graduates in recent years, companies have taken advantage, giving more opportunity for roles with greater responsibility and initiative, ameliorating the effects of dissatisfaction on over-qualified workers, and benefiting the company. Although there is some level of over-education in the UK, true over-education only arises from skill mismatch or lack of skills in individuals [@Chevalier2006].

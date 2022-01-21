@@ -1,0 +1,115 @@
+    \lettrine{T}{ypical} road classification techniques have focused purely on urban road networks and involved methods which can be both computationally intensive and time consuming. Given the pressure for a full quantitative assessment of the current speed limits for the rural road network in the United Kingdom, there is a demand to produce comprehensive methods for rural road feature extraction that may be applied nationally. This paper primarily focuses on techniques for assessing the road geometry for roads considered to be rural connecting roads in the United Kingdom. This literature review will first outline the current understanding of the rural road network, considering the role of speed and speed limits in accident likelihood, and a detailed look at current road extraction techniques involving aerial imagery and LiDAR, presenting the key differences and limitations of these studies when considering the rural road network in the UK.
+
+\section{British Rural Road Network}
+
+\cite{taylor2002} conducted a study outlining the key features of British rural roads, in an effort to improve the understanding of the characteristics associated with accident rates, beyond the past \textit{Speed-accident relationship on European Roads} (MASTER) study which primarily consisted of European road data, with limited data for England \citep{baruya1998}. \cite{taylor2002} identify key features of 174 selected rural British roads across England which they use to classify roads into certain categories. This data was obtained through drive-through video recordings.
+
+Features that \cite{taylor2002} suggest to consider in an analysis of British rural roads are given on Table \ref{tab:roadfeatures}. This study manually measured the road width for each site, and to determine the "hilliness" of roads, the number of 10m contour lines crossed were counted to give the total change in height.
+
+\begin{table}[htbp]
+    \centering
+\fontsize{9}{10}\selectfont
+\caption{Features identified as important to British rural road analysis.}
+\label{tab:roadfeatures}
+\begin{tabular}{ll}
+\toprule
+\textbf{Type of data} & \textbf{Examples} \\
+\midrule
+Discrete data & \begin{tabular}[c]{@{}l@{}}Type of junction \\ Minor junctions \\ Accesses \\ Number of bends, classified into:\\ \quad Sharp (warning signposts) \\ \quad Medium \\ \quad Slight\end{tabular} \\ \\
+Semi-continuous data & \begin{tabular}[c]{@{}l@{}}Lighting \\ Reflecting road studs \\ Kerbs \\ Number of lanes \\ Road markings \\ Land use\end{tabular} \\ \\
+Continuous data & \begin{tabular}[c]{@{}l@{}}Visibility \\ Verge width and type \\ Roadside type \end{tabular}                                                                                                                              \\ \bottomrule
+    \footnotesize{\citep{taylor2002}}
+\end{tabular}
+\end{table}
+
+\cite{taylor2002} categorised these roads into four key groups:
+
+\begin{itemize}
+    \item \textbf{Group 1:} Roads which are very hilly, with a high bend density and low traffic speed. \textit{These are low quality roads.}
+
+    \item \textbf{Group 2:} Roads with a high access density, above average bend density and below average traffic speed. \textit{These are lower than average quality roads.}
+
+    \item \textbf{Group 3:} Roads with a high junction density, but below average bend density and hilliness, and above average traffic speed. \textit{These are higher than average quality roads.}
+
+    \item \textbf{Group 4:} Roads with a low density of bends, junctions and accesses and a high traffic speed. \textit{These are high quality roads.}
+\end{itemize}
+
+This study therefore attempted to outline a rural road hierarchy in relation to road function, and certain road geometries, which addresses issues outlined in the Government's review of speed policy \citep{roadsafetyandenvironment2000}. However, due to the nature of the data collection for this study, time constraints mean that producing a full road hierarchy for all rural roads within England using this methodology is impractical.
+
+\subsection{Rural Speed Limits}
+An observation of 270 single carriageway rural roads in England found that the distribution of mean speeds was wide, and often significantly below the 60mph limit \citep{departmentfortransport2006}. Accidents on rural roads often occur within the 60 mph speed limit meaning a distinction between what is an appropriate speed should be made that does not relate to a given speed limit. \cite{baruya1998} suggest a distinction between both \textit{excess} and \textit{inappropriate} speed. \textit{Excess} when driving above the speed limit, and therefore directly breaking the law; \textit{inappropriate} speed, when driving too fast for the conditions of the road, not necessarily above the speed limit, often considered dangerous driving. A study by the \cite{departmentfortransport2013b} assessed the impact of inappropriate speed on rural roads, which contributed to 20\% of all crashes on minor rural roads with a 60mph limit, whereas excess speed accounted for around 16\% of collisions. The \cite{departmentfortransport2013b} note that this high proportion of inappropriate speed on rural roads reflects the inappropriate speed limits that are given on the majority of rural roads
+
+The Department for Transport found that rural roads account for around 66\% of all road deaths, despite accounting for around 42\% of the total distance travelled by all vehicles. Notably 51\% of all deaths in Britain in 2011 occurred on rural single carriageway roads, with the national speed limit of 60mph \citep{departmentfortransport2011}. 
+
+\subsection{Speed, Road Geometry and Accidents}
+
+Lowering the speed limit on roads has been shown to result in an overall reduction in the average speed of vehicles. \cite{finch1994} found that a reduction in the speed limit of a road resulted in a mean speed reduction of around one quarter of the difference, noting that drivers will often obey speed limits that they determine to be reasonable. A reduction in average speed subsequently leads to a reduction in road traffic accidents \citep{finch1994,taylor2002}. \cite{taylor2000} produced a model to predict accident frequencies given the proportion of drivers exceeding the speed limit and the average speed, finding that excess speed and a higher speed limit were both associated with a higher accident frequency.  Particularly, the risk of death at various speeds has been assessed in various studies, \cite{richards2009} found that at 60mph the risk of a driver dying in a head on collision between two cars is around 90\%, but with a reduction in speed, this drops to around 50\% at 48mph.
+
+\cite{taylor2000}  demonstrated that traffic flow, link length, and the number of minor junctions all directly increased the number of accidents, while wider roads were associated with a reduction in the number of accidents. The \textit{MASTER: Speed-accident relationship on European roads} \citep{baruya1998}, assessed road geometry and other features of rural roads in Europe, however road data for the United Kingdom was limited to a small area in the South East, suggesting that a comprehensive methodology for the extraction of UK rural road geometry is required for a more comprehensive study.
+
+Newer developments like the Speed Limit Appraisal Tool mean that automated and quantitatively informed speed limits may be imposed on rural roads. However, this tool does not take into account key features such as road geometry, and simply builds on existing speed data and accidents \citep{departmentfortransport2013a}. 
+
+\section{LiDAR Data Classification}
+
+Aerial LiDAR classification typically follows two objectives, the classification of ground and non-ground points, and the classification of surface objects, including buildings, trees or roads \citep{charaniya2004}. Classification takes two forms, \textit{supervised} and \textit{unsupervised}, supervised classification taking a \textit{training} dataset, and using it to estimate the parameters associated with the outcome hoping to be classified. These parameters are then used on unknown data, with a similar distribution to the training set, and used to classify features \citep{charaniya2004}.
+
+\subsection{Digital Terrain Models}
+\label{subs:dtm}
+
+Early LiDAR classification primarily focused on the production of digital terrain models (DTM) \citep[e.g.][]{kraus1998,maas1999,elberink2000}, by segmenting vegetation, and man made structures from ground. This dissertation will utilise a recent method for DTM production in order to classify ground and non ground points for subsequent road classification. The method chosen was proposed by \cite{zhang2016} using \textit{cloth simulation} to generate a DTM from LiDAR data. This algorithm, unlike other filtering algorithms, allows for a simplistic input, without the need for numerous parameters to ensure an accurate DTM. This method consists of four main steps:
+
+\begin{itemize}
+    \item \textit{Initial State.} A simulated \textit{cloth}\footnote{Used in 3D modelling, a simulation of particles with a mass, connected by a mesh, following Newton's Second Law: $\vec{F}=m \vec{a}$ \citep{karthikeyan2001}} is placed above the inverted LiDAR measurements. A series of points that lie flat to the surface and are allowed to move based on the influence of gravity.
+    \item The displacement of each LiDAR point is calculated under the influence of gravity, meaning some points appear below ground measurements.
+    \item \textit{Intersection check.} For any points detected as being under the ground, they are moved to ground level and set to be unmovable.
+    \item \textit{Considering internal forces.} Movable points are moved according to neighbouring points.
+\end{itemize}
+
+Quantitative accuracy assessment of this methodology by \cite{zhang2016} gave results similar to top existing DTM production algorithms, but with a far more simplistic implementation, and reduced computation times.
+
+\subsection{Feature Classification}
+
+Developments in LiDAR enabled the possibility of classification beyond ground and non-ground, by using laser intensity information and multiple returns, features of more advanced LiDAR systems. The TopEye system used by \cite{axelsson1999} allowed for classification of buildings and electrical power-lines using reflectance to obtain radiometric information about the area and note that this can be used to separate paved area from grassland. Power lines in particular benefited from the multiple returns produced by the LiDAR system used as they often gave one return from the power line, and one from ground.
+
+Vegetation in particular exhibits multiple returns, whereas most man made surface objects do not. By considering the number of returns and homogeneous height variation \cite{hui2008} were able to categorise surface vegetation into both high vegetation, low vegetation as well as smooth man made surfaces.
+
+\section{Road Classification}
+
+In comparison to the extraction of vegetation and buildings from LiDAR, the extraction of roads poses far more of a challenge, due to there being less prominent height differences \citep{vosselman2009a}. Road classification is essentially a data clustering method to categorise data into road and non-road points, enabled through discovering patterns and relationships between variables and validation of findings \citep{saeedi2009}. Clustering may be achieved through various algorithms, categorised generally into partitioning methods, hierarchical methods, density-based methods, grid-based methods, and model-based methods \citep{saeedi2009}. \cite{yadav2018} note that the periodic assessment of roads is important due to the changing traffic load, which is generally increasing over time, and new automated techniques will enable this in areas where in the past it had not been feasible. Due to the heterogeneous nature of certain roads types, the road environment is often complex, meaning collection and accurate processing of road features is challenging \citep{yadav2018}. 
+
+\subsection{Aerial Imagery}
+
+Road classification methodologies have historically used purely aerial imagery, providing only road pixels and 2D location information \citep{yadav2018,ferchichi2005,wan2007}. Such techniques rely solely on image texture analysis of the coloured pixels \citep{dubes1992}, and appear to be focused entirely in urban settings. Additionally, the methods proposed in aerial image classification fail to address the differentiation between road and pavement, simply classifying building and non-building, rather than roads.
+
+\subsection{LiDAR Road Classification}
+
+Intensity, elevation and the inclusion of multiple returns in LiDAR data enabled methods for categorising roads, and differentiating them from the surrounding ground, despite the similar elevation \citep{clode2004}.
+
+The majority of current road classification techniques using LiDAR have focused on unsupervised classification, often with the goal in vehicle automation using mobile LiDAR data \citep[e.g.][]{yadav2018,kumar2013,smadja2010,jaakkola2008}, and applications using aerial LiDAR have also followed this trend for unsupervised classification \citep{clode2004,vosselman2009}.
+
+Many methods for road classification from LiDAR follow similar patterns, first identification of ground points through height data, then DTM extraction through interpolation, followed by classification based on the attributes of the point cloud \citep{vosselman2009}. \cite{jaakkola2008} produced a methodology using mobile LiDAR data to classify road edges by segmenting kerbstones based on the height gradient along the scanned profile. However, this mobile LiDAR classification required driving speeds of 20km/h to 50km/h, and lengthy computation times. Additionally noted by \cite{yoon2009} in a similar study. Ground based LiDAR collection techniques often provide a resolution far higher than aerial LiDAR data, however the time taken for a comprehensive coverage of all British rural roads would not allow for its use in a national road assessment.
+
+Other unsupervised road classification techniques rely on the detection of planar or smooth surfaces at ground level, indicative of man made objects which, unlike vegetation, do not display sharp variation in height values \citep{vosselman2004,darmawati2008}.
+
+\subsection{Supervised Methods}\label{subsec:supervised}
+
+\cite{guan2013} used both aerial imagery and LiDAR data in combination with a training dataset to classify urban roads. The training dataset gave human labelled features, and used to train a maximum likelihood classification model. \cite{matkan2014} extracted roads from LiDAR using a Support-vector Machine (SVM) classification. Training samples enabled classification into roads, trees, buildings, grassland and cement. Accuracy was determined through testing on three known road datasets, the number of LiDAR points correctly categorised ranged from 63\% to 66\% depending on the classification. \cite{ferraz2016} used supervised random forest classification to detect large-scale forest roads using LiDAR. They note particularly that given the scale of these roads, the efficiency of road extraction is most important, managing to achieve 80\% accuracy with individual roads processed at 2 minutes per kilometer. Despite being forest roads however, the canopy was often not obscuring roads due to their reasonably wide surface, and as such this method produced inaccuracies in areas where the canopy was dense and covering the detected road. \cite{charaniya2004} trained a mixture of Gaussian models using key features of both LiDAR and aerial imagery data. They found that for classification of buildings and roads, the key features of LiDAR that enable extraction were the height, intensity, and the number of returns, in addition to luminescence information obtained from the aerial imagery. Results correctly categorised from 66\% to 84\% of LiDAR points when compared with a labelled dataset.
+
+These supervised techniques give insight into the feasibility for rural road extraction, given a dataset of known road centrelines. With improvements to the quality of LiDAR data more recently, a methodology for road feature extraction using road centrelines and LiDAR may more comprehensively include features that distinguish roads from surrounding objects, including intensity, the number of returns, and aerial luminescence.
+
+\subsection{Rural Road Extraction}
+
+Many recent road extraction techniques have relied on the segmentation between roads and buildings, relying on a clear height difference between road and non-road surfaces \citep{kumar2013}, a feature uncommon to rural roads. Rural road classification therefore must rely on alternative features of roads, notably the difference in intensity produced by vegetation compared with the surface of man made objects, explored in various studies \cite[e.g.][]{vosselman2000}. Additionally, overhanging tree canopies are uncommon features of roads that have been previously classified, and as such, a methodology for classifying rural British roads must take this limitation into particular consideration.
+
+\section{Overview of this Dissertation}\label{sec:overview}
+
+This dissertation aims to extract key features of a selection of rural roads in England through a combination of LiDAR point clouds, OS open road geometries, and aerial imagery, selecting road features considered to be important in past literature and government reviews. The key features considered when determining road quality are;
+
+\begin{itemize}
+    \item \textbf{Width:} Narrower roads are associated with an increased number of accidents in many studies of rural roads \citep{taylor2002,aarts2006,taylor2000}
+    \item \textbf{Surface quality:} Poor quality road surfaces have been shown to increase the number of road traffic accidents \citep{fleming2009}
+    \item \textbf{Blind corners/winding roads:} Blind corners increase the risk of accidents, and higher speeds mean stopping distances are often above the distance visible around rural road corners in the UK. Blind corners are particularly an issue due to the tall hedgerows that often bank rural roads  \citep{aarts2006,wu2013}
+    \item \textbf{Road Steepness:} Steeper roads have an increased skid risk, and their quality is more likely to deteriorate \citep{moore2006,viner2004}
+\end{itemize}
+
+While the focus of past road classification methods typically aim to classify the entire road surface, this isn't necessary for the feature extraction of roads as proposed in this dissertation. To extract roads widths, only LiDAR points at each edge of the road surface are required, and points along the road surface may be sampled at regular intervals, removing the majority of unnecessary LiDAR points and improving computation time, often a key limitation when working with LiDAR data \citep{zhang2018}. Additionally, this paper aims to concentrate on a supervised classification of roads, by taking known centreline locations, many LiDAR points may be excluded, and remaining points concentrated towards the centre of the centrelines may be used as a training data set. Unlike road widths, other road features do not require classification with the inclusion of known road geometries. Road bends may be determined through the existing road linestrings, while surface quality and road steepness may be extracted at known road locations in the LiDAR point cloud. The method as presented aims to allow for the potential expansion beyond the dataset considered in this analysis, providing the requisite data is available.

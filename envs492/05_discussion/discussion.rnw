@@ -1,0 +1,133 @@
+\lettrine{T}{he} proposed methodology presents a road classification technique which considers the need for an optimised and efficient extraction of road widths to combine with other road features for use in an automated national rural road assessment. This method builds upon past road classification techniques with the inclusion of Ordinance Survey road centreline geometries allowing for a supervised classification, without the need for the manual and time consuming creation of a training dataset.
+
+While considered to be a supervised method, the training data used in this method is derived from the preexisting OS road centrelines, and as such may be recreated automatically for any road in England, given the comprehensive coverage of this data \citep{ordnancesurvey2019a}. This differs from existing supervised road classification methods, where a training dataset is created and manually labelled \citep[e.g.][]{charaniya2004}. Additionally, the majority of LiDAR road classification techniques focus on unsupervised methods \citep[e.g.][]{clode2004,vosselman2009,jaakkola2008,darmawati2008}, and as such do not consider the use of any training data, with the primary goal of obtaining accurate road locations. Such techniques often limit their scope to road centreline extraction which has a limited use case with a preexisting national road centreline database. Notably, \cite{zhang2018} assess the accuracy of their technique by comparing derived road centrelines to an existing road centreline database which renders little in terms of practical application.
+
+Therefore, the method presented in this dissertation considers a more practical approach, providing an intermediate between unsupervised and supervised methods, which integrates the known road centrelines into the road classification. Rather than attempting to classify road centrelines, or the full road surface, this dissertation concentrates on the requirement for road feature extraction as presented in various UK government rural road studies \citep{departmentfortransport2018b,departmentfortransport2013a,roadsafetyandenvironment2000}.  With the primary focus of road classification on the automated road width extraction. Focusing on solely width extraction enables road surface sampling, primarily enabling a reduction in computational overhead, while adding the benefit of more simplistic noise filtering techniques, and a per road width classification.
+
+\section{Effectiveness of the Method}
+\subsection{Computational Efficiency}
+
+Direct comparison between the computational efficiency of this method and past methods is not possible due to the unique data used in this study. However, \cite{zhang2016} outline some specifications of the dataset used in their supervised road centreline extraction using LiDAR and aerial imagery. With aerial imagery at a resolution of 15cm, and a total 5200 by 5000 pixels, the study area therefore covers \Sexpr{5200/(1/.15)}m by \Sexpr{5000/(1/.15)}m. Similar to the 1km$^2$ for this study. The total time taken for object extraction for this area in their method was \Sexpr{round(2272/60, 2)} minutes, compared with the \Sexpr{round(time_taken, 2)} minutes proposed in this paper. It is expected that the method proposed by \cite{zhang2016} should take far longer to compute due to being the inclusion of complex methodologies such as image segmentation through random forest classification, and without any preliminary removal of LiDAR points such as the 30m buffer from known road centrelines used in this dissertation.
+
+\subsection{Comparison with Similar Studies}
+
+Despite several road classification methodologies proposing the inclusion of aerial imagery to assist with accuracy \citep[e.g.][]{charaniya2004,hui2008,guan2013}, this study reveals that for roads overlooked by tall features such as hedgerows, the shadow created reduces overall classification accuracy. Additionally, the inclusion of aerial data provided little benefit in areas without shadows, likely due to the more distinct separation in intensity values from a rural road surface and surrounding vegetation, unlike that found in a more urban setting. 
+
+Due to the irregularity of LiDAR and the large number of points, many past road classification techniques have relied on regulating the data into a grid \citep{hatger2005}. For example, \cite{clode2004} used LiDAR with a resolution of 0.8m, and regularised this into a grid to produce a DTM and subsequently extract road centrelines. Due to this aggregation, they were able to filter points through a density threshold, and produce road centrelines. However, using this method to find road widths proved more difficult, and as \cite{hatger2005} note; the function that derived road widths in this paper resulted in some ambiguity.
+
+The focus of many road classification techniques are primarily directed towards either centreline extraction \citep{clode2004,zhang2018,matkan2014}, or the use of ground based LiDAR for use in automated vehicles \citep{jaakkola2008,yoon2009}, and almost all studies appear to focus on urban road classification \citep{li2016,vosselman2009,zhao2012}, while even studies considering "rural" areas, do not represent roads that would be found in the context of rural England \citep{azizi2014,mena2005}, and exclude key features such as hedgerows, overhanging vegetation, with the road surface appearing fully distinct from neighbouring verges. Additionally these studies do not focus primarily on road width extraction, and as such are limited by the requirement for the inclusion of all points of data, to obtain a full road extraction.
+
+The study of the speed accident relationship on rural British roads by \cite{taylor2002} outlined some techniques for the extraction of rural British road features, and as such was able to begin an assessment for the classification of rural road hierarchies. However, the data collection technique employed included drive-through video recordings, not allowing for a scalable approach. Results also often lacked in accuracy, taking the road height variation from OS 10m contour lines. The method proposed in this dissertation aims to alleviate these problems by ensuring a higher level of accuracy in height variation, through the use of LiDAR data with a +/-25cm RMSE. As well as allowing for a computational technique that does not rely on the manual collection of ground-based data, and instead uses aerial LiDAR which is more practically feasible to obtain for a comprehensive study. LiDAR has multiple use cases, meaning the national production of this data is well funded.
+
+\section{Applications of this Methodology}
+\subsection{Stopping Sight Distance}
+
+Stopping Sight Distances are an important consideration for rural British roads. From qualitative observation of aerial imagery, and personal knowledge, hedgerows that bank the verges either side of many rural British roads often fully obscure the sight line around sharp bends, meaning it is often impossible to see oncoming traffic or obstacles, which, given the nature of these roads can often be large farm vehicles which spill into multiple lanes, or hazards such as farm animals, or unsafe road conditions. It is worth mentioning that the majority of hedgerows have automatic protection under the Hedgerow Regulations 1997 \citep{ukgovernment1997} for numerous historic and environmental reasons \citep[e.g. protected species;][]{ukgovernment1981}, as such, their removal for road safety is rarely granted.
+
+Stopping Sight Distance is defined as the ability to see an object in the roadway with enough distance to stop, Table \ref{tab:ssd} outlines the calculated stopping sight distances at certain speeds, giving a rough indication of the distance required between a car and bend in a road. For example, Table \ref{tab:ssd} indicates that at 100kph (60mph), stopping sight distance is recommended to be 185m. Broadly, for a road to be considered appropriate for a 60mph limit, it could be said that it should not have a bend which impairs the line of sight within 185m such a speed limit. For a rough idea of the number of bends per road (ignoring bend sharpness), there is an additional table given in \textbf{Appendix B}, Table \ref{tab:rd_bends}.
+
+Assumptions for certain road regulations are made that drivers will slow to appropriate speeds to adapt to road conditions, either in poor weather, or to approach a sharp bend, however \cite{layton2012} note that often this is not that case, and drivers often do not slow appreciably to account for these conditions. Therefore suggesting that speed limits should more accurately reflect the conditions of the road. Additionally, stopping sight distances observed by \cite{layton2012} are significantly longer for larger vehicles such as trucks, and given the large farm vehicles often present on country roads, speed policy should take this into account.
+
+\begin{table}[b]
+\centering
+\fontsize{9}{10}\selectfont
+\caption{Recommended minimum Stopping Sight Distances at certain speeds \citep{layton2012}}
+\label{tab:ssd}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Speed} &
+\multicolumn{2}{l}{\textbf{Stopping Sight Distance}} &
+\multicolumn{2}{l}{\textbf{Typical Emergency Stopping Distance (m)}} \\ 
+\midrule
+Design Speed &
+Calculated &
+Design &
+Wet Pavement &
+Dry Pavement \\
+(km/h) &
+(2.5$^s$, a=3.4m/s$^2$) &
+(2.5$^s$, a) &
+(1$^s$, f$_{wet}$) &
+(1$^s$, f$_{dry}$) \\
+\midrule
+30 & 31.2 & 35 & 17.1 & 14.2 \\
+40 & 46.2 & 50 & 27.7 & 21.6 \\
+50 & 63.5 & 65 & 42.0 & 30.3 \\
+60 & 83.0 & 85 & 59.6 & 40.3 \\
+70 & 104.9 & 105 & 81.7 & 51.6 \\
+80 & 129.0 & 130 & 106.1 & 64.2 \\
+90 & 155.5 & 160 & 131.2 & 78.1 \\
+100 & 184.2 & 185 & 163.4 & 93.4 \\
+110 & 215.3 & 220 & 200.6 & 110.0 \\
+120 & 248.6 & 250 & 235.7 & 127.9 \\
+ \bottomrule
+\end{tabular}
+\end{table}
+
+Road features extracted in this dissertation may be used to inform the current likely stopping sight distances, combining key features such as the width of roads, which influences the sight line, the max bend angle within a road segment, and the elevation change.
+
+\subsection{Improving Rural Transport Accessibility}
+
+Transport disadvantage is a key limitation of transport accessibility, that may be due to lack of public transport, a poor road network, or a persons physical inability to reach a destination due to disability \citep{smith2012}. Often transport disadvantage may be alleviated through access to public transport, as this removes the requirement for private transport ownership, limited by both income and ability to drive. However, public transport in rural areas is often limited or absent, meaning rural transport predominantly relies on private road vehicles, limiting access for those who are unable to drive, such as children, the elderly, and people with disabilities \citep{manthorpe2008}. Additionally, this reliance on private transport increases the minimum cost of living in rural communities, given car ownership is often considered mandatory but often isn't taken into account when assessing the minimum cost of living in rural areas \citep{smith2012}. For those who are unable to access private transport, accessibility is considered limited through capability, rather than pure accessibility through journey times and other factors \citep{currie2010}. Rural areas in particular often have larger elderly populations, meaning capability is often a key issue in areas with poor public transport, and can lead to social exclusion for those without cars \citep{solomon2009}.
+
+Transport accessibility is defined by the UK Government through journey time estimates for populations to particular key services. In particular, the UK Government uses official accessibility indicators to set minimum thresholds for journey time access to education, health services, employment and retail hubs \citep{departmentfortransport2016}, also taking into account the availability of public transport services. Accessibility in rural areas is found to be far poorer than urban areas based off minimum travel times to various services, and while travel by car generally reduces travel times, the rate is still far below urban areas. This journey time data is simplified, giving the start point of journeys as a single point within Output Area census units, and aggregated road speeds. The output of this data is given at the LSOA level which is then used for accessibility analysis. Journey times are obtained through mass collection of GPS data by INRIX \citep{inrix2019} which is then used in TRACC software \citep{tracc2019}.
+
+Due to the limited use of rural roads, the GPS data obtained for speed estimates are likely far less reliable than for urban areas. Additionally, calculating journey time in rural areas should consider the road geometry, which the above method ignores. By considering features such as road width, quality, bends, and elevation change, the suitability of certain roads for particular vehicle types may be informed. For example, rural healthcare accessibility is becoming more of an issue given fewer healthcare professionals now live in rural communities, \citep{farmer2003}, and the urban centralisation of hospital services \citep{mungall2005} means that understanding the level of access that each rural community has to these services is more important than ever. Emergency vehicles are often far larger than personal transportation, meaning GPS times derived from smaller personal transportation likely does not provide an accurate journey time estimate for these vehicle types, as the geometric features of certain roads likely do not allow for these vehicles. Aggregation and simplification of journey time estimates also do not provide a comprehensive estimate of the true journey times for each rural road, which would be achievable through the road feature extraction presented in this dissertation. The individual rural road features may provide further insight into specific roads which require targeted improvements to alleviate accessibility problems, without suffering from inherent geographical limitations such as the MAUP \citep{openshaw1984a}, imposed by journey time aggregation.
+
+\subsection{New Forms of Public Transport}
+
+There is a strong urban bias for the development of new transport technologies \citep{malecki2003}, explained through key issues particular to rural transport systems;
+
+\begin{itemize}
+    \item \textbf{Service area:} Rural transport agencies often serve large areas with long trips. As a result, assisting passengers needs is not easy and attending immediately to a problem that arises on the road is difficult (e.g. rescheduling trips when an incident occurs.)
+    \item \textbf{Service Coordination:} There are different basic public services e.g. healthcare and education with overlapping areas of services. It is challenging to coordinate services and resources among the agencies and other providers.
+    \item \textbf{Infrastructure:} Rural areas suffer a lack of communication infrastructure e.g. wireless communications services, real-time communication from and to rural passengers.
+    \item \textbf{Fleet size:} Although tech can solve several transportation problems in remote rural areas, it might be difficult to fund and develop at a small scale.
+\begin{flushright}
+    \footnotesize{\citep{riva2011}}
+\end{flushright}
+\end{itemize}
+
+While it may appear that many of these issues are inherent to rural areas, and unsolvable, the optimisation of transport technologies for rural areas may be made more achievable through access to the comprehensive road data provided through the methods proposed in this dissertation. \cite{palmer2004} state that flexible integrated transport services are a likely public transport implementation that would benefit rural areas without the limitations outlined above, such a technology would rely extensively on a full understanding of the road network on which it would be dispatched. The \cite{departmentfortransport2016} call for "Unconventional modes" of public transport in such areas, building mainly on a bottom up approach to meet direct demand. Additionally, vehicles supplied through such an implementation would account for suitability to both road conditions and consumer demand, allowing for vehicles smaller than a typical bus for example on narrower roads \citep{mulley2009}. There is also a significant call for the inclusion of a more comprehensive understanding of the road network through advanced computational techniques to improve the efficiency and quality of existing transport systems \citep{deeter2009}, including a more flexible transport management system \citep{robinson2008}.
+
+\subsection{Other Applications}
+
+Supply chains rely on a well maintained road infrastructure, and as such, many rural areas are considered to be (economically) "Lagging Rural Regions", due to their geographical remoteness, poor infrastructures, low population density and limited employment opportunities, often supported economically by an agricultural backbone \citep{ilbery2004}. Improving the economy of such areas therefore relies primarily on the effectiveness of the supply chains, often limited due to the poor infrastructures \citep{marsden2002}, and recent demand for large scale supply chains is limited in these areas due to the overall quality of the road network. To further understand the limitations of rural supply chains inherently relies on a full understanding of the road network, whether to acknowledge where limitations exist, or to develop opportunities for optimisation of the supply chains. Similarly, \cite{bosona2011} call for location analysis of supply chains through quantifiable data, to better optimise supply routes.
+
+\section{Current Limitations of this Method}
+
+
+As results have revealed, it is relatively hard to quantify the accuracy of this particular linear probability analysis, and often the accuracy has been assessed qualitatively. The ultimate goal with this method would be to produce a model which may be assessed quantitatively, allowing for a more conclusive and full automation. It should also be noted that the quantile selection at present is based on a qualitative observation of the distribution of linear probability values for the current 1km$^2$ area, and as such it would be essential to find a method to quantitatively assess the cutoff for road and non-road points in order for this method to be used with other roads.
+
+At present the removal of noise at the final stage of the road classification comes from both identifying isolated points (See Function \ref{code:max_lines}), and the removal of calculated widths that are above 8m and below 2m (See \textbf{Appendix \ref{c:script}}). While logically it makes sense to include limitations for widths, given a road below 2m would not support even single way traffic, and a 8m road is unexpected for any rural single carriageway, these limitations are still arbitrary, and for all unclassified roads in England, there is no minimum width required \citep{highwaysengland2016}.
+
+Alternatives to Linear Probability models do exist when considering binary outcome variables, one being probabilistic regression, which takes the cumulative standard normal distribution function ($\Phi$) to model the regression. Interpretability of results may be aided through this method as it includes consideration of the quantiles associated with a unit change in outcome variables. Additionally logistic (and probabilistic) regression, unlike simple linear regression do not take the assumption that there is a linear distribution in the outcome, weighting values more towards 1 or 0, conforming more with the distribution of a binary outcome variable \citep[See Figure \ref{fig:csnd};][]{hanck2019}. However, preliminary analysis of the methodology in this study did consider a logistic regression, but found that interpretability of the quantiles and results was difficult, and qualitative observation of the results did not appear to provide much benefit over linear regression.
+
+\begin{figure}[t]
+    \centering
+\begin{tikzpicture}[scale=1]
+\tikzset{
+    declare function={
+        normcdf(\x,\m,\s)=1/(1 + exp(-0.07056*((\x-\m)/\s)^3 - 1.5976*(\x-\m)/\s));
+    }
+}
+\begin{axis}[%
+  grid=major]
+  \addplot[mark=none, red!50] coordinates {(-6,0) (6,1)};
+  \addplot [smooth, black] {normcdf(x,0,2)};
+\end{axis}
+\end{tikzpicture}
+\caption{Comparison between a Linear Probability Model Distribution (Red) and Probit/Logit Cumulative Standard Normal Distribution (Black) \citep[Approximation credit][]{bowling2009})}\label{fig:csnd}
+\end{figure}
+
+Alternative methods to reduce the noise produced in road classification may include the identifications of straight line road edges, a distinguishing feature of man made structures \cite{guan2013}. This could enable point exclusion if outside of a particular threshold in relation to other points. LiDAR classification techniques often make use of segmentation algorithms to identify objects from geometric features such as planes, and straight edges \citep{wang2009}. These include Hough transforms \citep{vosselman2004,clode2004}, RANSAC \citep{smadja2010,sampath2008}, and least square fitting \citep{matkan2014}.
+
+Additionally, unsupervised LiDAR classification techniques have considered the texture of road and non-road, where man made structures often have smooth, regular height textures, and small height variations, while trees and other vegetation give an irregular height pattern,  using this to separate man made structures, such as roads, from vegetation \citep{vosselman2004,darmawati2008}.
+
+Driving behaviour is affected by particular features that are not covered in this methodology, namely the delineation of road centrelines and edges \citep{steyvers2000,charlton2018}. The detection of these features is influenced  by either if a road edge is easily detectable, or if a road has painted markings to indicate a centreline, both of which are not observable through this methodology, and would likely rely on mobile LiDAR data collection.
+
+\section{Conclusion}
+
+This dissertation presents a methodology for the extraction of road features to enable a fuller understanding of the rural British road network. The method presented considers the requirement for supervised classification of roads to determine road width, that utilises existing OS open road data which is freely available. Concentrating on the practical applications of determining road width enables the use of a sampling classification, which reduces computational load, and enables sample based filtering.
+
+Results generally provide insight into the overall road quality of individual roads in relation to each other, but work is required to more accurately extract key features in road quality assessment, particularly road widths. Further development of this method would provide road features for use in a national assessment of rural roads in Britain, to aid with improvements with the understanding of rural accessibility, the response time of emergency services, more appropriate speed limits, and rural road hierarchies.

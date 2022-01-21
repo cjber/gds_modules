@@ -1,0 +1,231 @@
+---
+title: To What Extent is Area Based Policy Affected by the Modifiable Aerial Unit Problem?
+
+# Use letters for affiliations
+author:
+  - name: 201374125
+    affiliation: a
+address:
+  - code: a
+    address: Department of Geography and Planning, University of Liverpool,
+
+# For footer text  TODO(fold into template, allow free form two-authors)
+lead_author_surname: 201374125
+
+# Place DOI URL or CRAN Package URL here
+#doi: "https://cran.r-project.org/package=YourPackage"
+
+# Abstract
+abstract: |
+ Word Count: 4650
+
+#5 Paper size for the document, values of letterpaper and a4paper
+papersize: a4
+
+# Font size of the document, values of 9pt (default), 10pt, 11pt and 12p
+fontsize: 9pt
+
+# Optional: Force one-column layout, default is two-column
+#one_column: true
+
+# Optional: Enables lineno mode, but only if one_column mode is also true
+#lineno: true
+
+# Optional: Enable one-sided layout, default is two-sided
+#one_sided: true
+
+# Optional: Enable section numbering, default is unnumbered
+numbersections: true
+
+# Optional: Specify the depth of section number, default is 5
+secnumdepth: 5
+
+# Optional: Skip inserting final break between acknowledgements, default is
+skip_final_break: true
+
+# i prefer a master bib location
+bibliography: /home/cjber/Dropbox/bib/zlib.bib
+#biblio-style: ../../../../bib/uol.csl
+
+# Optional: Enable a 'Draft' watermark on the document
+watermark: false
+
+# Customize footer, eg by referencing the vignette
+footer_contents: "201374125"
+
+# Produce a pinp document
+output: pinp::pinp
+
+# Required: Vignette metadata for inclusion in a package.
+vignette: >
+  %\VignetteIndexEntry{YourPackage-vignetteentry}
+  %\VignetteKeywords{YourPackage, r, anotherkeyword}
+  %\VignettePackage{YourPackage}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+# Introduction
+
+Recent shifts in government policy from national initiatives, towards more focused area based initiatives have been driven by the recognition of deprived areas, and their requirement for more targeted strategies, however, prior to the 1960s, nationally agreed standards were commonly utilised in general services such as schooling, social services, and policing, and rarely took into account the needs of individual deprived areas [@smith1999].
+
+Towards the late 1960s, area based initiatives (ABI) were first devised, defined by the What Works Centre for Local Economic Growth as:
+
+> "Area based initiatives (ABI) are policy initiatives aimed at tightly defined geographical areas, and provide a package of support aimed at improving economic, social or environmental outcomes within the zone."
+>  -- *@wwg2016*
+
+Initially these primarily focused on inner cities and urban areas, introducing the 'Education Priority Areas' (EPA) and 'Urban Programme'. Both of these programmes could be considered largely unsuccessful, as priority areas targeted with 'EPA' still remain among the most deprived in terms of educational achievement in England [@smith2015;@williams2008], and targeted 'Urban Programme' areas still remain at similar levels of deprivation [@smith2015]. Following this initial introduction of ABI, the focus shifted towards urban development and economic regeneration of the physical environment with the idea that positive impacts through these initiatives would 'trickle down' and benefit the more disadvantaged populations living within urban areas [@smith1999]. However, there was very little evidence suggesting any significant benefit from these initiatives [@robson1994]. Additionally, there is extensive literature noting that the effects of gentrification\footnote{the transformation of a working-class or vacant areas of the central city into middle-class residential and/or commercial use \cite{lees2008}} through urban development are rarely beneficial towards lower classes, and tend to force those out who are unable to afford the increased cost of living, leading to displacement [@hamnett2003;@immergluck2018].
+
+Following a period of little interest in ABIs, New Labour in 1996 once again shifted the focus towards them, driven by the publication of Social Exclusion Unit's 'Bringing Britain Together' [@seu1998] which aimed to identify the shortcomings of previous area based initiatives, where persistent problems with deprivation within certain communities in Britain had failed to be addressed. However, despite incorporating new characteristics to inform these updated initiatives, they are still based upon many of the same assumptions that underpinned the previously unsuccessful ABIs [@power2005].
+
+The key characteristics of communities considered to be deprived are defined in @mason1999 as: 
+
+ -  A high level, or proportion, of individuals or households, who experience a range of negative or undesirable circumstances, either singularly, or in 
+   combination, which significantly reduce their overall wellbeing. These include; low income, unemployment, poor health, bad housing conditions, and lack of skills.
+
+ - The concentration of these 'deprived' households and individuals in an area 
+   coupled with the undesirable aspects of that area. Poor environment, poor 
+   housing, neglected open spaces, abandoned shops and households. As well as high crime levels, lack of services and shortage of job opportunities.
+
+These initiatives focused on the neighbourhood level of deprivation, using local area explanations to inform the cause of deprivation, and extended these policies beyond just the inner city and urban areas. New area-based initiatives introduced through this approach include the Single Regeneration Budget (SRB), New Deal for Communities (NDC), as well as various Employment, Education and Health Action Zones [@smith1999]. Many of these new area-based policies were designed to test mainstream programmes to be used at a national level, and ran for a relatively short time period of around 3 years each, which allowed for more flexibility with delivering the policies, and introduced key partners, for example Health Action Zones were partnered with NHS Local Authorities [@chatterton2000].
+
+Given the advancement in quality of process and questioning in the UK decennial census [@officefornationalstatistics2011], the British Household Panel Study [@bhps1991], and the increase in computational power along with analytical techniques used to inform ABI designation [particularly the 'Indices of Area Deprivation' @robson1998], it was expected that these new initiatives would have proven more successful. However, there is little evidence to suggest that these policies were successful in positively impacting the socioeconomic, health outcomes, and overall levels of deprivation in targeted areas [@thomson2008]. Even at the time that these policies were introduced, studies identified the potential shortcomings [@chatterton2000; @smith1999], including the lack of community involvement [@healey1992], or the focus on economic and property development, ignoring other driving effects of deprivation, or gentrification related displacement [@turok1992;@robson1994a]. @chatterton2000 additionally identified key issues with these area based policies, stating that many driving factors of deprivation within a neighbourhood come from outside such areas, and these policies tend to simplify the underlying complex processes that drive deprivation. In particular they identify the effect of drawing arbitrary boundaries when determining targeted areas, with a focus on @townsend1979 who highlighted that as many poor people live outside targeted areas than do within them [reiterated in @shaw1999]. This shift towards area based policy, informed by area based statistical analysis, brings with it the question of whether the impact of spatial scale and aggregation of statistics is fully considered when designing new policy. @voas2000 note that these policy often appear to take the analysis of deprivation from a pre determined spatial scale as fact, and ignore the underlying issues within chosen areas, including the levels of deprivation outside identified areas, that, given a different spatial scale (or resolution), may have been considered for targeting. 
+
+The main focus of this article is to discuss the underlying issue of scale and resolution when considering area-based initiatives, known as the Modifiable Aerial Unit Problem (MAUP), famously popularised by @openshaw1984, where arbitrary aggregation of observations within geographically defined areas leads to varying results depending on the shape and scale of aggregation.
+
+# Rationale for Area Based Initiatives
+
+Area based initiatives allow for specific geographical areas that suffer disproportionately from higher levels of deprivation to be targeted and assessed individually, receiving the additional focus they require [@rhodes2003]. Often mainstream programmes operating in areas identified as deprived are put under pressure and are found to perform less effectively compared with the same programmes operating in more affluent areas. This alone indicates that a solely individual approach to targeting support through government programmes may not be effective [@smith1999].
+
+Many studies have confirmed that factors contributing and associated with deprivation are spatially correlated, including health and mortality [@lorant2001], immigration [@wadsworth2010] and unemployment [@patacchini2007]. This suggests that funding and programmes targeting deprivation benefit from area based initiatives as when areas are selected, they often benefit a large proportion of the community, more so than if resources were spread out evenly. Multiple contributing factors to deprivation often coexist within the same geographical areas and tend to amplify the effects of deprivation, meaning focused targeting is often required due to the scale of the problems [@smith1999].
+
+Particular emphasis has been put on the significance of partnerships with area-based regeneration programmes since they were first introduced in the 1970s [@sullivan2017], allowing for increased community engagement  [@lawless2004],
+
+## New Deal for Communities
+
+One key ABI that will be focused on in this report is the more recent New Deal for Communities (NDC), introduced in 2001 for 10 years until 2010, significantly longer than other ABI's [@batty2010]. This initiative developed and improved on previous ABI such as the City Challenge (1991), and Single Regeneration Budget Challenge (1994), primarily in selecting targeted areas through the improved indices of area deprivation [@robson1998] and by producing more focused and comprehensive targets [@parkinson1998], noted as a major area in which previous ABI failed, due to spreading resources too thinly [@batty2010].
+
+This ABI was primarily introduced in response to the failure in previous regenerative policies in tackling area based deprivation in England, as, despite various policies, there remained 4000 multiply deprived neighbourhoods [@seu1998]. This programme received the largest amount of funding for any ABI, with over £2 billion in total, despite only covering 39 small areas with around 1000 to 4000 dwellings each. Over 1000 separate schemes were produced and tailored towards each area, relating to health, crime, unemployment, housing and the physical environment [@lawless2004].
+
+@batty2010 outline key opinions from NDC residents in relation to their opinion of where they live prior to the initiative;
+
+- 55 percent of NDC area residents felt 'a bit' or 'very' unsafe walking alone in their area after dark, 22 percentage points higher than the national figure
+
+- the NDC area aggregate worklessness rate (21 percent) was over double that for England as a whole (10 percent)
+
+- 60 percent of NDC area residents were satisfied with their area as a place to live, compared with 86 percent nationally
+
+- 23 percent of NDC area residents reported their health had been 'not good' in the previous 12 months; the equivalent national figure was 14 percent
+
+- 40 percent of NDC area residents smoked compared with 26 percent nationally
+
+This programme was broadly tailed towards the needs of each NDC, but for the purpose of this report can be summarised as; achieving holistic change in place related outcomes: crime, community, and housing and the physical environment (HPE), with three people related outcomes: education, health and unemployment. As well as improvements to government driven delivery agencies such as the police force, Primary Care Trusts, schools and job centres through partnership working [@batty2010].
+
+Broadly this programme did improve on many of the faults of previous ABI, and in some policy areas showed a significant improvement [@batty2010], mainly in factors pertaining to improvement in education. However, unemployment, crime, and health showed little improvement on average.
+
+Despite the effort to improve upon certain identified features by which previous ABI fell short, the NBC programme still fails to address the inherently geographical problems with area-based initiatives, namely, the Modifiable Areal Unit Problem (MAUP), ignoring outsides influences of deprivation external to the chosen NDC, and the effects of excluding neighbouring zones when considering statistical measures in spatial contexts [@griffith2003].
+
+# What is the Modifiable Aerial Unit Problem?
+
+@openshaw1984 outlined the concept of the Modifiable Aerial Unit Problem, in which spatial study often relies on the aggregation of the data being observed, in the case of government policy into wards, local councils or census units. The spatial association between units relies on the scale and the shape of the units chosen, which are inherently arbitrary, and often the units chosen differ between studies of the same geodemographic outcomes, without much reason. Any chosen spatial study area is continuous, and as such there are many ways in which they can be aggregated, with no real 'right' way.
+
+The issue of the Modifiable Aerial Unit Problem in government policy doesn't just stem from the recent concentration on new Area Based Policy. @openshaw1984 notes that the Parliamentary Boundary Commission review the constituent boundaries within England every 15 years, directly modifying aerial units. Boundaries are selected to ensure an equal population within each, although it is noted that this effort rarely gives accurate results. Census data in the United Kingdom, while describing individual characteristics, and collected by households, is only publicised in aggregated spatial areas for confidentiality, therefore inferences on individual characteristics based on the census are by their nature flawed [@openshaw1984a].
+
+Recent developments in Census data boundaries however have attempted to incorporate socially homogeneous groups based on tenure and dwelling type [@ons2019], which attempts to alleviate some of the geographical discontinuity between areas. @dorling2002 argue that a greater understanding of geography is required in policy and @martin2006 suggest that census data will always be unreliable without a geographically focused design in output geographies, noted as well in @openshaw1995 who suggest dynamically allocated boundaries in census data would be a step towards reducing the impact of the MAUP.
+
+# Area Effects/Neighbourhood Effects
+
+Past studies have argued for the importance in understanding the difference between contextual and compositional effects in social research [@jones1995;@macintyre1993], where socio-economic relationships and the extent of area effects can be attributed to both compositional (or individual) and contextual effects. Compositional effects are those by which people living in areas of deprivation often have shared characteristics, for example, those which make them more likely to be deprived. While contextual effects are merely due to the characteristics of where an individual lives, for example, an area with fewer jobs and poorer healthcare are likely to have a larger number of individuals who are deprived.
+
+> "The mind is furnished with ideas by experience alone."  -- \textit{John Locke (1632 - 1704)}
+
+While perhaps overly empiricist, it is important to understand how experience derived through place has influence on a population. Compositional effects therefore are often spatially concentrated due to a variety of inherited experiences [@duncan1999], where choices made by individuals are often influenced by those around them. As a result, people within areas tend to share the same characteristics, and compositional effects are not entirely due to an individuals predetermined characteristics, but due to an area effect.
+
+@jencks1990 outline that those from affluent areas are on average better educated, stay in education for a longer time period, and often get better jobs than those from poorer areas. Other studies have also emphasised broad contextual effects in relation to deprivation and the socio-economic circumstances relating to deprivation, noting that there is a North - South divide within England [@britton1990;@townsend1988], differences between urban and rural areas [@watt1994] and rich versus poor areas [@britton1990].
+
+These studies all suffer from the same same geographical issues, the MAUP, and defining the chosen areas in terms of scale and resolution. For example, the scale at which these studies operate, despite often sharing the same outcomes, varies significantly.
+
+It is also important to consider the way by which a neighbourhood is defined. Ideally neighbourhoods targeted through policy should be a geographical area in which all characteristics that are related to the identified levels of deprivation are shared [@diezroux2001]. However, clear definitions between area, community, and neighbourhood are rarely made in practice, and studies focus on administrative boundaries such as census tracts in order to define an area for study.
+
+From their research, @jencks1990 derived key theoretical ways in which neighbourhoods could effect childhood development:
+
+- 'Epidemic theories', based primarily on the power of peer influences to spread problem behaviour
+
+- Theories of 'collective socialisation', in which neighbourhood role models and monitoring are important ingredients in a child's socialisation
+
+- 'Institutional' models, in which the neighbourhood's institutions e.g. schools, police protection, rather than neighbours make the difference
+
+- 'Competition' models, in which neighbours, and classmates compete for scarce neighbourhood resources
+
+- Models of 'relative deprivation' in which individuals evaluate their situation or relative standing with their neighbours (or classmates)
+
+The factors pertaining to adolescent behavioural development can be broken down into two key categories, familial context, and extra-familial context, with extra-familial again broken down into neighbourhoods, community, and school effects [@brooks-gunn1993]. Hence, despite the focus on neighbourhoods, childhood compositional effects are influenced by interactions within and outside an individuals 'neighbourhood', inherited from family, peers, and neighbours. In essence, although a persons individual effect may appear compositional, it is often influenced by context, and there is in fact rarely a purely contextual effect. This then implies that area effects do exist, and area does matter, but the approach by which many geographic papers and government policy attempt to define neighbourhoods does not account for a true area effect, one that is influenced by more than just a strictly defined neighbourhood. While neighbourhoods do often appear to influence individual life chances [@galster2010], the achieved income, education and occupation of individuals are more likely to be mediators in relating to other deprivation indicators such as poor health, rather than confounding variables [@diezroux2001].
+
+A recent study relating deprivation to geographical determinants of health, health related services and health negating outlets such as pubs found that often those who are the most deprived share the same level of access to health related services [@green2018]. This suggests that access to health services is typically similar for both deprived and non deprived areas (excluding rural areas), and that many health effects that are typically related to the environment are perhaps more likely to be compositional.
+
+Some compositional effects are themselves likely outcomes of area effects, for example the cost of housing may restrict the areas in which the less wealthy can live, this particularly relates to social exclusion, where poorer areas often have less access to the same retail options as those in less deprived areas [@wrigley2003], and seaside towns in the UK, due to the reduction in national tourism have cheaper housing costs but higher levels of deprivation and social exclusion [@agarwal2006].
+
+As outlined above, the initial implementation of Education focused ABI in the 1960s were largely unsuccessful, as many targeted areas still show similar levels of deprivation [@williams2008]. Education based policy focused primarily on initiatives within schools, to ensure a higher quality of teaching and resources. However, sociological studies at the time had identified that educational achievement was far more influenced by a home environment than by the school environment [@floud1961;@douglas1964].
+
+## Multi-level Models
+
+The origin of Multi-level Modelling came from the need to consider a hierarchical model of schools [@burstein1980], where levels are static and well defined, i.e. Pupils within a class, within a year, within a school and so on [and even then multilevel models have seen some critique, e.g. @plewis2003;@dedrick2009]. However, while the use of multi-level models have gained traction in assessing spatial inequality as a method to tackle to Modifiable Aerial Unit Problem [@jones1991], it makes little sense to assume a static hierarchy, which is required for use in multi-level models. People do not spend all their time within a fixed neighbourhood, most commute to work, and pupils attend school outside of their neighbourhood. As noted above, it is near impossible to quantify the notion of a neighbourhood and any other similar spatial concept. Even taking the broad assumption that a person is influenced entirely by their "neighbourhood", this level of influence is bound to vary itself spatially, and even those who are physical neighbours will be affected differently [@mitchell2001].
+
+Most studies that consider a multi-level modelling approach to tackling the outcomes of socio-economic variables use either wards or similar administrative boundaries making the assumption that they are an appropriate metric to define neighbourhoods, while discounting the fact that they may have little to do with the scale at which the spatial processes operate [See Table \ref{tab:compare};@pickett2001]. The selection of the hierarchical spatial areas is noted in many papers [e.g. @fone2007] as merely being chosen due to the access to data at these aggregations.
+
+\begin{table}
+  \caption{Comparisons between Multi-level modelling literature}\label{tab:compare}
+\centering
+\begin{tabular}{ l l c }
+  \hline
+Paper & Unit of Area & Area Effect \textsuperscript{a} \\ 
+  \hline
+\cite{mcculloch2001} & Ward & 6.59 \\
+\cite{fone2007} & District & 0.91 \\
+\cite{shouls1996} & District & 0.90 \\
+\cite{fone2006} & Electoral Division & 1.96 \\
+   \hline
+\multicolumn{3}{l}{\footnotesize\textsuperscript{a} Percentage of total area effects as a proportion of the individual effects}
+\end{tabular}
+\end{table}
+
+@pickett2001 review a total of 25 studies that utilise multilevel models in socioeconomic research to assess health outcomes, and note that while there is almost always a significant association attributed to area effects, this is often far smaller than that individual effects (Table 1 in @pickett2001 for a summary). Additionally @pickett2001 note that often studies may only measure one aspect of individual socioeconomic status, and some two or more. Hence, there are clearly missing considerations towards certain individual effects in many studies utilising multilevel models and the area level effects may be acting as a proxy towards a combination of uncounted for individual level effects [@geronimus1996]. For a study to suitably utilise multilevel models, a formal distinction must be made between individual and area characteristics, however, as noted above, there rarely is a distinct difference between what are considered to be either individual or area characteristics.
+
+Often individual level variables used in neighbourhood studies do not control for unmeasured differences in individuals who live in one neighbourhood versus another; thus neighbourhood effects may simply be a reflection of the characteristics of the individuals who live in certain neighbourhoods [@duncan2001].
+
+@mitchell2001 notes that the implication that multilevel models suitably account for additional levels of variation in socioeconomic variables, and as such often justify the presence of an area effect, is misleading and the reliance of incorrect assumptions to prove the existence of an area effect prevents a real, more comprehensive analysis of the underlying structure of area effects. For example, unemployment is a distinctly individual characteristic, that is often treated as an area characteristic, due to its aggregation in census data. The underlying geography of unemployment and how unemployment operates will affect different people differently, an observation that is obscured when treating an aggregation of unemployment as an area effect [@mitchell2001]. @openshaw1995 notes additionally that deprivation scores, proportion of residents in social housing, unemployment rates and levels of car ownership are examples commonly used and presented as measures of neighbourhood character despite being individual level effects.
+
+It is noted in several key papers that social processes exist throughout space [@soja1980;@harvey1989] but multi level models have to ignore this, and contain these processes within defined boundaries. Additionally the very notion of a deprived area relies on the existence of deprived people, the processes by which deprived people congregate together aren't a direct effect of the space, but an effect of the underlying social and economic processes that exist spatially [@mitchell2001].
+
+@dorling2000 notes that patterns in deprivation within London have persisted in the same areas for over 100 years, suggesting that these observations do not indicate an area effect, and suggest that the underlying deprivation is driven spatially by the persistence in policy, and economic processes.
+
+# Boundaries, the MAUP, Scale and Resolution
+
+The metric by which deprivation and other variables in targeted areas is determined relies inherently on the quality of the data itself and the measure itself. @payne2012 note that the Indices of Multiple Deprivation (IMD; used in the NDC) is not directly comparable between countries within the United Kingdom where differences are designed to account for variation in domains, indicators, weighting and geographical inconsistency between countries [@officefornationalstatistics2010]. This suggests that this measure is somewhat reductive, and the complexities of deprivation are not easily assessed through a single measure, as one would expect a single measure for all countries to be sufficient, without the need to tailor the measure between countries.
+
+The use of census data in social research is considered invaluable due to the comprehensive information they provide [@diezroux2001], however due to the aggregation of individual effects, the macrostuctrual factors that shape the spatial variation in socioeconomic variables and where these processes link to the underlying individual characteristics is obscured. These processes operate on a much smaller scale compared with society wide factors such as economic trends, or mass food production [@diezroux2001].
+
+While most studies and government policy, such as the NDC attempt to justify the use of neighbourhoods and neighbourhood level effects when tackling deprivation and its components, this choice likely stems merely due to the availability of the data at this aggregate level, typically the smallest comprehensively accessible. It should be considered that different processes act at differing levels. Additionally, neighbourhoods are merely one level at which processes relating to deprivation occur, physical resources and social policy features may be more related [@smith1999]. Even the term 'neighbourhood', which is often used to describe the unit of lower level aggregation seems to unintentionally conjure up cohesive imagery of idealised social communities [@diezroux2001].
+
+One repeated observation within England is that of the North - South divide in deprivation [@townsend1988], this observation itself is rather arbitrary, how is the North and South divided? Is it related explicitly to the observed deprivation? Similar studies have looked at national deprivation in England, at a smaller spatial scale and found that throughout England there is a patchwork of neighbouring affluent and poverty stricken areas [@higgs1998]. @voas2000 note that this distinction is important, as each would suggest alternative government policies, for clear pockets in deprivation area based initiatives make sense.
+
+Particularly, several studies have noted the fact that the majority of deprived individuals live outside targeted action zones [@shaw1999] meaning many people will be missed when policy only considers these areas for targeting. @smith1999 notes that for policy related to deprivation, the focus should always be on individual policy.
+
+Political demand is bound to have influence on the type of policy employed, often voters will support area based initiatives as they can relate to the policy being put forward [@thomson2008]. This has in the past created ABIs that are short term, poorly focused and poorly funded [@ho2017]. Due to political shifts, typically due to reelections every four years, the potential impact of any many policies is time limited, and investment often restricted [@lawless2006].
+
+The cause of deprivation is complex and interaction between the driving forces in deprivation exist between space. Focusing entirely on once area, and ignoring neighbours Inherently ignores this interaction. In addition, while the problem may be solved within one area, without any focus on surrounding areas, the approach may simply displace the issues. Problems relating to deprivation are generated at the national level, suggesting action should be more focused at this level [@smith1999].
+
+With varying spatial scale, differentiation relies heavily on the variable considered, and the current emphasis on neighbourhood level may not be appropriate for all. @voas2000 observed the variation in populations within districts and wards, and note that there is significant variance between the populations within these spatial units. The most spatial variation observed between ethnicity, dwelling type, household tenure, transport, central heating, lone parent with dependent children, qualifications and socio-economic group. This result suggests that if selecting predictor variables in determining an outcome at ward or district level, the aggregation of these individual variables into an area effect is not appropriate, additionally it is noted that these census attributes vary considerably in their variance within census area units, perhaps reflecting the limited homogeneous categorisation that census units are based.
+
+Often studies mention spatial heterogeneity and clustering when considering the spatial limitation of data, but avoid the mention of scale [@griffith2003], additionally, studies appear to share the same region but the aggregation within may differ, for example the use of counties rather than blocks within a country, a variation in the spatial resolution. @griffith2003 found that spatial autocorrelation increased with a finer resolution, variability decreased when scale was increased, and suggest that distance decay between variables is likely to vary. 
+
+The scale at which contextual effects operate may not always be fully considered in policy. For example, air quality is typically monitored at the local authority level [@environmentalprotectionuk1997], whereas studies have shown that variation in air pollution occurs at a far finer level [@hoek2008].
+
+# Conclusion
+
+Area Based Policies are not necessarily flawed, but still suffer from key issues that limited their success when first introduced. The New Deal for Communities did show success in certain areas, perhaps due to its far longer implementation over 10 years, and by setting more focused and realistic targets.
+
+The primary issue with any policy based on aggregated geographical data is that of the Modifiable Aerial Unit Problem, neighbourhoods, districts, census units or wards are often used interchangeably, but given their varying spatial scale and resolution they do not give shared results. The type of policy itself often does not consider the level at which the desired effect operates, and the fact that all policy is generally determined at some authoritative unit suggests that little consideration is given to this idea.
+
+The recent developments in census units, with the adoption of the OA level and higher aggregations units that introduce the social homogeneity within chosen areas is certainly an improvement [@ons2019], in the context of deprivation this perhaps gives a more accurate representation of the influence area through social interaction may have on factors determining deprivation, outlined above due to the influence area and social interactions within a persons social environment may have on their composition. The issue is that social homogeneity does not necessarily relate to the numerous and complex network of factors that influence deprivation at all spatial scales. Particularly @openshaw1995 outline detailed approaches to readdress census geography.
+
+The idea of social exclusion is particularly of interest, in that if government policy encourages regeneration within deprived areas, this has shown to increase property value through gentrification, and led to displacement of current inhabitants [@hamnett2003;@immergluck2018]. This builds on the inherent issue with area based initiatives, that they do not consider the effects of policy on connections to outside areas [@brooks-gunn1993].

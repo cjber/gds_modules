@@ -1,0 +1,641 @@
+    \lettrine{T}{his} dissertation primarily makes use of the free open source statistical language \R{} \citep{parallel}. Managing the large LiDAR datasets from my personal computer was made possible through the \texttt{lidR} \R{} package \citep{lidR}. Further details regarding the \R{} environment and computer setup used for this dissertation are given in \textbf{Appendix \ref{a:code}}. Also given in \textbf{Appendix \ref{a:code}} are the code snippets utilised in this methodology, for many equations, the relevant code is given as a reference to the appendix location, in the form \textbf{A.x.x}. Due to the nature of the functions used in this analysis, a single function often contains multiple equations, and so a reference to a particular appendix number may be repeated.
+
+\section{Data}
+\label{sec:data}
+
+<<cloud_total>>=
+source("../scripts/functions.r")
+ctg <- catalog("../data/point/")
+number_points <- comma(sum(ctg@data$Number.of.point.records))
+@
+
+LiDAR point cloud data was downloaded through the \href{https://data.gov.uk/}{UK Government's open data repository} which uses the \href{http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/}{Open Government Licence}, allowing for:
+    \begin{itemize}
+        \item Copying, publishing, distributing and transmission of the data
+        \item Adaptation of the data
+        \item Commercial and Non-commercial use of the information
+    \end{itemize}
+
+    LiDAR data used in this paper is available \href{https://data.gov.uk/dataset/977a4ca4-1759-4f26-baa7-b566bd7ca7bf/lidar-point-cloud}{\textsc{here}} under this licence \citep{ukgovernment2019}. This data was given as a compressed LAS file format (\texttt{.laz}), the \R{} package \texttt{lidR} provided the function \texttt{lidr::catalog()} which enabled each separate \texttt{.laz} to be combined into one object of class \texttt{LAScatalog}. Analysis on this object could then be split into chunks (selected as 500m$^2$), allowing for multi-core threading to speed up analysis, and a reduction in the memory overhead when reading in data, often a limitation of the \R{} language as objects are stored entirely into memory when read \citep{wickham2014}. The \texttt{LAScatalog} object did not require the compressed \texttt{.laz} files to be read into memory as \texttt{.las} files, meaning memory limitations were far less of a problem.
+
+    Aerial imagery was downloaded through \href{https://digimap.edina.ac.uk/}{Digimap\textsuperscript{\textregistered}
+    } which uses the \textit{Aerial Digimap Educational User Licence}, allowing for free use of the data for educational purposes \citep{theuniversityofedinburgh2019}.
+
+Road centreline geometries were accessed through the \href{https://www.ordnancesurvey.co.uk/business-and-government/products/opendata.html}{Ordnance Survey Open Data repository} which shares the Open Government licence. These were downloaded in the GeoPackage format (\texttt{.gpkg}) nationally and cropped to the extent of the LiDAR point cloud data.
+
+\section{LiDAR Preprocessing}
+
+The total number of LiDAR points used in this study is \Sexpr{number_points}. All LiDAR data has a vertical accuracy of +/-15cm Root mean square error (RMSE). An overview of the LiDAR data selected for this study is given on Table \ref{tab:lidartab}. The variables of primary interest are:
+
+\begin{itemize}
+    \item \textbf{z:} The distance a laser pulse is reflected back to to scanner, calculated by the time taken for a return pulse to be detected.
+    \item \textbf{Intensity:} The amplitude of the return pulse, reflected back by the surface terrain or objects.
+	\item \textbf{ReturnNumber:} A number of range 1-5, indicating for a point, the corresponding order of a reflected laser pulse. A return number of 1 indicates the first return for a pulse (and highest $z$ value), a return number of 5 indicates the last return (and lowest $z$ value).
+	\item \textbf{NumberOfReturns:} The number of return pulses for a single laser pulse (maximum of 5).
+    \item \textbf{Classification:} A number given to a point indicating a specific numeric classification. Of interest in this study is a classification of 2, indicating a ground point. More information is given by \href{http://desktop.arcgis.com/en/arcmap/10.3/manage-data/las-dataset/lidar-point-classification.htm}{\cite{esri2019}}, which outlines numerical classifications for various vegetation types and man made structures.
+\end{itemize}
+
+<<>>=
+model <- fread("../data/point/points.csv")
+lidar_tab <- model %>% dplyr::select(Z, Intensity, ReturnNumber, NumberOfReturns, ScanDirectionFlag, EdgeOfFlightline, Classification, ScanAngleRank)
+tmp <- do.call(
+  data.frame,
+  list(
+    Mean = apply(lidar_tab, 2, mean),
+    SD = apply(lidar_tab, 2, sd),
+    Min = apply(lidar_tab, 2, min),
+    Max = apply(lidar_tab, 2, max)
+  )
+)
+@
+
+<<lidartab, results='asis'>>=
+make_table(tmp, cap = "LiDAR Point Cloud Summary Data") %>% 
+kable_styling(latex_options = "hold_position")
+@
+
+\subsection{Last Pulse}
+
+The LiDAR point cloud data used in this paper gives the values for 5 pulse returns. The canopy above roads may be excluded through ignoring early pulses (higher Z values), therefore only the last pulse values for any point are selected, taking only points where the \textbf{ReturnNumber} equals the \textbf{NumberOfReturns}. Last pulse points may be expressed as;
+
+$$
+\mathbf{p}_{i}=(l p x, l p y, l p z, l p i),
+$$
+\begin{flushright}
+    \footnotesize{\ref{code:lidr_clean}}
+\end{flushright}
+
+\noindent where $\mathbf{p_i}$ is a single instance of a LiDAR point within the chosen point cloud, $lpx$ is the last pulse $x$ coordinate, $lpy$ the last pulse $y$ coordinate, $lpz$ the last pulse $z$ coordinate, and $lpi$ the last pulse intensity value.
+
+\subsection{Normalisation}
+
+Ground points were classified using the Cloth Simulation Filtering (CSF) algorithm, as described in \cite{zhang2016}. Points were already classified in the data provided, however, as the classification technique was unknown, reclassification was considered necessary. The general implementation simulates the movements of a piece of cloth lying over the inverse of a point cloud, as the point cloud is flipped, the cloth settles beneath ground points, while covering points that lie separate to the ground, essentially forming a digital terrain model (DTM), cloth simulations are described in more detail in \cite{bridson2005} and subsection \ref{subs:dtm}. The CSF algorithm is given;
+
+$$
+X(t+\Delta t)=2 X(t)-X(t-\Delta t)+\frac{G}{m} \Delta t^{2},
+$$
+\begin{flushright}
+    \footnotesize{\ref{code:lidr_clean}}
+\end{flushright}
+
+<<>>=
+pts <- fread("../data/point/points.csv")
+pts_clean <- fread("../data/point/points_clean.csv")
+
+matches_pts <- merge(pts, pts_clean, by = c("X", "Y")) %>% 
+    na.omit()
+
+cchange <- sum(matches_pts$Classification.y == 2) / sum(matches_pts$Classification.x == 2)
+@
+
+\noindent where $m$  is the mass of a single LiDAR point (set to 1), $\Delta t$ is the time step between points and $G$ represents the gravity constant. The implementation of this algorithm was given as part of the \texttt{lidR} package. Reclassification resulted in an increase in the number of classified ground points by \Sexpr{round((cchange - 1) * 100, 2)}\%. Reflecting primarily the simplification of existing classifications into ground and non-ground.
+
+
+With the classification of ground points, (given $\mathbf{Classification} = 2$), a full DTM may be produced through spatial interpolation of the classified points.  Interpolation uses the inverse distance weighting and $k$ nearest neighbours algorithms to produce the DTM. Nearest neighbours were selected as $k = 10$, with $q = 2$ for the inverse weighting, and used to produce a DTM with a resolution of 1m$^2$. This particular technique was selected over more comprehensive methods such as kriging as the number of points is very high, and the small benefit of kriging was considered minimal compared with the increase in computational load. The $z$ values from the DTM were then subtracted from the LiDAR point cloud, leaving a normalised point cloud. This ensures that when extracting height information, any observed values are due to objects on the surface of the terrain, and not due to the lie of the terrain itself.
+
+\subsection{Points Extent}
+
+With the normalised last pulse point cloud, the point cloud was clipped to within a 30m extent of each known road location, using the OS road shapefiles;
+\[
+\begin{aligned}
+   \textbf{p}_i \in \left[A(r_i) \times 30m^2\right],
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:extract_buff}}
+\end{flushright}
+
+\noindent where $A(r_i)$ are the geometric areas of each road in the study area. Selecting a 30m extent ensured that even with slight inaccuracy in road location, the road LiDAR points would likely not be excluded. A large number of unimportant points were therefore removed, saving on computational resources. Additionally this extent ensured that both road and non road points were included, but reduced the chance of false positives from occurring as fewer non road points were now included in the analysis.
+
+
+\subsection{Noise Filtering}\label{subsec:noise}
+
+Intensity noise was filtered through area based outlier detection, measuring the 95th percentile values within a 10m$^2$ area, and removing all points above the 95\% percentile. This can be expressed as;
+
+\[
+    \begin{aligned}
+\mathbf{c}_{k} = \Big(\mathbf{p}_i \in \Big[\frac{95}{100} \times lpi\Big]\Big) \\
+A\left(\mathbf{c}_{\mathbf{k}}\right)=10 m^{2}
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:las_filter_noise}}
+\end{flushright}
+
+\noindent
+where $\mathbf{c}_k$ represents a 10m$^2$ selection of LiDAR points, where each point $(\mathbf{p}_i)$ has an intensity value within the 95\% percentile intensity for all original points in $\mathbf{c}_k$.
+
+\subsection{LiDAR Catalog}
+
+As mentioned in Section \ref{sec:data}, objects of class \texttt{LASCatalog} enabled more efficient processing by allowing the LiDAR point cloud to be processed in predefined batch sizes. Considering a collection of processed LiDAR points; last pulse, normalised, clipped to 30m road extents, and intensity noise filtered. Points were then grouped into 500m$^2$ areas;
+
+\[
+\begin{aligned}
+\mathbf{C}_{N}=\left\{\mathbf{c}_{1}, \mathbf{c}_{2}, \ldots, \mathbf{c}_{k}\right\} \\
+A\left(\mathbf{C}_{N}\right)=500 m^{2}, \\
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:las_filter_noise}}
+\end{flushright}
+
+\noindent and each 500$m^2$ area collectively represents the overall processed point cloud;
+
+\[
+\begin{aligned}
+\mathbf{S}=\left\{\mathbf{C}_{1}, \mathbf{C}_{2} \ldots, \mathbf{C}_{N}\right\}.
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:comb_ctg}}
+\end{flushright}
+
+\section{Road Analysis}
+\label{sec:road-extraction}
+
+The preprocessed LiDAR data was combined with the OS road shapefiles and aerial imagery to obtain a set of criteria to assess the chosen road network. A summary of the information provided alongside OS road shapefiles is given on Table \ref{tab:roadstab}. While both \texttt{roadNumberTOID} and \texttt{roadNameTOID} do provide true road identification for many roads, this was not true for each road in the area chosen. Due to this, it was impossible to identify what could be considered an individual road, meaning a \textit{road} will now be defined as indicated on Figure \ref{fig:area_map}, selected based on the shapefile geometry provided.
+
+<<>>=
+roads_info <- st_read("../data/osroads/oproad_crop.gpkg")  %>% 
+    select(c(id, roadNameTOID, roadNumberTOID, roadClassification, roadFunction, formOfWay, length, name1)) %>% 
+    st_drop_geometry()
+
+funcs <- unique(roads_info$roadFunction)
+
+tmp <- do.call(
+  data.frame,
+  list(
+    Example = apply(roads_info, 2, head, 1)
+  )
+) %>% 
+rownames_to_column("Variable")
+@
+
+<<roadstab, results='asis'>>=
+make_table(tmp, cap = "OS Roads Data Summary") %>% 
+kable_styling(latex_options = "hold_position")
+@
+
+The roads in this paper consist of these functions; 
+
+\begin{itemize}
+<<results = 'asis'>>=
+cat(paste("\\item", funcs), sep = "\n")
+@
+\end{itemize}
+
+B roads are classified roads, while other functions are unclassified. All roads are single carriageway, and so for the purpose of this analysis it is assumed they likely have the default national speed limit of 60mph. All \textit{Restricted Local Access Roads} were removed, as were roads with a length of less than 50m, often those clipped by the extent of the LiDAR data.
+
+\section{Road Angles}\label{sec:angles}
+
+The angle of each bend in a road was identified through the nodes produced in the creation of the road shapefiles. First the road linestrings were split into points, with coordinates representing each node within a road, a point at which the orientation of the linestring is altered, (See Figure \ref{fig:bearingang1} and \ref{fig:bearingang2} for illustrations of road nodes).
+
+The direction of a road was considered to be the \textit{bearing angle} $\hat \theta$, from a node $\mathbf{N}_i = \left(x_{i}, y_{i}\right)$ to a node $\mathbf{N}_{i+1} = \left(x_{i+1}, y_{i+1}\right)$, with the angle measured in a clockwise direction from north. This is represented on Figure \ref{fig:bearingang1}.
+
+    \begin{figure}[htbp]
+        \centering
+\begin{tikzpicture}[scale=7]
+    \filldraw (.2,.4) circle[radius=.3pt] node [below left] {$\mathbf{N}_{i}$};
+
+\draw[-] (0.1,.4) -- (0.3, .4);
+\draw[-] (0.2,.3) -- (0.2, .5) node[above] {$N$};
+
+\filldraw (.8,.7) circle[radius=.3pt] node [above right] {$\mathbf{N}_{i+1}$};
+
+\draw[-] (0.2,.4) -- (0.8, .7);
+
+    \draw[<-] (0.28,.44) arc (45:90:.111);
+    \node[] at (.25,.5)  {$\hat \theta_i$};
+\end{tikzpicture}
+\caption[Bearing Angle ($\hat \theta_i$) between two sequential road nodes.]{Bearing Angle ($\theta$) between two sequential road Nodes; $\mathbf{N}_{i}$ and $\mathbf{N}_{i+1}$. North is given by $N$.}\label{fig:bearingang1}
+\end{figure}
+
+
+To find the angle $\hat \theta$, the node $\mathbf{N}_{i+1}$ can be represented into relation to node $\mathbf{N}_{i}$ as;
+
+$$
+\left(x_{i+1}, y_{i+1}\right)=\left(x_{i}+r \sin \theta, y_{i}+r \cos \theta\right)
+$$
+
+\noindent where $r$ is the length of the line segment $N_{i}N_{i+1}$. Rearranging the equation for $\theta$ gives;
+
+$$
+    \tan \theta=\frac{x_{i+1}-x_{i}}{y_{i+1}-y_{i}}
+$$
+
+\noindent this equation can be rewritten to calculate the value of $\theta$ using the $\mathit{atan2}$ function;
+
+$$
+\theta=\mathrm{atan} 2\left(x_{i+1}-x_{i}, y_{i+1}-y_{i}\right) \in[-\pi, \pi]
+$$
+
+
+\noindent finally the bearing angle $\hat \theta \in[0,2 \pi]$ may be obtained by the addition of 2$\pi$ to any value below 0;
+
+\[
+    \begin{aligned}
+\hat \theta=\left\{\begin{array}{ll}{\theta,} & {\theta \geq 0} \\
+{2 \pi+\theta,} & {\theta<0}\end{array}\right.
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:road_angles}}
+\end{flushright}
+
+With the bearing angle of the first line segment ($\hat \theta_{1}$) for a particular road, the change in orientation of the second  line segment between nodes $\mathbf{N}_2$ and $\mathbf{N}_3$ may be given;
+
+\[
+\begin{aligned}
+\hat{\theta}_2= &\mathrm{atan} 2\left(x_{3}-x_{2}, y_{3}-y_{2}\right) - \\
+&\mathrm{atan} 2\left(x_{2}-x_{1}, y_{2}-y_{1}\right),
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:road_angles}}
+\end{flushright}
+
+\noindent or simply written as $\hat \theta_{2} = \hat \theta_{2} - \hat \theta_{1}$, with additional nodes following the pattern $\hat \theta_{i} = \hat \theta_{i} - \hat \theta_{i-1}$. Figure \ref{fig:bearingang2} illustrates this for nodes 1 to 3, indicating the bearing angle $\hat \theta_2$ in relation to the bearing angle $\hat \theta_1$, rather than in relation to the north ($N$).
+
+    \begin{figure}[htbp]
+        \centering
+\begin{tikzpicture}[scale=7]
+
+    \filldraw (.2,.4) circle[radius=.3pt] node [below left] {$\mathbf{N}_1$};
+
+\draw[-] (0.1,.4) -- (0.3, .4);
+\draw[-] (0.2,.3) -- (0.2, .5) node[above] {$N$};
+
+\filldraw (.8,.7) circle[radius=.3pt] node [above left] {$\mathbf{N}_{2}$};
+\filldraw (.9,1) circle[radius=.3pt] node [above right] {$\mathbf{N}_{3}$};
+
+\draw[-] (0.2,.4) -- (0.8, .7);
+\draw[-] (0.8,.7) -- (.9, 1);
+
+    \draw[<-] (0.28,.44) arc (45:90:.111);
+    \node[] at (.25,.5)  {$\hat \theta_{1}$};
+
+\draw[dotted] (0.8,.7) -- (1, .8);
+
+    \draw[<-] (0.9,.75) arc (45:90:.1);
+    \node[] at (.88,.8)  {$\hat \theta_{2}$};
+\end{tikzpicture}
+\caption[Bearing Angle between the first ($\mathbf{N}_1$), second ($\mathbf{N}_2$) and third node ($\mathbf{N}_3$) of a road.]{Bearing Angle between the first ($\mathbf{N}_1$), second ($\mathbf{N}_2$) and third node ($\mathbf{N}_3$) of a road; giving $\hat \theta_1$ in relation to the north ($N$), and $\hat \theta_2$ in relation to the bearing angle $\hat \theta_1$.}
+\label{fig:bearingang2}
+\end{figure}
+
+ As the bearing angle between the first two nodes gives only the initial direction of the road, this was set to zero; $\hat \theta_{1} = 0$. In the final analysis, for each road the maximum bearing angle between any two nodes was selected, as well as the average bearing angle between all nodes.
+
+\section{Road Node Elevation Change}\label{sec:elev}
+
+The elevation change between two road node points was calculated by first selecting non-normalised LiDAR points at a geometric node within a 1m$^2$ area. LiDAR points were then filtered by those only classified as ground, and with only a single return, to reduce the likelihood of inaccurate $z$ values from canopy or other vegetation and vehicles. The mean $z$ value of points were found for each node, and elevation change between each node was calculated;
+\[
+\begin{aligned}
+    \Delta e(\mathbf{N}_i, \mathbf{N}_{i+1}) = \Delta \left\{\begin{array}{ll}
+    \overline{spz} \in  \left[A(\mathbf{N}_i)\times 1m^2\right], \\
+    \overline{spz} \in  \left[A(\mathbf{N}_{i+1})\times 1m^2\right]
+\end{array}\right.,
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:height_change}}
+\end{flushright}
+
+\noindent where $spz$ are the $z$ values for ground classified points with a single return, and $\Delta e(\mathbf{N}_i, \mathbf{N}_{i+1})$ is the change in elevation between sequential nodes $\mathbf{N}_i$ and $\mathbf{N}_{i+1}$, taking the change in mean single return pulse point $z$ values ($\overline{spz}$) within a 1m$^2$ buffer of each node. For each road, the total elevation change per kilometer was calculated by dividing the sum of all elevation changes between two neighbouring road nodes by the length of a road in kilometers;
+
+\[
+\begin{aligned}
+   \Delta e = \sum \frac{\Delta e(\mathbf{N}_i, \mathbf{N}_{i+1})}{L_k \times 1000},
+   \end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:height_change}}
+\end{flushright}
+
+\noindent where $L_k$ is the length of a road $k$ in meters.
+
+\section{Surface Quality}\label{sec:qual}
+
+Surface quality was assessed through the range in intensity values found at a 1m$^2$ area around each road node. Again, to ensure there was no inaccuracy in intensity values caused by later returns passing through a canopy, only points that had a single return pulse and classified as ground were used in this analysis;
+
+\[
+\begin{aligned}
+    \Delta q(\mathbf{N}_1,\mathbf{N}_2,\dots, \mathbf{N}_{i}) = & \Delta (\overline{spi}) \in  A(\mathbf{N}_i)\times 1m^2 \\
+    q_r = & \Delta q(\mathbf{N}_1,\mathbf{N}_2,\dots, \mathbf{N}_{i})_{max} - \\
+    & \Delta q(\mathbf{N}_1,\mathbf{N}_2,\dots, \mathbf{N}_{i})_{min},
+\end{aligned}
+\]
+
+\noindent where $spi$ represents LiDAR point intensities with a single pulse return and ground classified, and $\Delta q(\mathbf{N}_1, \mathbf{N}_2, \dots, \mathbf{N}_i)$ represents each individual intensity value for each node in a road, giving the range $q_r$.
+
+\section{Road Width}\label{sec:road_width}
+
+\subsection{Road Sampling}
+
+The LiDAR point cloud was sampled at 60m by 2m bounding regions, at regular 10 meter intervals for each road, perpendicular to the road direction, ensuring that when road direction changed, the sampling locations remained perpendicular. To achieve this, each road was first split into nodes at which road direction changed, with a single road consisting of multiple nodes with $xy$ coordinates, indicating a point along a road where the road direction changed. From this, points with $xy$ coordinates were created at 10 meter intervals beginning at the start of a road, (considered Node 1; $\mathbf{N}_1$), until the next node along the road ($\mathbf{N}_2$). To calculate these points along each line between two neighbouring nodes ($\mathbf{N}_{i} = (x_i, y_i)$ and $\mathbf{N}_{i+1} = (x_{i+1},y_{i+1})$), first the individual change in $x$ and $y$ values was calculated, expressed as;
+
+\begin{equation}\label{eq:xydiff}
+\begin{aligned}
+    |x| =& x_{i+1} - x_i \\
+    |y| =& y_{i+1} - y_i,
+\end{aligned}
+\end{equation}
+\begin{flushright}
+    \footnotesize{\ref{code:compute_samples}}
+\end{flushright}
+
+\noindent along with the euclidean distance between these nodes;
+
+\[
+\begin{aligned}
+    d(\mathbf{N}_{i},\mathbf{N}_{i+1}) = \sqrt{(x_{i+1} - x_{i})^2 + (y_{i+1} - y_{i})^2}.
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:euc}}
+\end{flushright}
+
+A point ($p_k$) along these two nodes, at an interval distance $I_k$, was determined through these equations;
+
+\[
+\begin{aligned}
+    px =& \frac{x_{i} + |x|}{d(\mathbf{N}_{i},\mathbf{N}_{i+1})} \times I_k \\
+    py =& \frac{y_{i} + |y|}{d(\mathbf{N}_{i},\mathbf{N}_{i+1})} \times I_k,
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:compute_samples}}
+\end{flushright}
+
+\noindent giving a point $p_k = (px,py)$ at a distance $I_k$ from $N_i$ in the direction of $N_{i+1}$. Where $I_k$ is the increment, which increases by 10m until the length of the node is covered, given $I_{1} = 10, I_{2} = 20, \dots, I_{k}<d(\mathbf{N}_{i},\mathbf{N}_{i+1})$ and $k \geq 2$. To create a perpendicular sample from a point $p_k$ at position $I_k$ between two nodes $N_i$ and $N_{i+1}$, first two points at a perpendicular distance $\delta$ from the bearing angle between the two nodes, at a point $p_k$ were created, with $\delta$ selected as 30m. First the euclidean distance from $\mathbf{N}_{i+1}$ to the point $p_k$ was calculated;
+
+\[
+\begin{aligned}
+    d(N_{i+1},p_k) = \sqrt{(x_{i+1} - px)^2 + (y_{i+1} - py)^2},
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:euc}}
+\end{flushright}
+
+\noindent with this distance, the value required for each $xy$ coordinate to achieve a distance of $\delta$ from a point $p_k$ may be calculated by;
+
+\[
+\begin{aligned}
+    \delta_x = \frac{\delta}{d(N_{i+1},p_k)} \times (x_{i+1} - px_k) \\
+    \delta_y = \frac{\delta}{d(N_{i+1},p_k)} \times (y_{i+1} - py_k),
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:compute_samples}}
+\end{flushright}
+
+\noindent then to create perpendicular points at length $\delta$ from the point $p_k$, the value $\delta_y$ was added to the $x$ value of the point $p_k$, while the value $\delta_y$ was subtracted from the $y$ value of the point $p_k$. This was then inverted to produce a second point. This may be expressed as;
+
+\[
+\begin{aligned}
+    P_{perp}=\left\{\begin{array}{ll}
+            px_k + \delta_y, & py_k - \delta_x \\
+        px_k - \delta_y, & py_k + \delta_x
+\end{array}\right.,
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:perp}}
+\end{flushright}
+
+\noindent where $P_{perp}$ is a collection of two points at distance $\delta$ from the point $p_k$. From these two points, a linestring was created between them, which was then buffered to 2m. This gave sample lines, with an area of 2m by 60m, at 10m intervals along each road. The total point cloud was then clipped to only include points with fell inside these sample lines ($s_i$);
+
+\[
+\begin{aligned}
+    \textbf{S} = \textbf{p}_i \in \left[A(s_i) \times 2m^2 \right].
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:clip_samples}}
+\end{flushright}
+
+
+\subsection{Aerial Imagery}
+
+With the perpendicular sample lines extracted for the length of every road, to assist with the prediction of correct road locations, true colour aerial imagery was included. This imagery was first converted from three band RGB raster images, to a single-band grey-scale raster brick with values ranging 0 to 255. Combining the three bands into a single band produces a grey scale image, that more accurately portrays luminescence information from the aerial image, which has been included in past road classification methodologies.
+
+$$
+lum = \frac{Band_1 + Band_2 + Band_3}{3}
+$$
+\begin{flushright}
+    \footnotesize{\ref{code:greyscale}}
+\end{flushright}
+
+\subsection{Linear Probability Models and Road Width}\label{sec:lpm}
+
+For a supervised classification of roads, first the outcome variable \textit{road} was estimated by classifying all points within a 2m buffer of the known road centrelines as road, and all points outside this as non-road. To further classify road and non-road, linear models were constructed in relation to this outcome variable, and compared to assess effectiveness. A maximal approach was chosen, selecting all appropriate predictor variables, iterating through models by removing variables that did not significantly influence the model outcome, or created noise.
+
+In addition to the variables provided by the LiDAR and aerial data, the variable $Dist$ was created and included, representing the shortest distance from a point to the centreline of the road it is associated with, considering that road points should be weighted more towards points that are closer to the centre-point of the road.
+
+Linear probability models essentially follow the same formula as a linear regression model:
+
+\[
+\begin{aligned}
+Y_{i}=\beta_{0}+\beta_{1}+X_{1 i}+\beta_{2} X_{2 i}+\cdots+\beta_{k} X_{k i}+u_{i},
+\end{aligned}
+\]
+
+\noindent but given a binary outcome variable $Y_i$, this is considered to be a linear probability model, taking the form;
+
+\[
+\begin{aligned}
+E\left(Y | X_{1}, X_{2}, \ldots, X_{k}\right)=P\left(Y=1 | X_{1}, X_{2}, \ldots, X_{3}\right),
+\end{aligned}
+\]
+
+\noindent where;
+
+\[
+\begin{aligned}
+P\left(Y=1 | X_{1}, X_{2}, \ldots, X_{k}\right)=\beta_{0}+\beta_{1}+X_{1 i}+\beta_{2} X_{2 i}+\cdots+\beta_{k} X_{k i}.
+\end{aligned}
+\]
+
+\noindent $\beta_j$ therefore may be interpreted as the change in the probability that $Y_i = 1$, with all other predictor variable constant. $\beta_j$ may be estimated using Ordinary Least Squares regression \citep{hanck2019}. 
+
+<<range_vals>>=
+range_val <- fread("../data/derived/model_data/linearmodels.csv")
+min_range <- min(range_val$lm1_pred)
+max_range <- max(range_val$lm1_pred)
+@
+
+
+Likelihood values from the predictions gave a range of numerical values (\Sexpr{round(min_range,2)} to \Sexpr{round(max_range, 2)}). Points that fell below a certain threshold were removed, leaving only points that were most likely correctly identified as road points. This threshold was assessed qualitatively through both observation of the distribution of probability ranges for each model, and results gained through different thresholds. Considering a threshold $x$, this may be expressed as;
+
+\[
+\begin{aligned}
+\mathbf{S} &= \Big(\mathbf{p}_i \in \Big[\frac{x}{100} \times lm\Big]\Big), \\
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:lm_compute}}
+\end{flushright}
+
+\noindent where $\mathbf{S}$ is the total point cloud and $lm$ is the value assigned to a point $\mathbf{p}_i$, indicating the likelihood that the point is part of the road surface.
+
+Further qualitative assessment of the results revealed that some points considered to be noise were still present, but often isolated. To ensure no isolated points were present, the minimum distance between each point, and the nearest neighbouring point was checked, if a single point was considered isolated, with over 1m between it and any other point, it was removed. This may be expressed as;
+
+\[
+\begin{aligned}
+    \mathit{D} &= \sqrt{\delta xi^{2} + \delta y^{2}} \\
+    \mathbf{S} &= (\mathbf{p}_{i}\in [\mathit{D} \leq 1m]),
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:filter_samples}}
+\end{flushright}
+
+\noindent given $\mathit{D}$ is the minimum distance between a point and any other point.
+
+The full point cloud $\mathbf{S}$ now gave of a collection of predicted road points for each sample line along a road segment, with noise removed.  To obtain road widths from these points, the maximum distance between two points in a particular sample was determined, these points were kept and all others removed. A linear section of road with two samples resembles Figure \ref{fig:sample_points}.
+
+
+
+\begin{figure}[htbp]
+    \centering
+\begin{tikzpicture}[scale=2]
+
+\draw[<->, very thick, color = gray] (0,0.5) -- (0,4);
+\draw[dashed, very thick, color = gray] node[above, color = black]{$\mathbf{N}_{i}$} (0,0.3) -- (0,4.2) node[above, color = black]{$\mathbf{N}_{i+1}$};
+
+\filldraw (-1,1) circle[radius=1pt] node [below left] {$\mathbf{A}_1$};
+\draw[-] (-1,1) -- node[fill=white,inner ysep=3pt, inner xsep = 3pt]{$h_\mathbf{A}$} (1,2);
+\draw[dashed] (-1,1) -- node[fill=white,inner ysep=3pt, inner xsep = 3pt]{$b_\mathbf{A}$} (1,1) ;
+\draw[dotted] (1,1) -- node[fill=white,inner ysep=3pt, inner xsep = 3pt]{$a_\mathbf{A}$} (1,2);
+\filldraw (1,2) circle[radius=1pt] node [above right] {$\mathbf{A}_2$};
+
+\draw(.85,1)--(.85,1.15)--(1,1.15); % right angle
+
+\draw[-] (-.6,1) arc (0:55:.2);
+\node[] at (-.5,1.12)  {$\theta_\mathbf{A}$};
+
+\filldraw (-1,4) circle[radius=1pt] node [below left] {$\mathbf{B}_2$};
+\draw[-] (-1,4) -- node[fill=white,inner ysep=3pt, inner xsep = 3pt]{$h_\mathbf{B}$} (1,3);
+\draw[dashed] (-1,3) -- node[fill=white,inner ysep=3pt, inner xsep = 3pt]{$b_\mathbf{B}$} (1,3);
+\draw[dotted] (-1,3) -- node[fill=white,inner ysep=3pt, inner xsep = 3pt]{$a_\mathbf{B}$}(-1,4);
+\filldraw (1,3) circle[radius=1pt] node [above right] {$\mathbf{B}_1$};
+
+\draw(-.85,3)--(-.85,3.15)--(-1,3.15); % right angle
+
+\draw[-] (.6,3.2) arc (135:200:.2);
+\node[] at (.4,3.12)  {$\theta_\mathbf{B}$};
+\end{tikzpicture}
+\caption[Road LiDAR points at maximum distance apart, showing two example sample locations ($\mathbf{A}$ and $\mathbf{B}$).]{Road LiDAR points at maximum distance apart, showing two example sample locations ($\mathbf{A}$ and $\mathbf{B}$). Road centreline represented by the thick grey line, as a line joining between two nodes. True road width is indicated by the dashed lines $b_\mathbf{A}$ and $b_\mathbf{B}$, considered to be the adjacent side of a triangle in relation to be bearing angles between the first and second point of each sample, $\theta_\mathbf{A}$ and $\theta_\mathbf{B}$. The distance between the two points per sample are considered to give the hypotenuse length of a triangle ($h_\mathbf{A}$ and $h_\mathbf{B}$).}\label{fig:sample_points}
+\begin{flushright}
+    \footnotesize{\ref{code:max_dist}}
+\end{flushright}
+\end{figure}
+
+To find the angle $\theta_\mathbf{K}$, the difference in $x$ and $y$ coordinates between two nodes $\mathbf{N}_i$ and $\mathbf{N}_{i+1}$ was calculated as in Equation \ref{eq:xydiff} to obtain the bearing angle between these nodes, represented by the grey line on Figure \ref{fig:sample_points}. Similarly, the difference in $x$ and $y$ coordinates were found for the perpendicular points associated with the sample. With this, $\theta_\mathbf{K}$ is given;
+
+\[
+\begin{aligned}
+    \theta_\mathbf{K}=\mathrm{atan} 2\left(|x|_l,|y|_l\right) - \mathrm{atan} 2\left(|x|_s,|y|_s\right)
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:adjacent_length}}
+\end{flushright}
+
+\noindent where the difference in node coordinates gives $L = (|x|_l,|y|_l)$, and the difference in sample line coordinates gives $s = (|x|_s,|y|_s)$.
+
+Given the two selected points at every sample with a maximum distance between them, trigonometry could be used to determine the width of the road at that particular location. Road width is considered to be the adjacent line length ($b_\mathbf{K}$; where $\mathbf{K}$ is a single sample location), perpendicular to the road segment, considering the distance between the two points to be the hypotenuse  of a right angled triangle (Figure \ref{fig:sample_points}; $|\mathbf{K}_1\mathbf{K}_2| \equiv h_\mathbf{K}$). The width $b_\mathbf{K}$ for each sample location was found, this may be expressed using trigonometry as;
+
+\[
+\begin{aligned}
+    b_\mathbf{K} =& |\mathbf{K}_1\mathbf{K}_2| \times cos(\theta_\mathbf{K})
+\end{aligned}
+\]
+\begin{flushright}
+    \footnotesize{\ref{code:find_dists}}
+\end{flushright}
+
+\noindent where $b_\mathbf{K}$ gives the predicted width of a road at a sample $\mathbf{K}$. With a complete set of calculated road widths for each sample, any width above 8m was removed, in addition to any width below 2m, under the assumption that a width calculated outside these limits would be caused due to noise or inaccuracy.
+
+There is the possibility that the maximum distance between two points does not provide the maximum perpendicular distance across a road section. Such a situation would arise given a triangle formed that is has an opposite length ($a_\mathbf{K}$) above the adjacent length ($b_\mathbf{K}$), giving a hypotenuse ($h_\textbf{K}$) with a longer vertical length. However, given the maximum opposite line length between two points in a sample line is 2m, (each sample is 2m by 60m), for any line where the opposite length is greater than the adjacent length, the adjacent length must therefore be below 2m and thus, the road width calculated from this sample is removed during the filtering process.
+
+\subsection{Improved Road Centrelines}
+
+During the analysis of the linear models, it was noted that road centrelines were often inaccurate, giving road outcome values that were not representative of the road surface. In an attempt to adjust for this, new road centrelines were derived based on the centre location of road points in each sample, classified through an initial linear probability model. The mid point between two points $\left(x_{1}, y_{1}\right)$ and $\left(x_{2}, y_{2}\right)$ can be expressed as;
+
+$$
+\left(\frac{x_{1}+x_{2}}{2}, \frac{y_{1}+y_{2}}{2}\right).
+$$
+\begin{flushright}
+    \footnotesize{\ref{code:mid_pts}}
+\end{flushright}
+
+
+With the mid point of each classified road sample, these were than joined for form new centrelines, and a further linear probability model was ran and compared.
+
+Given the improvement in road centreline locations, it was considered feasible to construct linear probability models individually for each sample location on each road. This technique would allow for per road variation in material type or quality, and potentially reduce the amount of noise brought in from inaccurate centrelines. Preliminary testing of this method revealed that it was essential to remove any sample containing tree canopy, as the predictions were based off points that misrepresented true road points. While points are generally able to penetrate the canopy, the intensity values produces by these points was reduced, and removed the distinction between road intensity values, and vegetation. This analysis of the LiDAR data is described in more detail in Chapter \ref{ch:results}. Additionally, due to the reduced number of points, it was considered feasible to filter out points that gave model $p$ values below 0.05. For each individual model, if the $p$ value of any predictor or the outcome variable road was above 0.05, the sample location it was associated with was removed in an attempt to improve the reliability of results. This may be expressed as;
+
+$$
+\mathbf{S} = \Big(s_i \in \Big[p_s < 0.05 \Big]\Big).
+$$
+\begin{flushright}
+    \footnotesize{\ref{code:lm_compute}}
+\end{flushright}
+
+
+\subsection{Final Model Analysis}
+
+To aid with model interpretability, the direct comparison between each variable in the analysis was enabled through centering and scaling with the use of beta coefficients \citep{peterson2005};
+
+$$
+\beta_{p}=\frac{\operatorname{Cov}\left(r_{p}, r_{b}\right)}{\operatorname{Var}\left(r_{b}\right)}.
+$$
+\begin{flushright}
+    \footnotesize{\ref{code:lm_beta}}
+\end{flushright}
+
+\subsection{Estimate of True Widths}
+
+QGIS \citep{QGIS} was used to manually measure the width at various points along each road using 25cm resolution aerial imagery, avoiding stretches of road with canopy cover that obscured the true road width. With the widths, the results of each model was compared to assess model accuracy. Each width was normalised to allow comparison between each road, and to give a final average accuracy value. Normalisation was achieved through finding the relative difference in width as a percentage;
+
+\[
+\begin{aligned}
+    \mathbf{W}_{n} = \frac{\mathbf{W}}{\mathbf{W}_{e} \times 100},
+\end{aligned}
+\]
+
+\noindent where $\mathbf{W}_{n}$ is the normalised width, $\mathbf{W}$ is the average width per road derived from the linear model, and $\mathbf{W}_{e}$ is the qualitatively estimated width. Given some widths occasionally were overestimated, to ensure the outcome of this calculation gave a relative value, any normalised width given a value above 100 was reassigned;
+
+\[
+\begin{aligned}
+    \mathbf{W}_{n} = 100 - \mathbf{W}_{n},
+\end{aligned}
+\]
+
+\noindent given $\mathbf{W}_{n} > 100$. 
+
+
+\section{Road Quality Assessment}
+
+To provide a method for direct comparison between each road, the extracted features are normalised and combined as one to produce the Road Quality Index (RQI).
+
+Normalisation of each road feature was achieved through a simple range normalisation;
+
+\[
+\begin{aligned}
+m \mapsto \frac{m-r_{\min }}{r_{\max }-r_{\min }},
+\end{aligned}
+\]
+
+\noindent where $r_{\text {min }}$ denotes the minimum of the range of a variable,  $r_{\text {max }}$ denotes the maximum of the range of a variable, and $m \in\left[r_{\text {min }}, r_{\text {max }}\right]$ denotes the variable to be scaled. As an increase in road width is associated with a higher quality road, as opposed to larger values of each other variable indicating a poorer quality road, the width values were first inversed before normalisation. An additional variable, reliability was presented in addition to the RQI, which gives a value for the number of points per road length, ($P_n/L$), allowing for some information regarding the density of sample points to be considered in analysis.
+
+Following normalisation, the sum of all normalised variables for a particular road were taken, and subtracted from 1 to give positive values indicating better quality roads, and lower values indicating lower quality roads. These variables involved in the creation of this index are;
+
+\begin{itemize}
+    \item \textbf{Road Angles:} The bearing angle change in road direction, considering the initial road direction as a bearing angle of 0$^{\circ}$ (Section \ref{sec:angles}).
+    \item \textbf{Road Elevation Change:} The change in elevation for each node in a road, extracted from LiDAR data, giving a total elevation change for a full road (Section \ref{sec:elev}).
+    \item \textbf{Road Surface Quality:} The total range of intensity values for each node in a road, extracted from the LiDAR point cloud for points that did not return more than a single pulse (Section \ref{sec:qual}).
+    \item \textbf{Road Width:} Extracted through linear probability classification of the road surface using LiDAR data (Section \ref{sec:road_width}).
+\end{itemize}
+
+The value obtained from this is referred to as the Road Quality Index, presented in full on Table \ref{tab:rqi}.

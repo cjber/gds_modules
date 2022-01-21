@@ -1,0 +1,21 @@
+\section{Clean Data}
+<<00_clean, eval = F, echo = T, code = readLines("./scripts/00_clean.r")>>=
+@
+
+
+\section{Create Sample lines}
+<<01_samples, eval = F, echo = T, code = readLines("./scripts/01_samples.r")>>=
+@
+
+\section{Linear Models and Improved Centrelines}
+<<02_lm, eval = F, echo = T, code = readLines("./scripts/02_lm.r")>>=
+@
+
+\section{Road Widths}
+<<03_width, eval = F, echo = T, code = readLines("./scripts/03_width.r")>>=
+@
+
+\section{Improved Centreline Models}
+<<04_cents, eval = F, echo = T, code = readLines("./scripts/04_cents.r")>>=
+@
+

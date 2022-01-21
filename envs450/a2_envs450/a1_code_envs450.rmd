@@ -1,0 +1,454 @@
+---
+title: 'Code Appendix'
+
+# Use letters for affiliations
+author:
+  - name: 201374125
+    affiliation: a
+address:
+  - code: a
+    address: Department of Geography and Planning, University of Liverpool, Liverpool, L69 7ZX
+
+# For footer text  TODO(fold into template, allow free form two-authors)
+lead_author_surname: 201374125
+
+# Place DOI URL or CRAN Package URL here
+#doi: "https://cran.r-project.org/package=YourPackage"
+
+
+# Paper size for the document, values of letterpaper and a4paper
+papersize: letter
+
+# Font size of the document, values of 9pt (default), 10pt, 11pt and 12pt
+fontsize: 9pt
+
+# Optional: Force one-column layout, default is two-column
+one_column: true
+
+# Optional: Enables lineno mode, but only if one_column mode is also true
+#lineno: true
+
+# Optional: Enable one-sided layout, default is two-sided
+#one_sided: true
+
+# Optional: Enable section numbering, default is unnumbered
+numbersections: false
+
+# Optional: Specify the depth of section number, default is 5
+secnumdepth: 5
+
+# Optional: Skip inserting final break between acknowledgements, default is false
+skip_final_break: true
+
+# Optional: Bibliography 
+bibliography: /home/cjber/Dropbox/bib/library.bib
+biblio-style: apsr
+
+# Optional: Enable a 'Draft' watermark on the document
+watermark: false
+
+# Customize footer, eg by referencing the vignette
+footer_contents: "201374125"
+
+# Produce a pinp document
+output: pinp::pinp
+
+# Required: Vignette metadata for inclusion in a package.
+vignette: >
+  %\VignetteIndexEntry{YourPackage-vignetteentry}
+  %\VignetteKeywords{YourPackage, r, anotherkeyword}
+  %\VignettePackage{YourPackage}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+## Setup
+
+```{r, include=FALSE}
+
+knitr::opts_chunk$set(message=FALSE, echo=TRUE, cache=FALSE, warning = FALSE,
+                      results='hide', fig.show = 'hide')
+
+```
+
+```{r}
+
+# Required packages
+library(QuantPsyc) # used to standardise coefficients
+## note: load first as requres MASS which masks 'select' from dplyr
+library(ggplot2) # graphical visualisations
+library(ENVS450) # statistical functions
+library(car) # more statistical functions
+library(sf) # for processing geopackage files/shapefiles
+library(tmap) # for plotting maps/choropleths
+library(ggcorrplot) # corrolation plots
+library(dplyr) # data manipulation
+library(extrafont) # use additional fonts for visualisations
+library(kableExtra) # addition kable functions
+library(broom) # convert summaries into data.frames
+library(rowr) # used for cbind.fill to add NA values when missing
+
+```
+
+```{r}
+# Load the census dataset
+census <- "./data/2011 Census.RData"
+load(census)
+```
+
+# Figure 1.
+
+## Read in Geopackage data
+
+```{r}
+# read geopackage file for uk polys, choose layer that includes UK district names
+# data from GDAL
+uk = st_read("./data/gbr.gpkg", layer="gadm36_GBR_3", quiet=TRUE)
+```
+
+```{r}
+# select only polygons from England and Wales (same as census data)
+uk = subset(uk, NAME_1 == "England" | NAME_1 == "Wales")
+# keep only names and polygons
+uk = uk[ ,10, 17]
+# 'NAME_3' same as 'District' from census
+names(uk)[1] = "District"
+
+# Rename certain districts to match census data
+uk$District <- recode(uk$District, "Kingston upon Hull"=
+                                   "Kingston upon Hull, City of",
+                                   "London"="City of London",
+                                   "Bristol"="Bristol, City of",
+                                   "Durham"="County Durham",
+                                   "Herefordshire"="Herefordshire, County of",
+                                   "Rhondda, Cynon, Taff"="Rhondda Cynon Taf",
+                                   "Suffolk coastal"="Suffolk Coastal",
+                                   "Vale of Glamorgan"="The Vale of Glamorgan",
+                                   "Saint Albans"="St Albans",
+                                   "Saint Edmundsbury"="St Edmundsbury",
+                                   "Saint Helens"="St. Helens")
+
+# Merge polys to dataframe by District name, outer join to keep NAs
+census_poly = merge(uk, census, by = "District", all.x=T)
+
+```
+
+## Construct Figure 1
+
+```{r}
+# Map: fill by unemployment, change line aesthetics
+uk_unemp = tm_shape(census_poly) +
+  tm_fill(col = "Unemployed", title = "Unemployment (%)",
+          n = 4, # number of bins
+          style='jenks', # fisher jenks bins
+          textNA = "NA",
+          colorNA = "gray") + # NAs shown as grey in legend
+  tm_borders(lwd = 1, alpha=0.3) + # add borders
+  tm_layout(legend.format = list(digits = 0), # alter layout, no decimals
+            frame.double.line = TRUE, # double frame
+            inner.margin = 0.05, # stop map overlapping frame
+            fontfamily = 'Liberation Serif') # the best font
+
+uk_unemp # plot choropleth map (Figure 1)
+```
+
+
+# Correlation
+
+## Table 1
+
+```{r}
+# Create a matrix of all correlations between continuous variables
+correlation.matrix = cor( census[ , -c(1:5) ], method="spearman")
+
+# Sort by highest correlations in relation to Unemployed
+corResults = cor.results(correlation.matrix, sort.by="abs.r", data=census,
+                         var.name="Unemployed")
+# Show only two numbers after the decimal
+corResults = format(corResults, digits = 2)
+
+# Combine significance column with r values (asterisks)
+corResults$r = paste(corResults$r,corResults$sig.)
+
+# Drop the columns of the dataframe
+corResults = select(corResults,-c('x','p.value','sig.'))
+
+# Rename all columns
+names(corResults) <- c("Variable", "Rho", "Lower CI †",
+                       "Upper CI †")
+
+# Create Table 1
+kable(corResults, # align col 1 left, rest centred
+      caption = "Spearman's rank correlation coefficients for all variables
+      in relation to Unemployment.", align=c('l', 'c', 'c', 'c'),
+      # longtable stops splitting over pages, booktabs for formatting
+      longtable = FALSE, booktabs = TRUE,  linesep = "", format = "latex") %>%
+  # add the footnote
+  footnote(general_title="",
+           general = c("* Significant at the 0.05 level;",
+                       "** Significant at the 0.01 level;",
+                       "*** Significant at the 0.001 level;",
+                       "† 95% Confidence Interval")
+         ) %>%
+  row_spec(c(1,3,7,12,13), bold = T) # add bold rows showing chosen variables
+```
+
+# Models
+
+## Construct Model 1
+
+```{r}
+# Create maximal linear model
+model1 <- lm(Unemployed ~ No_Cars + No_Quals + White_British + Social_Rented +
+             illness, data=census)
+summary(model1) # summary showing T values etc
+AIC(model1) # Akaike's Information Criterion
+summary(model1)$r.squared * 100 # R Squared %
+
+```
+
+## Construct Model 2
+
+```{r}
+# Create minimal adequate linear model
+model2 <- lm(Unemployed ~ No_Cars + No_Quals + White_British + Social_Rented,
+             data=census)
+summary(model2) # summary showing T values etc
+AIC(model2) # Akaike's Information Criterion
+anova(model1, model2) # compare the two models
+summary(model2)$r.squared * 100 # R Squared %
+```
+
+## Construct Model 3
+
+```{r}
+# Create minimal adequate linear model
+model3 <- lm(Unemployed ~ No_Cars + No_Quals + White_British,
+             data=census)
+summary(model3) # summary showing T values etc
+AIC(model3) # Akaike's Information Criterion
+summary(model3)$r.squared * 100 # R Squared %
+anova(model2, model3) # compare the two models
+```
+
+## Create Table 2 showing $t$ values
+
+```{r}
+
+## Prepare data for Table 2
+
+# tidy from broom package changes summary information into data.frames
+m1 = tidy(summary(model1))
+# select only the important columns
+m1 = select(m1, term, statistic, p.value)
+# remove (intercept)
+m1 = m1[-1, ]
+# repeat all this for other two models (tried a loop but was a bit complex)
+m2 = tidy(summary(model2))
+m2 = select(m2, term, statistic, p.value)
+m2 = m2[-1, ]
+m3 = tidy(summary(model3))
+m3 = select(m3, term, statistic, p.value)
+m3 = m3[-1, ]
+
+# Change p values into vectors for each model
+p1 = as.vector(m1$p.value)
+p2 = as.vector(m2$p.value)
+p3 = as.vector(m3$p.value)
+
+# For each vector of p values, change from numeric to the significance asterisks
+p1 <- symnum(p1, corr = FALSE, na = FALSE, cutpoints = c(0, 
+    0.001, 0.01, 0.05, 1), symbols = c("***", "**", "*", " "))
+p2 <- symnum(p2, corr = FALSE, na = FALSE, cutpoints = c(0, 
+    0.001, 0.01, 0.05, 1), symbols = c("***", "**", "*", " "))
+p3 <- symnum(p3, corr = FALSE, na = FALSE, cutpoints = c(0, 
+    0.001, 0.01, 0.05, 1), symbols = c("***", "**", "*", " "))
+
+# Round statistic values to 2 digits and change to vector as well, keep zeros
+t1 = sprintf('%.2f', m1$statistic)
+t2 = sprintf('%.2f', m2$statistic)
+t3 = sprintf('%.2f', m3$statistic)
+
+# Join statistic values and p asterisks
+mod1 = paste(t1, p1)
+mod2 = paste(t2, p2)
+mod3 = paste(t3, p3)
+
+# Find R squared % for each model
+m1r = summary(model1)$r.squared * 100
+m2r = summary(model2)$r.squared * 100
+m3r = summary(model3)$r.squared * 100
+
+# Make vector of R squareds
+r = c(m1r, m2r, m3r)
+# Round them to 2 digits
+r = round(r, 2)
+# Change to character (so it can be appended to the statistic values)
+# Stat value no longer numeric as they have asterisks on them
+r = as.data.frame.character(r)
+# Transform the dataframe
+r = t(r)
+
+# Column bind all statistic values and p values
+table = cbind.fill(mod1, mod2, mod3, fill = NA)
+
+# column names
+columnn = c("Model 1", "Model 2", "Model 3")
+# rename column names
+colnames(table) = columnn
+# same for r values
+colnames(r) = columnn
+
+# join by row and shared column names
+table = rbind(table, r)
+# rename row names of table
+rownames(table) = c('No Cars', 'No Quals', 'White British', 'Social Rented', 
+                    'Illness', 'R Squared')
+
+```
+
+## Plot Table 2
+
+```{r}
+# tell Kable to not show anything for NA values
+options(knitr.kable.NA = '')
+# Table 2
+kable(table, digits = 2, caption = "Multiple Regression Model showing $t$ values",
+      longtable = FALSE, booktabs = TRUE,
+      linesep = '', format = "latex",
+      col.names = c("Model 1",
+                    "Model 2",
+                    "Model 3")) %>%
+  # add line after row 5
+  row_spec(5, hline_after = T) %>%
+  column_spec(4, color = "gray") %>%
+  # footnote for significance
+  footnote(general_title="",
+           general = c("* Significant at the 0.05 level;",
+                       "** Significant at the 0.01 level;",
+                       "*** Significant at the 0.001 level")
+         )
+```
+
+# Model Validation
+
+## Skew and transformations
+
+```{r}
+# Define the final model again (just in case)
+model <- lm(Unemployed ~ No_Cars + No_Quals + White_British + Social_Rented,
+             data=census)
+skew(model$residuals) ## little skew of residuals (0.25)
+skew(census$Unemployed) # Some skew 0.744
+skew(logit(census$Unemployed)) # Much lower skew (0.04)
+```
+
+## Figure 2: Studentised Residuals
+
+```{r}
+
+# create a matrix for multiple graph plots
+layout(matrix(1:4, ncol = 3, nrow=1))
+# Show the normality of the outcome, and call it plot a
+qqPlot(census$Unemployed, main="a")
+# create spread level plot of model showing absolute studentised residuals
+spreadLevelPlot(model,
+  ylab="Absolute Studentised Residuals", las=par("las"),
+  main=paste("b"))
+# Also show normality of the residuals of model
+qqPlot(residuals(model), main="c")
+
+```
+
+## Plot in $LaTeX$
+
+
+```{latex}
+\begin{figure*}
+  \begin{center}
+    \includegraphics{Assess2PINP_files/figure-latex/fig2-1} 
+  \end{center}
+  \caption{(a) Distribution of the outcome variable. 
+    (b) Studentised Residuals of the model. 
+    (c) Homoscedasticity of the model.}\label{fig}
+\end{figure*}
+```
+
+*Note:* For figures and tables that cover two columns I needed to convert to a $LaTeX$ float as above.
+
+## Homoscedasticity
+
+```{r}
+# Non-constant Variance Score Test to show the error variance
+ncvTest(model)
+```
+
+## Multicollinearity
+
+```{r}
+# Variance Inflation Factor
+# root of vif of model
+vif(model)^0.5
+
+# mean of vif
+mean(vif(model))
+```
+
+## Partial Residual Plots
+
+```{r}
+crPlots(model, main = " ", layout=c(1,4))
+```
+
+## Plot in $LaTeX$
+
+```{latex}
+\begin{figure*}
+  \begin{center}
+    \includegraphics{Assess2PINP_files/figure-latex/fig3-1} 
+  \end{center}
+  \caption{Partial Residual Plots for Each Predictor Variable.}\label{fig}
+\end{figure*}
+```
+
+## Table 3: Standardised Regression Coefficients
+
+```{r}
+
+## find outcome mean
+mean(census$Unemployed)
+## find outcome range
+range(census$Unemployed)
+## find predictor mean
+mean(census$White_British)
+## find predictor range
+range(census$White_British)
+```
+
+```{r}
+## Create table of beta coefficients, tidy into a data.frame
+cftable = tidy(lm.beta(model)) # beta.lm from QuantPsych
+
+# Table 3
+kable(cftable, digits = 2, caption = "Standadised coefficients",
+      longtable = FALSE, booktabs = TRUE,
+      linesep = '', format = "latex",
+      col.names = c("Variable",
+                    "Standard Deviation"))
+        
+```
+
+
+# Markdown
+
+This article was complied in RMarkdown with an adapted version of the [PNAS LaTeX](http://www.pnas.org/site/authors/latex.xhtml) style
+   class from the [rticles](https://cran.r-project.org/package=rticles) package.
+
+\nocite{Wickham2016}
+\nocite{Williamson}
+\nocite{Fox2011}
+\nocite{Pebesma2018}
+\nocite{Tennekes2018}
+\nocite{Kassambara2018}
+\nocite{Wickham2018}
+\nocite{Chang2014}
+\nocite{Zhu2018}
+\nocite{Fletcher2012}

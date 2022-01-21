@@ -1,0 +1,92 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}% 
+\contentsline {section}{\numberline {1.1}Introduction to LiDAR}{3}{section.1.1}% 
+\contentsline {subsection}{\numberline {1.1.1}Benefits over Aerial Imagery}{3}{subsection.1.1.1}% 
+\contentsline {subsection}{\numberline {1.1.2}Limitations}{4}{subsection.1.1.2}% 
+\contentsline {section}{\numberline {1.2}Objective of this Dissertation}{4}{section.1.2}% 
+\contentsline {chapter}{\numberline {2}Literature Review}{6}{chapter.2}% 
+\contentsline {section}{\numberline {2.1}British Rural Road Network}{6}{section.2.1}% 
+\contentsline {subsection}{\numberline {2.1.1}Rural Speed Limits}{7}{subsection.2.1.1}% 
+\contentsline {subsection}{\numberline {2.1.2}Speed, Road Geometry and Accidents}{7}{subsection.2.1.2}% 
+\contentsline {section}{\numberline {2.2}LiDAR Data Classification}{8}{section.2.2}% 
+\contentsline {subsection}{\numberline {2.2.1}Digital Terrain Models}{8}{subsection.2.2.1}% 
+\contentsline {subsection}{\numberline {2.2.2}Feature Classification}{8}{subsection.2.2.2}% 
+\contentsline {section}{\numberline {2.3}Road Classification}{9}{section.2.3}% 
+\contentsline {subsection}{\numberline {2.3.1}Aerial Imagery}{9}{subsection.2.3.1}% 
+\contentsline {subsection}{\numberline {2.3.2}LiDAR Road Classification}{9}{subsection.2.3.2}% 
+\contentsline {subsection}{\numberline {2.3.3}Supervised Methods}{10}{subsection.2.3.3}% 
+\contentsline {subsection}{\numberline {2.3.4}Rural Road Extraction}{10}{subsection.2.3.4}% 
+\contentsline {section}{\numberline {2.4}Overview of this Dissertation}{10}{section.2.4}% 
+\contentsline {chapter}{\numberline {3}Methodology}{12}{chapter.3}% 
+\contentsline {section}{\numberline {3.1}Data}{12}{section.3.1}% 
+\contentsline {section}{\numberline {3.2}LiDAR Preprocessing}{12}{section.3.2}% 
+\contentsline {subsection}{\numberline {3.2.1}Last Pulse}{13}{subsection.3.2.1}% 
+\contentsline {subsection}{\numberline {3.2.2}Normalisation}{13}{subsection.3.2.2}% 
+\contentsline {subsection}{\numberline {3.2.3}Points Extent}{14}{subsection.3.2.3}% 
+\contentsline {subsection}{\numberline {3.2.4}Noise Filtering}{14}{subsection.3.2.4}% 
+\contentsline {subsection}{\numberline {3.2.5}LiDAR Catalog}{14}{subsection.3.2.5}% 
+\contentsline {section}{\numberline {3.3}Road Analysis}{15}{section.3.3}% 
+\contentsline {section}{\numberline {3.4}Road Angles}{16}{section.3.4}% 
+\contentsline {section}{\numberline {3.5}Road Node Elevation Change}{17}{section.3.5}% 
+\contentsline {section}{\numberline {3.6}Surface Quality}{17}{section.3.6}% 
+\contentsline {section}{\numberline {3.7}Road Width}{18}{section.3.7}% 
+\contentsline {subsection}{\numberline {3.7.1}Road Sampling}{18}{subsection.3.7.1}% 
+\contentsline {subsection}{\numberline {3.7.2}Aerial Imagery}{19}{subsection.3.7.2}% 
+\contentsline {subsection}{\numberline {3.7.3}Linear Probability Models and Road Width}{19}{subsection.3.7.3}% 
+\contentsline {subsection}{\numberline {3.7.4}Improved Road Centrelines}{22}{subsection.3.7.4}% 
+\contentsline {subsection}{\numberline {3.7.5}Final Model Analysis}{22}{subsection.3.7.5}% 
+\contentsline {subsection}{\numberline {3.7.6}Estimate of True Widths}{22}{subsection.3.7.6}% 
+\contentsline {section}{\numberline {3.8}Road Quality Assessment}{23}{section.3.8}% 
+\contentsline {chapter}{\numberline {4}Results}{24}{chapter.4}% 
+\contentsline {section}{\numberline {4.1}Data Preprocessing}{24}{section.4.1}% 
+\contentsline {section}{\numberline {4.2}Perpendicular Sampling}{25}{section.4.2}% 
+\contentsline {section}{\numberline {4.3}Linear Probability Model Sensitivity Analysis}{26}{section.4.3}% 
+\contentsline {section}{\numberline {4.4}Corrected Centreline Extraction}{28}{section.4.4}% 
+\contentsline {section}{\numberline {4.5}Final Model Analysis}{29}{section.4.5}% 
+\contentsline {section}{\numberline {4.6}Road Assessment}{29}{section.4.6}% 
+\contentsline {chapter}{\numberline {5}Discussion}{31}{chapter.5}% 
+\contentsline {section}{\numberline {5.1}Effectiveness of the Method}{31}{section.5.1}% 
+\contentsline {subsection}{\numberline {5.1.1}Computational Efficiency}{31}{subsection.5.1.1}% 
+\contentsline {subsection}{\numberline {5.1.2}Comparison with Similar Studies}{32}{subsection.5.1.2}% 
+\contentsline {section}{\numberline {5.2}Applications of this Methodology}{32}{section.5.2}% 
+\contentsline {subsection}{\numberline {5.2.1}Stopping Sight Distance}{32}{subsection.5.2.1}% 
+\contentsline {subsection}{\numberline {5.2.2}Improving Rural Transport Accessibility}{33}{subsection.5.2.2}% 
+\contentsline {subsection}{\numberline {5.2.3}New Forms of Public Transport}{34}{subsection.5.2.3}% 
+\contentsline {subsection}{\numberline {5.2.4}Other Applications}{35}{subsection.5.2.4}% 
+\contentsline {section}{\numberline {5.3}Current Limitations of this Method}{35}{section.5.3}% 
+\contentsline {section}{\numberline {5.4}Conclusion}{36}{section.5.4}% 
+\setcounter {tocdepth}{1}
+\contentsline {chapter}{\numberline {A}Environment and Functions}{41}{appendix.A}% 
+\contentsline {section}{\numberline {A.1}Packages and Machine Environment}{41}{section.A.1}% 
+\contentsline {section}{\numberline {A.2}Referenced Functions}{43}{section.A.2}% 
+\contentsline {subsection}{\numberline {A.2.1}LiDAR Clean}{43}{subsection.A.2.1}% 
+\contentsline {subsection}{\numberline {A.2.2}Extract Buffer}{43}{subsection.A.2.2}% 
+\contentsline {subsection}{\numberline {A.2.3}Filter LAS Noise}{43}{subsection.A.2.3}% 
+\contentsline {subsection}{\numberline {A.2.4}Combine Catalog}{44}{subsection.A.2.4}% 
+\contentsline {subsection}{\numberline {A.2.5}Road Angles}{44}{subsection.A.2.5}% 
+\contentsline {subsection}{\numberline {A.2.6}Height Change}{44}{subsection.A.2.6}% 
+\contentsline {subsection}{\numberline {A.2.7}Compute Samples}{45}{subsection.A.2.7}% 
+\contentsline {subsection}{\numberline {A.2.8}Euclidean Distance}{45}{subsection.A.2.8}% 
+\contentsline {subsection}{\numberline {A.2.9}Perpendicular Sampling}{45}{subsection.A.2.9}% 
+\contentsline {subsection}{\numberline {A.2.10}Clip Samples}{46}{subsection.A.2.10}% 
+\contentsline {subsection}{\numberline {A.2.11}Greyscale}{46}{subsection.A.2.11}% 
+\contentsline {subsection}{\numberline {A.2.12}Compute Individual Linear Model}{46}{subsection.A.2.12}% 
+\contentsline {subsection}{\numberline {A.2.13}Filter Samples}{47}{subsection.A.2.13}% 
+\contentsline {subsection}{\numberline {A.2.14}Max Dist}{47}{subsection.A.2.14}% 
+\contentsline {subsection}{\numberline {A.2.15}Adjacent Length}{48}{subsection.A.2.15}% 
+\contentsline {subsection}{\numberline {A.2.16}Find Distances}{49}{subsection.A.2.16}% 
+\contentsline {subsection}{\numberline {A.2.17}Mid Points}{49}{subsection.A.2.17}% 
+\contentsline {subsection}{\numberline {A.2.18}Beta Coefficients}{49}{subsection.A.2.18}% 
+\contentsline {section}{\numberline {A.3}Additional Functions}{49}{section.A.3}% 
+\contentsline {subsection}{\numberline {A.3.1}Catalog to Dataframe}{49}{subsection.A.3.1}% 
+\contentsline {subsection}{\numberline {A.3.2}Filter Returns}{49}{subsection.A.3.2}% 
+\contentsline {subsection}{\numberline {A.3.3}True Centrelines}{49}{subsection.A.3.3}% 
+\contentsline {subsection}{\numberline {A.3.4}Max Lines}{50}{subsection.A.3.4}% 
+\contentsline {subsection}{\numberline {A.3.5}Model Comparison}{50}{subsection.A.3.5}% 
+\contentsline {subsection}{\numberline {A.3.6}Formatting}{51}{subsection.A.3.6}% 
+\contentsline {chapter}{\numberline {B}Additional Tables and Figures}{52}{appendix.B}% 
+\contentsline {chapter}{\numberline {C}Scripts}{55}{appendix.C}% 
+\contentsline {section}{\numberline {C.1}Clean Data}{55}{section.C.1}% 
+\contentsline {section}{\numberline {C.2}Create Sample lines}{56}{section.C.2}% 
+\contentsline {section}{\numberline {C.3}Linear Models and Improved Centrelines}{58}{section.C.3}% 
+\contentsline {section}{\numberline {C.4}Road Widths}{58}{section.C.4}% 
+\contentsline {section}{\numberline {C.5}Improved Centreline Models}{60}{section.C.5}% 

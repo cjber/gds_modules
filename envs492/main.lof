@@ -1,0 +1,21 @@
+\setcounter {tocdepth}{1}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Study area highlighting road centrelines}}{4}{figure.caption.5}% 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Bearing Angle ($\mathaccentV {hat}05E\theta _i$) between two sequential road nodes.}}{16}{figure.caption.9}% 
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Bearing Angle between the first ($\mathbf {N}_1$), second ($\mathbf {N}_2$) and third node ($\mathbf {N}_3$) of a road.}}{17}{figure.caption.10}% 
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Road LiDAR points at maximum distance apart, showing two example sample locations ($\mathbf {A}$ and $\mathbf {B}$).}}{21}{figure.caption.11}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Post noise filtering LiDAR point cloud distribution}}{24}{figure.caption.12}% 
+\contentsline {figure}{\numberline {4.2}{\ignorespaces LiDAR point clouds for one selected road aggregated into 2m$^2$ grids}}{25}{figure.caption.13}% 
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Linear model probability distributions for the maximal model (LM 1)}}{26}{figure.caption.14}% 
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Comparison between linear prediction quantiles}}{27}{figure.caption.15}% 
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Comparison between original and derived centrelines showing differences in linear models.}}{28}{figure.caption.16}% 
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Visual comparison between the RQI of roads.}}{30}{figure.caption.18}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Comparison between a Linear Probability Model Distribution (Red) and Probit/Logit Cumulative Standard Normal Distribution (Black) \citep [Approximation credit][]{bowling2009})\relax }}{36}{figure.caption.20}% 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {B.1}{\ignorespaces Sample lines extracted based on known road locations}}{54}{figure.caption.24}% 
+\addvspace {10\p@ }

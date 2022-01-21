@@ -1,0 +1,135 @@
+       \lettrine{R}{oad} usage in the United Kingdom has been steadily increasing by year with the highest ever billion vehicle miles travelled in 2018  \citep[318.1 BVM;][]{departmentfortransport2019}. Characterised by tall hedgerows and winding turns, rural roads in the UK are often unsuitable for higher traffic flow due to the obstruction of view from protected hedgerows, narrow lanes and often poor condition \citep{departmentfortransport2018b}. Due to the abundance of these roads, with "Unclassified" local network roads making up 60\% of all roads in the UK \citep{departmentfortransport2012}, and their varying nature, the national assessment of these roads into appropriate speed limits on an individual basis has been considered impractical \citep{taylor2002}. Due to this, there have been no individual assessments for the majority of rural roads, and instead, given their nature, they are classified as unlit, single carriageway roads and thus assigned a default speed of 60mph \citep{ukgovernment2019a}. Highways England manages the motorways and trunk roads within the UK, but local road networks are maintained by Local Authorities, and as such there is at present no comprehensive information regarding these smaller road networks \citep{highwaysengland2019}. Rural roads in the UK are often cited as by far the most dangerous road type with studies suggesting that up to two thirds of vehicle accidents occur on rural roads \citep{corben2005}.
+
+The Rural Urban Classification defines a rural area as one outside of a settlement with more than a 10,000 resident population \citep{ukgovernment2011}, therefore a road could be considered rural, if either connecting or present within small settlements in the UK. This study will focus particularly on rural connecting roads, outside of rural towns. The purpose of this is to select roads that are unlit, and are unlikely to have been individually assessed, as opposed to roads that are present within more built up rural areas. These roads are considered to likely have the designated national speed limit of 60 mph, and feature hedgerows, narrow road surfaces, and bends, key features to be considered in this dissertation.
+
+A Governmental review of speed policy considered the need for the role of speed and accidents on rural roads to be further addressed \citep{roadsafetyandenvironment2000}, suggesting a framework for individual classification of roads, taking into account local considerations of the road to implement more suitable speed limits. In 2012, draft guidance for rural roads was presented by the Department for Transport suggesting a blanket reduction in rural single carriageway road speed limits from 60mph to 40mph and a reduction to 50mph for lower quality A and B roads \citep{bbc2012}. However, this draft guidance has yet to be implemented, likely due to the costs involved in a blanket change to speed limits. For example, the cost for a complete change in national speed limits from imperial to metric in Ireland cost an estimated €30 million in speed limit signs alone \citep{noctor2004}. These costs suggest that an alternative to blanket implementation may be required.
+
+National speed limits have seen little variation for a number of years, with the majority of roads following the broad criteria for the three main roads types. The three national speed limits are:
+
+\begin{itemize}
+\item the 30 mph speed limit on roads with street lighting (sometimes referred to as Restricted Roads)
+
+\item the national speed limit of 60 mph on single carriageway roads
+
+\item the national speed limit of 70 mph on dual carriageways and motorways.
+\end{itemize}
+\begin{flushright}
+    \footnotesize{\citep{ukgovernment2019a}}
+\end{flushright}
+
+The \cite{departmentfortransport2013b} outline, in \textit{Setting Local Speed Limits}, that national speed limits are not appropriate for all roads, where local road conditions present the requirement for alternative speed limits. The majority of the rural road network in the UK follows the national speed limit of 60mph for single carriageway roads, and 70mph for dual carriageway roads, despite driver speed often being far below the speed limit. The \cite{departmentfortransport2013b} note that this is especially common on C and Unclassified roads due to the narrow width, frequent bends, junctions and access roads. In 2011, an estimated 66\% of total road deaths in Britain occurred on rural roads, with 51\% on single carriageway rural roads with the national speed limit of 60mph \cite{departmentfortransport2012}.
+
+The \cite{departmentfortransport2013b} suggest that selecting alternative speed limits for single carriageway rural roads should consider:
+
+\begin{itemize}
+    \item History of collisions;
+    \item The road's function;
+    \item Existing mean traffic speed;
+    \item Use by vulnerable road users;
+    \item The road's geometry and function;
+    \item and the road environment, including road-side development.
+\end{itemize}
+
+The Road Safety Management Capacity Review \citep{departmentfortransport2018} outlines the current limitations with road safety management, with the lack of defined and measurable safety performance framework, noting that such a framework should set out the long term goal of total prevention of road deaths and injuries, achieving this through a reduction in average speeds on different road types, and an improvement in emergency response times. This review states that at present there is a distinct lack of both urban and rural road hierarchies, which could be used to better match appropriate speed limits, with function, layout and design. Again, this review notes that posted speed limits often allow for speed far in excess of the design limits of single carriageway rural roads, with inappropriate but allowable speed often a contributing factor in rural accidents. Finally the report calls for a review of national speed limits as soon as possible.
+
+A recent development for guidance in setting local speed limits is the production of the \textit{Speed Limit Appraisal Tool} \citep{departmentfortransport2013a}. This tool provides an automated method for the introduction of new speed limits for local councils. This tool takes observed traffic flow, accidents, speeds, descriptive information regarding the network and current costs, outputting projections in these data to advise speed limit changes. While this tool introduces a quantitative method for individual road speed limit assessments, it misses some key features outlined in past government framework proposals \citep[e.g.][]{departmentfortransport2018}, particularly in relation to road geometry.
+
+The innovative methodology presented in this dissertation will focus particularly on the call for an improved understanding of rural road geometry to support the production of appropriate and justified speed limits for rural single carriageway roads, and to inform future requirements for a full rural road hierarchy. Road geometry is defined here as the parameters of roads relating to geometric design, particularly relating to the appropriate road speed, stopping sight distance, road width, road bends and surface quality \citep{jaakkola2008}.
+
+Some road geometric information may be extracted through the readily available OS Road centreline geometries. However, the extraction of road widths poses a complication as this information is not readily available, and automated extraction requires techniques that enable road classification through the data available, either aerial imagery, or LiDAR. Road classification techniques have more recently been aided through the introduction of LiDAR data, as an alternative to aerial imagery classification, allowing for more reliable results due to the presence of additional information that LiDAR provides. The following section outlines LiDAR in this context, and presents how LiDAR may be used to extract these features of roads.
+
+\section{Introduction to LiDAR}
+\label{sec:overviewlidar}
+
+Aerial LiDAR data is collected by emitting rapid laser pulses from an aircraft towards the ground which are reflected back, measuring the distance between the aircraft and surface objects at up to 500,000 measurements per second \citep{environmentagency2019}. This method produces a set of highly accurate three dimensional points which collectively are known as a LiDAR point \textit{cloud}. As LiDAR data detects all surface objects, the resultant point cloud produced will include all natural and man made structures, including buildings, roads and trees in addition to the natural variation in the terrain height, known as a digital surface model \citep{hatger2005}.
+
+The main features unique to LiDAR, unlike similar aerial data collection techniques such as true colour imagery are outlined below:
+
+\begin{itemize}
+    \item \textbf{Pulses}: LiDAR systems record the data by emitting a laser pulse which is reflected back at the aircraft by ground objects. If the laser hits a solid object such as ground or a building roof, this laser pulse is entirely reflected back towards the aircraft, giving a single point. However, if the laser pulse hits a soft object such as a tree canopy, the pulse may be partially returned, giving multiple return pulses \citep{rottensteiner2003}. Therefore, these multiple pulse returns give information regarding objects at an exact $xy$ location but with varying heights.
+
+    \item \textbf{Intensity}: LiDAR systems also give intensity values for return pulses, which gives information regarding the reflectance of the surface of objects that are hit by the laser pulses. If intensity is given $I$ then reflectance $R$ may be represented as $R = \frac{I}{E_{T}}$ where $E_T$ refers to the first pulse signal intensity \citep{charaniya2004}.
+
+    \item \textbf{Elevation:} In addition to $x$ and $y$ coordinates, the distance between the aircraft and the reflected ground or object is recorded and assigned a $z$ value.
+\end{itemize}
+
+\subsection{Benefits over Aerial Imagery}
+
+Rural roads in the UK are often characterised by dense hedgerows either side, with large trees that extend over the road surface. In addition to the reduction in corner visibility on these roads, standard aerial imagery suffers from the road surface being obscured by shadows from these trees and hedgerows, and the tree canopy itself. Additionally, aerial imagery often suffers from obstruction due to clouds \citep{li2016}. Due to the inclusion of pulses with modern LiDAR data, the road surface can often be detected through the canopy by selecting the final pulse returns, the infrared laser pulses also have smaller shadows, due to the narrow scanning angle of LiDAR \citep{wang2009}. Non LiDAR imagery often suffers from scene complexity, where road patterns, vehicles and lane markings reduce road heterogeneity \citep{li2016}.
+
+The 3D $z$ value information provided by LiDAR data allows for the separation of ground and objects on the surface, meaning roads and buildings are often easily separated, despite having similar reflectance \citep{sampath2008}. Additionally, the reflectance of roads is often homogeneous, and distinctly separate from vegetation \citep{clode2004}.
+
+\subsection{Limitations}
+
+LiDAR lacks any texture or spectral information, and often studies in road classification have combined LiDAR with aerial imagery to alleviate this issue \citep{hu2004,zhang2003}, with the inclusion of luminescence information to aid with road classification \citep[e.g.][]{charaniya2004}. LiDAR points are distributed irregularly and with varying density, with point density often higher where flight strips overlap, and tall objects can occlude points, leaving more limited data surrounding trees or buildings \citep{li2016}.
+
+Often road classification methodologies use LiDAR height data to identify kerbs to separate streets from pavement \citep{kumar2013,vosselman2009a}, however rural roads often have no kerb, and are often at the same level as the surrounding vegetation \citep{yadav2018}.
+
+LiDAR data often requires a large amount of processing due to the irregular distribution of points, presence of noise and the number of variables that have to be considered. \cite{yadav2018} note that often papers do not include information regarding the computational time for processing this data which may cause practical limitations at larger scales.
+
+<<>>=
+source("../scripts/functions.r")
+rd_l <- st_read("../data/derived/roads/roads.gpkg", quiet = T) %>%
+  st_set_crs(27700)
+
+jpgs <- Sys.glob("../data/aerial/*.jpg")
+jpgs <- lapply(jpgs, brick)
+jpgs <- lapply(jpgs, aggregate, fact = 8)
+jpgs <- do.call(merge, jpgs)
+aerial <- crop(jpgs, rd_l)
+
+rd_l$roadFunction <- ifelse(rd_l$roadFunction == "B Road", 2, 1)
+aerial_bbox <- bbox(aerial)
+
+rd_inset <- rd_l[rd_l$road_id == "road_9", ]
+jpgs <- Sys.glob("../data/aerial/*.jpg")
+jpgs <- lapply(jpgs, brick)
+jpgs <- do.call(merge, jpgs)
+aerial_inset <- crop(jpgs, rd_inset)
+
+cols <- rep(wes_palette(name = "Zissou1"), 6)
+
+inset <- ggRGB(aerial_inset) +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "white",
+    fill = NA, size = 2
+  ), legend.position = "none") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+
+main <- ggRGB(aerial) +
+  geom_sf(data = rd_l, colour = cols, size = rd_l$roadFunction) +
+  geom_sf(data = rd_inset %>% st_bbox() %>% st_as_sfc(), colour = "white", fill = NA, size = 1) +
+  theme_map() +
+  theme(panel.border = element_rect(
+    colour = "black",
+    fill = NA, size = 1
+  ), legend.position = "none") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+@
+
+\section{Objective of this Dissertation}
+<<area_map, fig.cap="Study area highlighting road centrelines; each colour represents a separate 'road' as defined by the OS Data provided. Thicker roads are B roads, while thinner are Unclassified. The inset map shows an example road, with features typical of roads within this study area.", fig.pos = "b" >>=
+ggdraw() +
+  draw_plot(main) +
+  draw_plot(inset, x = -.1, y = .35, width = .6, height = .6)
+@
+
+This dissertation will present a method for rural road classification and width extraction for a 1km$^2$ region in the North West of England (Figure \ref{fig:area_map}). The methodology is produced in order to ensure scalability and automation, allowing for replication for any area where data is available. Data used will include road centreline geometries, LiDAR point cloud, and aerial imagery to extract road widths through linear probability models. Additionally, this dissertation aims to extract other features of roads such as elevation changes, surface quality, and the sharpness of bends. The extraction of such features aims to build upon past road classification studies, combined with a more refined methodology that aims to ensure a higher accuracy for rural British roads. Unlike previous road classification methodologies, this dissertation aims to focus primarily on road feature extraction, and not the accurate extraction of road locations, as road centerline locations provided by Ordnance Survey already exists. 
+
+\textbf{\textit{Key Aims:}}
+
+\begin{itemize}
+    \item Using OS Road and LiDAR Data produce an automated method for determining the characteristics of rural roads that relate to overall road quality. These are;
+        \subitem Bend sharpness
+        \subitem Road steepness
+        \subitem Surface quality
+        \subitem Road width
+    \item Produce and assess an automated method using LiDAR, aerial imagery and OS road geometry to determine the true width of roads within the chosen study area, outlining the particular limitations and solutions when considering the rural British road network.
+    \item Using extracted road features, outline the overall quality of the road network, and allow for direct comparison between each road.
+\end{itemize}
+
+
+This dissertation is organised into chapters, first a literature review, outlining the broad implications of speed limits, rural road networks, and object extraction particularly in relation to LiDAR aerial point clouds. Second, a detailed description of the methodology involved in this dissertation will outline the techniques used to classify road widths, in addition to the other road geometric information. A results section will primarily assess the method for road classification, through sensitivity analysis and some qualitative observations, a section will then explore the findings. Finally a discussion will detail the implications of the findings, and suggest areas for methodological improvement.

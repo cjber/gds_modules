@@ -1,0 +1,1077 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/a3c87ab5/
+"../scripts/functions.r"	scripts/stack.r	/^source("..\/scripts\/functions.r")$/;"	s
+"./functions.r"	scripts/00_clean.r	/^source(".\/functions.r")$/;"	s
+"./functions.r"	scripts/01_samples.r	/^source(".\/functions.r")$/;"	s
+"./functions.r"	scripts/02_lm.r	/^source(".\/functions.r")$/;"	s
+"./functions.r"	scripts/03_width.r	/^source(".\/functions.r")$/;"	s
+"./functions.r"	scripts/04_cents.r	/^source(".\/functions.r")$/;"	s
+"00_clean.r"	scripts/run_all.r	/^source("00_clean.r")$/;"	s
+"01_samples.r"	scripts/run_all.r	/^source("01_samples.r")$/;"	s
+"02_lm.r"	scripts/run_all.r	/^source("02_lm.r")$/;"	s
+"03_width.r"	scripts/run_all.r	/^source("03_width.r")$/;"	s
+"04_cents.r"	scripts/run_all.r	/^source("04_cents.r")$/;"	s
+"[	scripts/functions.r	/^    "[<-"(lower.tri(., diag = TRUE), NA) %>%$/;"	v
+2001	kbib.bib	/^@article{2001,$/;"	a
+Additional Functions	main.tex	/^\\section{Additional Functions}$/;"	s	chapter:Environment and Functions
+Additional Tables and Figures	main.tex	/^\\chapter{Additional Tables and Figures}$/;"	c
+Adjacent Length	main.tex	/^\\subsection{Adjacent Length}\\label{code:adjacent_length}$/;"	u	section:Environment and Functions""Referenced Functions
+Aerial Imagery	main.tex	/^\\subsection{Aerial Imagery}$/;"	u	section:Literature Review""Road Classification
+Aerial Imagery	main.tex	/^\\subsection{Aerial Imagery}$/;"	u	section:Methodology""Road Width
+Applications of this Methodology	main.tex	/^\\section{Applications of this Methodology}$/;"	s	chapter:Discussion
+Benefits over Aerial Imagery	main.tex	/^\\subsection{Benefits over Aerial Imagery}$/;"	u	section:Introduction""Introduction to LiDAR
+Beta Coefficients	main.tex	/^\\subsection{Beta Coefficients} \\label{code:lm_beta}$/;"	u	section:Environment and Functions""Referenced Functions
+British Rural Road Network	main.tex	/^\\section{British Rural Road Network}$/;"	s	chapter:Literature Review
+Broad Definitions	main.tex	/^\\section*{Broad Definitions}$/;"	s	chapter:Definitions
+Catalog to Dataframe	main.tex	/^\\subsection{Catalog to Dataframe} \\label{code:ctg_to_df}$/;"	u	section:Environment and Functions""Additional Functions
+Clean Data	main.tex	/^\\section{Clean Data}$/;"	s	chapter:Scripts
+Clip Samples	main.tex	/^\\subsection{Clip Samples} \\label{code:clip_samples}$/;"	u	section:Environment and Functions""Referenced Functions
+Combine Catalog	main.tex	/^\\subsection{Combine Catalog} \\label{code:comb_ctg}$/;"	u	section:Environment and Functions""Referenced Functions
+Comparison with Similar Studies	main.tex	/^\\subsection{Comparison with Similar Studies}$/;"	u	section:Discussion""Effectiveness of the Method
+Computational Efficiency	main.tex	/^\\subsection{Computational Efficiency}$/;"	u	section:Discussion""Effectiveness of the Method
+Compute Individual Linear Model	main.tex	/^\\subsection{Compute Individual Linear Model} \\label{code:lm_compute}$/;"	u	section:Environment and Functions""Referenced Functions
+Compute Samples	main.tex	/^\\subsection{Compute Samples} \\label{code:compute_samples}$/;"	u	section:Environment and Functions""Referenced Functions
+Conclusion	main.tex	/^\\section{Conclusion}$/;"	s	chapter:Discussion
+Corrected Centreline Extraction	main.tex	/^\\section{Corrected Centreline Extraction}$/;"	s	chapter:Results
+Create Sample lines	main.tex	/^\\section{Create Sample lines}$/;"	s	chapter:Scripts
+Current Limitations of this Method	main.tex	/^\\section{Current Limitations of this Method}$/;"	s	chapter:Discussion
+Data	main.tex	/^\\section{Data}$/;"	s	chapter:Methodology
+Data Preprocessing	main.tex	/^\\section{Data Preprocessing}$/;"	s	chapter:Results
+Definitions	main.tex	/^\\chapter*{Definitions}$/;"	c
+Digital Terrain Models	main.tex	/^\\subsection{Digital Terrain Models}$/;"	u	section:Literature Review""LiDAR Data Classification
+Discussion	main.tex	/^\\chapter{Discussion}$/;"	c
+ENVS450	rbib.bib	/^@Manual{ENVS450,$/;"	m
+Effectiveness of the Method	main.tex	/^\\section{Effectiveness of the Method}$/;"	s	chapter:Discussion
+Environment and Functions	main.tex	/^\\chapter{Environment and Functions}$/;"	c
+Estimate of True Widths	main.tex	/^\\subsection{Estimate of True Widths}$/;"	u	section:Methodology""Road Width
+Euclidean Distance	main.tex	/^\\subsection{Euclidean Distance} \\label{code:euc}$/;"	u	section:Environment and Functions""Referenced Functions
+Extract Buffer	main.tex	/^\\subsection{Extract Buffer} \\label{code:extract_buff}$/;"	u	section:Environment and Functions""Referenced Functions
+Feature Classification	main.tex	/^\\subsection{Feature Classification}$/;"	u	section:Literature Review""LiDAR Data Classification
+Filter LAS Noise	main.tex	/^\\subsection{Filter LAS Noise} \\label{code:las_filter_noise}$/;"	u	section:Environment and Functions""Referenced Functions
+Filter Returns	main.tex	/^\\subsection{Filter Returns}\\label{code:filter_returns}$/;"	u	section:Environment and Functions""Additional Functions
+Filter Samples	main.tex	/^\\subsection{Filter Samples}\\label{code:filter_samples}$/;"	u	section:Environment and Functions""Referenced Functions
+Final Model Analysis	main.tex	/^\\section{Final Model Analysis}$/;"	s	chapter:Results
+Final Model Analysis	main.tex	/^\\subsection{Final Model Analysis}$/;"	u	section:Methodology""Road Width
+Find Distances	main.tex	/^\\subsection{Find Distances} \\label{code:find_dists}$/;"	u	section:Environment and Functions""Referenced Functions
+Formatting	main.tex	/^\\subsection{Formatting} \\label{code:make_table}$/;"	u	section:Environment and Functions""Additional Functions
+Greyscale	main.tex	/^\\subsection{Greyscale} \\label{code:greyscale}$/;"	u	section:Environment and Functions""Referenced Functions
+Height Change	main.tex	/^\\subsection{Height Change}\\label{code:height_change}$/;"	u	section:Environment and Functions""Referenced Functions
+Hmisc	rbib.bib	/^@Manual{Hmisc,$/;"	m
+Improved Centreline Models	main.tex	/^\\section{Improved Centreline Models}$/;"	s	chapter:Scripts
+Improved Road Centrelines	main.tex	/^\\subsection{Improved Road Centrelines}$/;"	u	section:Methodology""Road Width
+Improving Rural Transport Accessibility	main.tex	/^\\subsection{Improving Rural Transport Accessibility}$/;"	u	section:Discussion""Applications of this Methodology
+Introduction	main.tex	/^\\chapter{Introduction}$/;"	c
+Introduction to LiDAR	main.tex	/^\\section{Introduction to LiDAR}$/;"	s	chapter:Introduction
+Last Pulse	main.tex	/^\\subsection{Last Pulse}$/;"	u	section:Methodology""LiDAR Preprocessing
+LiDAR Catalog	main.tex	/^\\subsection{LiDAR Catalog}$/;"	u	section:Methodology""LiDAR Preprocessing
+LiDAR Clean	main.tex	/^\\subsection{LiDAR Clean} \\label{code:lidr_clean}$/;"	u	section:Environment and Functions""Referenced Functions
+LiDAR Data Classification	main.tex	/^\\section{LiDAR Data Classification}$/;"	s	chapter:Literature Review
+LiDAR Preprocessing	main.tex	/^\\section{LiDAR Preprocessing}$/;"	s	chapter:Methodology
+LiDAR Road Classification	main.tex	/^\\subsection{LiDAR Road Classification}$/;"	u	section:Literature Review""Road Classification
+Limitations	main.tex	/^\\subsection{Limitations}$/;"	u	section:Introduction""Introduction to LiDAR
+Linear Models and Improved Centrelines	main.tex	/^\\section{Linear Models and Improved Centrelines}$/;"	s	chapter:Scripts
+Linear Probability Model Sensitivity Analysis	main.tex	/^\\section{Linear Probability Model Sensitivity Analysis}$/;"	s	chapter:Results
+Linear Probability Models and Road Width	main.tex	/^\\subsection{Linear Probability Models and Road Width}\\label{sec:lpm}$/;"	u	section:Methodology""Road Width
+Literature Review	main.tex	/^\\chapter{Literature Review}$/;"	c
+Local Definitions	main.tex	/^    \\section*{Local Definitions}$/;"	s	chapter:Definitions
+Max Dist	main.tex	/^\\subsection{Max Dist}\\label{code:max_dist}$/;"	u	section:Environment and Functions""Referenced Functions
+Max Lines	main.tex	/^\\subsection{Max Lines}\\label{code:max_lines}$/;"	u	section:Environment and Functions""Additional Functions
+Methodology	main.tex	/^\\chapter{Methodology}$/;"	c
+Mid Points	main.tex	/^\\subsection{Mid Points}\\label{code:mid_pts}$/;"	u	section:Environment and Functions""Referenced Functions
+Model Comparison	main.tex	/^\\subsection{Model Comparison}\\label{code:model_comparison}$/;"	u	section:Environment and Functions""Additional Functions
+New Forms of Public Transport	main.tex	/^\\subsection{New Forms of Public Transport}$/;"	u	section:Discussion""Applications of this Methodology
+Noise Filtering	main.tex	/^\\subsection{Noise Filtering}\\label{subsec:noise}$/;"	u	section:Methodology""LiDAR Preprocessing
+Normalisation	main.tex	/^\\subsection{Normalisation}$/;"	u	section:Methodology""LiDAR Preprocessing
+Objective of this Dissertation	main.tex	/^\\section{Objective of this Dissertation}$/;"	s	chapter:Introduction
+Other Applications	main.tex	/^\\subsection{Other Applications}$/;"	u	section:Discussion""Applications of this Methodology
+Overview of this Dissertation	main.tex	/^\\section{Overview of this Dissertation}\\label{sec:overview}$/;"	s	chapter:Literature Review
+Packages and Machine Environment	main.tex	/^\\section{Packages and Machine Environment}$/;"	s	chapter:Environment and Functions
+PerformanceAnalytics	rbib.bib	/^@Manual{PerformanceAnalytics,$/;"	m
+Perpendicular Sampling	main.tex	/^\\section{Perpendicular Sampling}$/;"	s	chapter:Results
+Perpendicular Sampling	main.tex	/^\\subsection{Perpendicular Sampling} \\label{code:perp}$/;"	u	section:Environment and Functions""Referenced Functions
+Points Extent	main.tex	/^\\subsection{Points Extent}$/;"	u	section:Methodology""LiDAR Preprocessing
+RStoolbox	rbib.bib	/^@Manual{RStoolbox,$/;"	m
+Referenced Functions	main.tex	/^\\section{Referenced Functions}$/;"	s	chapter:Environment and Functions
+Results	main.tex	/^\\chapter{Results}$/;"	c
+Road Analysis	main.tex	/^\\section{Road Analysis}$/;"	s	chapter:Methodology
+Road Angles	main.tex	/^\\section{Road Angles}\\label{sec:angles}$/;"	s	chapter:Methodology
+Road Angles	main.tex	/^\\subsection{Road Angles}\\label{code:road_angles}$/;"	u	section:Environment and Functions""Referenced Functions
+Road Assessment	main.tex	/^\\section{Road Assessment}$/;"	s	chapter:Results
+Road Classification	main.tex	/^\\section{Road Classification}$/;"	s	chapter:Literature Review
+Road Node Elevation Change	main.tex	/^\\section{Road Node Elevation Change}\\label{sec:elev}$/;"	s	chapter:Methodology
+Road Quality Assessment	main.tex	/^\\section{Road Quality Assessment}$/;"	s	chapter:Methodology
+Road Sampling	main.tex	/^\\subsection{Road Sampling}$/;"	u	section:Methodology""Road Width
+Road Width	main.tex	/^\\section{Road Width}\\label{sec:road_width}$/;"	s	chapter:Methodology
+Road Widths	main.tex	/^\\section{Road Widths}$/;"	s	chapter:Scripts
+Rural Road Extraction	main.tex	/^\\subsection{Rural Road Extraction}$/;"	u	section:Literature Review""Road Classification
+Rural Speed Limits	main.tex	/^\\subsection{Rural Speed Limits}$/;"	u	section:Literature Review""British Rural Road Network
+Scripts	main.tex	/^\\chapter{Scripts}\\label{c:script}$/;"	c
+Speed, Road Geometry and Accidents	main.tex	/^\\subsection{Speed, Road Geometry and Accidents}$/;"	u	section:Literature Review""British Rural Road Network
+Stopping Sight Distance	main.tex	/^\\subsection{Stopping Sight Distance}$/;"	u	section:Discussion""Applications of this Methodology
+Supervised Methods	main.tex	/^\\subsection{Supervised Methods}\\label{subsec:supervised}$/;"	u	section:Literature Review""Road Classification
+Surface Quality	main.tex	/^\\section{Surface Quality}\\label{sec:qual}$/;"	s	chapter:Methodology
+True Centrelines	main.tex	/^\\subsection{True Centrelines}\\label{code:true_cents}$/;"	u	section:Environment and Functions""Additional Functions
+a:code	main.tex	/^\\label{a:code}$/;"	l
+aarts2006	kbib.bib	/^@article{aarts2006,$/;"	a
+adjacent	scripts/functions.r	/^        adjacent <- abs(as.numeric(c1_len) * cos(as.numeric(theta)))$/;"	v
+adjacent	scripts/functions.r	/^        adjacent <- cbind($/;"	v
+adjacent_length	scripts/functions.r	/^adjacent_length <- function(samp, cent) {$/;"	f
+aerial	scripts/01_samples.r	/^aerial <- crop(aerial, roads)$/;"	g
+aerial	scripts/01_samples.r	/^aerial <- do.call(merge, grey_rasters)$/;"	g
+aerial	scripts/04_cents.r	/^aerial <- raster("..\/data\/derived\/aerial\/aerial_crop.tif")$/;"	g
+agarwal2006	kbib.bib	/^@article{agarwal2006,$/;"	a
+akel	kbib.bib	/^@article{akel,$/;"	a
+akel2003	kbib.bib	/^@article{akel2003,$/;"	a
+algan2005	kbib.bib	/^@inproceedings{algan2005,$/;"	j
+allsop2011	kbib.bib	/^@article{allsop2011,$/;"	a
+andrienko2007	kbib.bib	/^@article{andrienko2007,$/;"	a
+ang_deg	scripts/functions.r	/^        ang_deg <- ang_rad * 180 \/ pi$/;"	v
+ang_deg	scripts/functions.r	/^      ang_deg <- ang_rad \/ pi * 180$/;"	v
+ang_deg	scripts/stack.r	/^                ang_deg <- ang_deg + 180$/;"	v
+ang_deg	scripts/stack.r	/^            ang_deg <- ang_deg + 180$/;"	v
+ang_deg	scripts/stack.r	/^            ang_deg <- ang_rad * 180 \/ pi$/;"	v
+ang_deg	scripts/stack.r	/^        ang_deg <- ang_rad \/ pi * 180$/;"	v
+ang_deg_c	scripts/functions.r	/^        ang_deg_c <- ang_rad * 180 \/ pi$/;"	v
+ang_deg_c	scripts/stack.r	/^                ang_deg_c <- ang_deg + 180$/;"	v
+ang_deg_c	scripts/stack.r	/^            ang_deg_c <- ang_rad * 180 \/ pi$/;"	v
+ang_rad	scripts/functions.r	/^        ang_rad <- atan2(y, x)$/;"	v
+ang_rad	scripts/functions.r	/^      ang_rad <- atan2(y, x)$/;"	v
+ang_rad	scripts/stack.r	/^            ang_rad <- atan2(x, y)$/;"	v
+ang_rad	scripts/stack.r	/^        ang_rad <- atan2(x, y)$/;"	v
+angle	scripts/functions.r	/^      angle <- abs(angle)$/;"	v
+angle	scripts/functions.r	/^      angle <- append(angle, ang_deg)$/;"	v
+angle	scripts/functions.r	/^  angle <- c()$/;"	v
+angle	scripts/stack.r	/^        angle <- append(angle, ang_deg)$/;"	v
+angle	scripts/stack.r	/^angle <- c()$/;"	g
+angles	scripts/03_width.r	/^angles <- angles %>%$/;"	g
+angles	scripts/03_width.r	/^angles <- do.call(rbind, angles)$/;"	g
+angles	scripts/03_width.r	/^angles <- lapply(roads_split, road_angles)$/;"	g
+angles$angle	scripts/03_width.r	/^angles$angle <- as.numeric(unfactor(angles$angle))$/;"	g
+anonymous2016	kbib.bib	/^@article{anonymous2016,$/;"	a
+anselin2003	kbib.bib	/^@article{anselin2003,$/;"	a
+anselin2007	kbib.bib	/^@article{anselin2007,$/;"	a
+anselin2010	kbib.bib	/^@article{anselin2010,$/;"	a
+anselin2013	kbib.bib	/^@article{anselin2013,$/;"	a
+anselin2013a	kbib.bib	/^@book{anselin2013a,$/;"	b
+asher2015	kbib.bib	/^@book{asher2015,$/;"	b
+astarita2012	kbib.bib	/^@article{astarita2012,$/;"	a
+axelsson1999	kbib.bib	/^@article{axelsson1999,$/;"	a
+azizi2014	kbib.bib	/^@article{azizi2014,$/;"	a
+b	scripts/functions.r	/^  b <- summary(model)$coef[-1, 1]$/;"	v
+b	wclatex.py	/^b = c.find(bstring)$/;"	v
+bandyopadhyay2016	kbib.bib	/^@article{bandyopadhyay2016,$/;"	a
+barbosa2007	kbib.bib	/^@article{barbosa2007,$/;"	a
+bartholomew2011	kbib.bib	/^@article{bartholomew2011,$/;"	a
+bartley2004	kbib.bib	/^@article{bartley2004,$/;"	a
+baruya1998	kbib.bib	/^@article{baruya1998,$/;"	a
+batty2010	kbib.bib	/^@book{batty2010,$/;"	b
+bbc2012	kbib.bib	/^@article{bbc2012,$/;"	a
+bearing_ang	scripts/stack.r	/^bearing_ang <- c()$/;"	g
+bearing_ang	scripts/stack.r	/^bearing_ang <- rbind(bearing_ang, normal_ang)$/;"	g
+benchmarkme	rbib.bib	/^@Manual{benchmarkme,$/;"	m
+beta	scripts/functions.r	/^  beta <- b * sx \/ sy$/;"	v
+bevan2009	kbib.bib	/^@article{bevan2009,$/;"	a
+bhps1991	kbib.bib	/^@misc{bhps1991,$/;"	n
+bibtex	rbib.bib	/^@Manual{bibtex,$/;"	m
+bitter2007	kbib.bib	/^@article{bitter2007,$/;"	a
+blaschke2010	kbib.bib	/^@article{blaschke2010,$/;"	a
+blaschke2014	kbib.bib	/^@article{blaschke2014,$/;"	a
+blincoe2006	kbib.bib	/^@article{blincoe2006,$/;"	a
+bongaarts2006	kbib.bib	/^@article{bongaarts2006,$/;"	a
+bosona2011	kbib.bib	/^@article{bosona2011,$/;"	a
+boulton2010	kbib.bib	/^@article{boulton2010,$/;"	a
+bowen2001	kbib.bib	/^@article{bowen2001,$/;"	a
+bowling2009	kbib.bib	/^@article{bowling2009,$/;"	a
+bowman1997	kbib.bib	/^@book{bowman1997,$/;"	b
+bridson2005	kbib.bib	/^@inproceedings{bridson2005,$/;"	j
+britton1990	kbib.bib	/^@article{britton1990,$/;"	a
+brooks-gunn1993	kbib.bib	/^@article{brooks-gunn1993,$/;"	a
+broom	rbib.bib	/^@Manual{broom,$/;"	m
+bstring	wclatex.py	/^bstring = r"\\chapter{Introduction}"$/;"	v
+burnett2003	kbib.bib	/^@article{burnett2003,$/;"	a
+burstein1980	kbib.bib	/^@article{burstein1980,$/;"	a
+burton2004	kbib.bib	/^@article{burton2004,$/;"	a
+c	wclatex.py	/^c = c.replace("-", "") # or space!?$/;"	v
+c	wclatex.py	/^c = c.replace("\/", " ");$/;"	v
+c	wclatex.py	/^c = c.replace("\\n", " ")$/;"	v
+c	wclatex.py	/^c = c[b+len(bstring):e]$/;"	v
+c	wclatex.py	/^c = commands.sub("", c)$/;"	v
+c	wclatex.py	/^c = comment.sub("", c)$/;"	v
+c	wclatex.py	/^c = figure.sub("", c)$/;"	v
+c	wclatex.py	/^c = markup.sub(r"\\1", c)$/;"	v
+c	wclatex.py	/^c = math.sub("", c)$/;"	v
+c	wclatex.py	/^c = mathal.sub("", c)$/;"	v
+c	wclatex.py	/^c = nonwords.sub(" ", c)$/;"	v
+c	wclatex.py	/^c = numbers.sub("", c)$/;"	v
+c	wclatex.py	/^c = open(sys.argv[1]).read()$/;"	v
+c	wclatex.py	/^c = table.sub("", c)$/;"	v
+c1_len	scripts/functions.r	/^        c1_len <- st_length(s)$/;"	v
+c1_len	scripts/stack.r	/^            c1_len <- st_length(s)$/;"	v
+c:script	main.tex	/^\\chapter{Scripts}\\label{c:script}$/;"	l
+calc_perp	scripts/functions.r	/^calc_perp <- function(p1, p2, n, interval = 0.5, proportion = TRUE) {$/;"	f
+caltagirone2018	kbib.bib	/^@article{caltagirone2018,$/;"	a
+carter2009	kbib.bib	/^@article{carter2009,$/;"	a
+cent	scripts/functions.r	/^  cent <- Filter(function(x) dim(x)[1] > 0, cent)$/;"	v
+cent	scripts/functions.r	/^  cent <- cent %>% st_cast("POINT")$/;"	v
+cent	scripts/functions.r	/^  cent <- centrelines[centrelines$road_id %in% rds, ]$/;"	v
+cent	scripts/functions.r	/^  cent <- split(cent, f = cent$road_id)$/;"	v
+cent1	scripts/04_cents.r	/^cent1 <- st_read("..\/data\/derived\/roads\/cent_iteration1.gpkg") %>%$/;"	g
+cent1_las	scripts/04_cents.r	/^cent1_las <- do.call(rbind, cent1_las)$/;"	g
+cent1_las	scripts/04_cents.r	/^cent1_las <- joined_output %>%$/;"	g
+cent1_las	scripts/04_cents.r	/^cent1_las <- lapply(cent1_las, filter_returns)$/;"	g
+cent1_las	scripts/04_cents.r	/^cent1_las <- lapply(cent1_las, lm_compute, f = f1)$/;"	g
+cent1_las	scripts/04_cents.r	/^cent1_las <- split(cent1_las, cent1_las$sample_id)$/;"	g
+cent1_las$lm1_dum	scripts/04_cents.r	/^cent1_las$lm1_dum <- ifelse(cent1_las$lm1_pred >$/;"	g
+cent1_las$lm1_pred	scripts/04_cents.r	/^cent1_las$lm1_pred <- lm1_pred$/;"	g
+cent1_las$lm2_dum	scripts/04_cents.r	/^cent1_las$lm2_dum <- ifelse(cent1_las$lm2_pred >$/;"	g
+cent1_las$lm2_pred	scripts/04_cents.r	/^cent1_las$lm2_pred <- lm2_pred$/;"	g
+centrelines	scripts/01_samples.r	/^centrelines <- centrelines[names(joined_output)]$/;"	g
+centrelines	scripts/01_samples.r	/^centrelines <- read_sf("..\/data\/derived\/roads\/roads_line.gpkg") %>%$/;"	g
+centrelines	scripts/01_samples.r	/^centrelines <- split(centrelines, centrelines$road_id)$/;"	g
+centrelines	scripts/04_cents.r	/^centrelines <- centrelines[names(joined_output)]$/;"	g
+centrelines	scripts/04_cents.r	/^centrelines <- do.call(rbind, centrelines)$/;"	g
+centrelines	scripts/04_cents.r	/^centrelines <- split(cent1, cent1$road_id)$/;"	g
+centrelines	scripts/04_cents.r	/^centrelines <- st_read("..\/data\/derived\/roads\/cent_iteration1.gpkg")$/;"	g
+centrelines	scripts/04_cents.r	/^centrelines <- st_read("..\/data\/derived\/roads\/roads_line.gpkg")$/;"	g
+cents	scripts/03_width.r	/^cents <- compact(cents)$/;"	g
+cents	scripts/03_width.r	/^cents <- do.call(rbind, cents)$/;"	g
+cents	scripts/03_width.r	/^cents <- lapply(mid_rds, true_cents)$/;"	g
+ch:discussion	main.tex	/^\\label{ch:discussion}$/;"	l
+ch:introduction	main.tex	/^\\label{ch:introduction}$/;"	l
+ch:literature	main.tex	/^\\label{ch:literature}$/;"	l
+ch:methods	main.tex	/^\\label{ch:methods}$/;"	l
+ch:results	main.tex	/^\\label{ch:results}$/;"	l
+champion2004	kbib.bib	/^@article{champion2004,$/;"	a
+charaniya2004	kbib.bib	/^@inproceedings{charaniya2004,$/;"	j
+charlton2016	kbib.bib	/^@article{charlton2016,$/;"	a
+charlton2017	kbib.bib	/^@article{charlton2017,$/;"	a
+charlton2018	kbib.bib	/^@article{charlton2018,$/;"	a
+chatterton2000	kbib.bib	/^@article{chatterton2000,$/;"	a
+chaudhry	kbib.bib	/^@article{chaudhry,$/;"	a
+clarke2006	kbib.bib	/^@article{clarke2006,$/;"	a
+clip_samples	scripts/functions.r	/^clip_samples <- function(cluster, x) {$/;"	f
+clode2004	kbib.bib	/^@article{clode2004,$/;"	a
+clode2007	kbib.bib	/^@article{clode2007,$/;"	a
+code:adjacent_length	main.tex	/^\\subsection{Adjacent Length}\\label{code:adjacent_length}$/;"	l
+code:clip_samples	main.tex	/^\\subsection{Clip Samples} \\label{code:clip_samples}$/;"	l
+code:comb_ctg	main.tex	/^\\subsection{Combine Catalog} \\label{code:comb_ctg}$/;"	l
+code:compute_samples	main.tex	/^\\subsection{Compute Samples} \\label{code:compute_samples}$/;"	l
+code:ctg_to_df	main.tex	/^\\subsection{Catalog to Dataframe} \\label{code:ctg_to_df}$/;"	l
+code:euc	main.tex	/^\\subsection{Euclidean Distance} \\label{code:euc}$/;"	l
+code:extract_buff	main.tex	/^\\subsection{Extract Buffer} \\label{code:extract_buff}$/;"	l
+code:filter_returns	main.tex	/^\\subsection{Filter Returns}\\label{code:filter_returns}$/;"	l
+code:filter_samples	main.tex	/^\\subsection{Filter Samples}\\label{code:filter_samples}$/;"	l
+code:find_dists	main.tex	/^\\subsection{Find Distances} \\label{code:find_dists}$/;"	l
+code:greyscale	main.tex	/^\\subsection{Greyscale} \\label{code:greyscale}$/;"	l
+code:height_change	main.tex	/^\\subsection{Height Change}\\label{code:height_change}$/;"	l
+code:las_filter_noise	main.tex	/^\\subsection{Filter LAS Noise} \\label{code:las_filter_noise}$/;"	l
+code:lidr_clean	main.tex	/^\\subsection{LiDAR Clean} \\label{code:lidr_clean}$/;"	l
+code:lm_beta	main.tex	/^\\subsection{Beta Coefficients} \\label{code:lm_beta}$/;"	l
+code:lm_compute	main.tex	/^\\subsection{Compute Individual Linear Model} \\label{code:lm_compute}$/;"	l
+code:make_table	main.tex	/^\\subsection{Formatting} \\label{code:make_table}$/;"	l
+code:max_dist	main.tex	/^\\subsection{Max Dist}\\label{code:max_dist}$/;"	l
+code:max_lines	main.tex	/^\\subsection{Max Lines}\\label{code:max_lines}$/;"	l
+code:mid_pts	main.tex	/^\\subsection{Mid Points}\\label{code:mid_pts}$/;"	l
+code:model_comparison	main.tex	/^\\subsection{Model Comparison}\\label{code:model_comparison}$/;"	l
+code:perp	main.tex	/^\\subsection{Perpendicular Sampling} \\label{code:perp}$/;"	l
+code:road_angles	main.tex	/^\\subsection{Road Angles}\\label{code:road_angles}$/;"	l
+code:true_cents	main.tex	/^\\subsection{True Centrelines}\\label{code:true_cents}$/;"	l
+comb	scripts/01_samples.r	/^comb <- catalog_apply(ctg, clip_samples, sample_lines)$/;"	g
+comb	scripts/01_samples.r	/^comb <- comb %>%$/;"	g
+comb	scripts/01_samples.r	/^comb <- comb <- do.call(rbind, comb)$/;"	g
+comb_ctg	scripts/functions.r	/^comb_ctg <- function(x) {$/;"	f
+commands	wclatex.py	/^commands = re.compile(r"\\\\\\w+((\\*)?\\{.*?\\})*")$/;"	v
+comment	wclatex.py	/^comment = re.compile("\\%.*")$/;"	v
+compute_samples	scripts/functions.r	/^compute_samples <- function(x, increment = 10, width = 30) {$/;"	f
+coord	scripts/stack.r	/^coord <- st_coordinates(rd)$/;"	g
+coords	scripts/01_samples.r	/^coords <- joined_output %>%$/;"	g
+coords	scripts/04_cents.r	/^coords <- joined_output %>%$/;"	g
+coords	scripts/functions.r	/^  coords <- rd %>% st_coordinates()$/;"	v
+corben2005	kbib.bib	/^@article{corben2005,$/;"	a
+costea2016	kbib.bib	/^@article{costea2016,$/;"	a
+cowplot	rbib.bib	/^@Manual{cowplot,$/;"	m
+ctg	scripts/00_clean.r	/^ctg <- catalog("..\/data\/derived\/ctg_buff\/")$/;"	g
+ctg	scripts/00_clean.r	/^ctg <- catalog("..\/data\/derived\/ctg_clean\/")$/;"	g
+ctg	scripts/00_clean.r	/^ctg <- catalog("..\/data\/point\/")$/;"	g
+ctg	scripts/01_samples.r	/^ctg <- catalog("..\/data\/derived\/ctg_buff\/")$/;"	g
+ctg	scripts/03_width.r	/^ctg <- catalog("..\/data\/derived\/ctg_notnorm\/")$/;"	g
+ctg	scripts/04_cents.r	/^ctg <- catalog("..\/data\/derived\/ctg\/")$/;"	g
+ctg_notnorm	scripts/00_clean.r	/^ctg_notnorm <- catalog("..\/data\/point\/")$/;"	g
+ctg_to_df	scripts/functions.r	/^ctg_to_df <- function(cluster, aerial = NULL) {$/;"	f
+currie2010	kbib.bib	/^@article{currie2010,$/;"	a
+d	scripts/functions.r	/^  d <- st_distance(x, y)$/;"	v
+dahlkamp2006	kbib.bib	/^@inproceedings{dahlkamp2006,$/;"	j
+darmawati2008	kbib.bib	/^@inproceedings{darmawati2008,$/;"	j
+data	rbib.bib	/^@Manual{data.table,$/;"	m
+dedrick2009	kbib.bib	/^@article{dedrick2009,$/;"	a
+deeter2009	kbib.bib	/^@article{deeter2009,$/;"	a
+departmentfortransport2006	kbib.bib	/^@misc{departmentfortransport2006,$/;"	n
+departmentfortransport2011	kbib.bib	/^@article{departmentfortransport2011,$/;"	a
+departmentfortransport2012	kbib.bib	/^@article{departmentfortransport2012,$/;"	a
+departmentfortransport2012a	kbib.bib	/^@misc{departmentfortransport2012a,$/;"	n
+departmentfortransport2013	kbib.bib	/^@article{departmentfortransport2013,$/;"	a
+departmentfortransport2013a	kbib.bib	/^@article{departmentfortransport2013a,$/;"	a
+departmentfortransport2013b	kbib.bib	/^@article{departmentfortransport2013b,$/;"	a
+departmentfortransport2016	kbib.bib	/^@misc{departmentfortransport2016,$/;"	n
+departmentfortransport2018	kbib.bib	/^@misc{departmentfortransport2018,$/;"	n
+departmentfortransport2018a	kbib.bib	/^@article{departmentfortransport2018a,$/;"	a
+departmentfortransport2018b	kbib.bib	/^@article{departmentfortransport2018b,$/;"	a
+departmentfortransport2019	kbib.bib	/^@misc{departmentfortransport2019,$/;"	n
+devtools	rbib.bib	/^@Manual{devtools,$/;"	m
+dewaard2004	kbib.bib	/^@article{dewaard2004,$/;"	a
+df	scripts/stack.r	/^df <- cbind(x, y)$/;"	g
+diezroux2001	kbib.bib	/^@article{diezroux2001,$/;"	a
+distances	scripts/functions.r	/^    distances <- as.list(distances[1, 1:2]) %>%$/;"	v
+distances	scripts/functions.r	/^    distances <- distances[distances$min_dist < 1, ]$/;"	v
+distances	scripts/functions.r	/^    distances <- s %>%$/;"	v
+distances	scripts/functions.r	/^  distances <- x %>%$/;"	v
+distances$colid	scripts/functions.r	/^    distances$colid <- gsub("[^0-9.-]", "", distances$colid)$/;"	v
+dists	scripts/01_samples.r	/^dists <- do.call(rbind, dists)$/;"	g
+dists	scripts/01_samples.r	/^dists <- mapply($/;"	g
+dists	scripts/04_cents.r	/^dists <- do.call(rbind, dists)$/;"	g
+dists	scripts/04_cents.r	/^dists <- mapply($/;"	g
+dong2019	kbib.bib	/^@article{dong2019,$/;"	a
+dorling2000	kbib.bib	/^@article{dorling2000,$/;"	a
+dorling2002	kbib.bib	/^@article{dorling2002,$/;"	a
+douglas1964	kbib.bib	/^@book{douglas1964,$/;"	b
+dragut2014	kbib.bib	/^@article{dragut2014,$/;"	a
+dtm	scripts/functions.r	/^  dtm <- grid_terrain(las, 1, knnidw(k = 10, p = 2))$/;"	v
+dubes1992	kbib.bib	/^@article{dubes1992,$/;"	a
+duncan1999	kbib.bib	/^@article{duncan1999,$/;"	a
+duncan2001	kbib.bib	/^@article{duncan2001,$/;"	a
+duro2012	kbib.bib	/^@article{duro2012,$/;"	a
+e	scripts/functions.r	/^      e <- abs(n1 - n2)$/;"	v
+e	scripts/functions.r	/^      e <- cbind($/;"	v
+e	wclatex.py	/^e = c.find(r"\\bibliographystyle{")$/;"	v
+eisank2014	kbib.bib	/^@article{eisank2014,$/;"	a
+elberink2000	kbib.bib	/^@article{elberink2000,$/;"	a
+elev	scripts/functions.r	/^      elev <- rbind(elev, e)$/;"	v
+elev	scripts/functions.r	/^  elev <- c()$/;"	v
+embley1998	kbib.bib	/^@inproceedings{embley1998,$/;"	j
+end_time	scripts/run_all.r	/^end_time <- Sys.time()$/;"	g
+engl	kbib.bib	/^@misc{engl,$/;"	n
+environmentagency2019	kbib.bib	/^@misc{environmentagency2019,$/;"	n
+environmentalprotectionuk1997	kbib.bib	/^@misc{environmentalprotectionuk1997,$/;"	n
+eq:xydiff	main.tex	/^\\begin{equation}\\label{eq:xydiff}$/;"	l
+esri2019	kbib.bib	/^@misc{esri2019,$/;"	n
+euclidean_distance	scripts/functions.r	/^euclidean_distance <- function(p1, p2) {$/;"	f
+euzenat2013	kbib.bib	/^@book{euzenat2013,$/;"	b
+extent	scripts/00_clean.r	/^extent <- st_as_sfc(st_bbox(roads))$/;"	g
+extract_buff	scripts/functions.r	/^extract_buff <- function(cluster, clip_input) {$/;"	f
+f1	scripts/02_lm.r	/^f1 <- as.formula("road ~ Intensity + lum + dists + Z + NumberOfReturns")$/;"	g
+f1	scripts/04_cents.r	/^f1 <- as.formula("road ~ Intensity + dists + Z + NumberOfReturns")$/;"	g
+f1	scripts/04_cents.r	/^f1 <- as.formula("road ~ Intensity + lum + dists + Z + NumberOfReturns")$/;"	g
+f2	scripts/04_cents.r	/^f2 <- as.formula("road ~ Intensity + dists + Z + NumberOfReturns")$/;"	g
+fambro2000	kbib.bib	/^@article{fambro2000,$/;"	a
+fang2004	kbib.bib	/^@article{fang2004,$/;"	a
+farmer2003	kbib.bib	/^@article{farmer2003,$/;"	a
+farrington2005	kbib.bib	/^@article{farrington2005,$/;"	a
+ferchichi2005	kbib.bib	/^@inproceedings{ferchichi2005,$/;"	j
+ferguson2017	kbib.bib	/^@misc{ferguson2017,$/;"	n
+ferraz2016	kbib.bib	/^@article{ferraz2016,$/;"	a
+fig:area_map	main.tex	/^\\caption[Study area highlighting road centrelines]{Study area highlighting road centrelines; ea/;"	l
+fig:bearingang1	main.tex	/^\\caption[Bearing Angle ($\\hat \\theta_i$) between two sequential road nodes.]{Bearing Angle ($/;"	l
+fig:bearingang2	main.tex	/^\\label{fig:bearingang2}$/;"	l
+fig:csnd	main.tex	/^\\caption{Comparison between a Linear Probability Model Distribution (Red) and Probit\/Logit Cum/;"	l
+fig:fig_lp	main.tex	/^\\caption[LiDAR point clouds for one selected road aggregated into 2m$^2$ grids]{LiDAR point clo/;"	l
+fig:hist_lidar	main.tex	/^\\caption[Post noise filtering LiDAR point cloud distribution]{Post noise filtering LiDAR point /;"	l
+fig:lmdistributions	main.tex	/^\\caption[Linear model probability distributions for the maximal model (LM 1)]{Linear model prob/;"	l
+fig:quant_fig	main.tex	/^\\caption[Comparison between linear prediction quantiles]{Comparison between linear prediction q/;"	l
+fig:rqi_compare	main.tex	/^\\caption[Visual comparison between the RQI of roads.]{Visual comparison between the RQI of road/;"	l
+fig:sample_fig	main.tex	/^\\caption[Sample lines extracted based on known road locations]{Sample lines extracted based on /;"	l
+fig:sample_points	main.tex	/^\\caption[Road LiDAR points at maximum distance apart, showing two example sample locations ($\\/;"	l
+figure	wclatex.py	/^figure = re.compile(r"\\\\begin{figure}.*?\\\\end{figure}")$/;"	v
+file	wclatex.py	/^file = open(".\/plain_words.txt", "w")$/;"	v
+filter_returns	scripts/functions.r	/^filter_returns <- function(x) {$/;"	f
+filter_samples	scripts/functions.r	/^filter_samples <- function(s) {$/;"	f
+finch1994	kbib.bib	/^@misc{finch1994,$/;"	n
+find_dists	scripts/functions.r	/^find_dists <- function(x, y) {$/;"	f
+fixed_cents	scripts/03_width.r	/^fixed_cents <- do.call(rbind, fixed_cents)$/;"	g
+fixed_cents	scripts/03_width.r	/^fixed_cents <- fixed_cents %>%$/;"	g
+fixed_cents	scripts/03_width.r	/^fixed_cents <- lapply(fixed_cents, max_lines, cents = roads)$/;"	g
+fixed_cents	scripts/03_width.r	/^fixed_cents <- list($/;"	g
+fixed_cents	scripts/functions.r	/^  fixed_cents <- st_coordinates(x)[, 1:2]$/;"	v
+fleming2009	kbib.bib	/^@inproceedings{fleming2009,$/;"	j
+floud1961	kbib.bib	/^@article{floud1961,$/;"	a
+fone2006	kbib.bib	/^@article{fone2006,$/;"	a
+fone2007	kbib.bib	/^@article{fone2007,$/;"	a
+fotheringham1989	kbib.bib	/^@article{fotheringham1989,$/;"	a
+fotheringham1991	kbib.bib	/^@article{fotheringham1991,$/;"	a
+frejka2008	kbib.bib	/^@article{frejka2008,$/;"	a
+fuller2008	kbib.bib	/^@book{fuller2008,$/;"	b
+future	rbib.bib	/^@Manual{future,$/;"	m
+galster2010	kbib.bib	/^@article{galster2010,$/;"	a
+gao2013	kbib.bib	/^@article{gao2013,$/;"	a
+geronimus1996	kbib.bib	/^@article{geronimus1996,$/;"	a
+gerster2007	kbib.bib	/^@article{gerster2007,$/;"	a
+ggpubr	rbib.bib	/^@Manual{ggpubr,$/;"	m
+ggthemes	rbib.bib	/^@Manual{ggthemes,$/;"	m
+ghanem2017	kbib.bib	/^@book{ghanem2017,$/;"	b
+gibbons2008	kbib.bib	/^@article{gibbons2008,$/;"	a
+gml	data/aerial/sj7967_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj7968_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj7969_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj7970_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8067_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8068_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8069_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8070_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8167_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8168_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8169_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8170_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8267_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8268_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8269_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8270_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8367_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8368_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8369_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gml	data/aerial/sj8370_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.opengis.net/gml
+gogolla	kbib.bib	/^@article{gogolla,$/;"	a
+goldstein2004	kbib.bib	/^@article{goldstein2004,$/;"	a
+goos	kbib.bib	/^@article{goos,$/;"	a
+gray2001	kbib.bib	/^@article{gray2001,$/;"	a
+green2002	kbib.bib	/^@article{green2002,$/;"	a
+green2018	kbib.bib	/^@article{green2018,$/;"	a
+grenon2004	kbib.bib	/^@article{grenon2004,$/;"	a
+grey_rasters	scripts/01_samples.r	/^grey_rasters <- lapply(grey_rasters, brick)$/;"	g
+grey_rasters	scripts/01_samples.r	/^grey_rasters <- lapply(jpgs, greyscale)$/;"	g
+greyscale	scripts/functions.r	/^greyscale <- function(x) {$/;"	f
+griffith2003	kbib.bib	/^@article{griffith2003,$/;"	a
+gruen	kbib.bib	/^@article{gruen,$/;"	a
+guan2013	kbib.bib	/^@article{guan2013,$/;"	a
+gusmano2018	kbib.bib	/^@article{gusmano2018,$/;"	a
+gutierrez2009	kbib.bib	/^@article{gutierrez2009,$/;"	a
+hamnett2003	kbib.bib	/^@article{hamnett2003,$/;"	a
+han2017	kbib.bib	/^@article{han2017,$/;"	a
+hanck2019	kbib.bib	/^@article{hanck2019,$/;"	a
+harvey1989	kbib.bib	/^@book{harvey1989,$/;"	b
+hata2014	kbib.bib	/^@inproceedings{hata2014,$/;"	j
+hatger2002	kbib.bib	/^@article{hatger2002,$/;"	a
+hatger2003	kbib.bib	/^@article{hatger2003,$/;"	a
+hatger2005	kbib.bib	/^@article{hatger2005,$/;"	a
+hawe2015	kbib.bib	/^@article{hawe2015,$/;"	a
+haynes2000	kbib.bib	/^@article{haynes2000,$/;"	a
+healey1992	kbib.bib	/^@article{healey1992,$/;"	a
+height_change	scripts/functions.r	/^height_change <- function(x) {$/;"	f
+higgs1998	kbib.bib	/^@article{higgs1998,$/;"	a
+higgs2004	kbib.bib	/^@article{higgs2004,$/;"	a
+highwaysengland2016	kbib.bib	/^@misc{highwaysengland2016,$/;"	n
+highwaysengland2019	kbib.bib	/^@misc{highwaysengland2019,$/;"	n
+hinz2003	kbib.bib	/^@article{hinz2003,$/;"	a
+ho2017	kbib.bib	/^@book{ho2017,$/;"	b
+hodge2004	kbib.bib	/^@article{hodge2004,$/;"	a
+hoek2008	kbib.bib	/^@article{hoek2008,$/;"	a
+hoem1990	kbib.bib	/^@article{hoem1990,$/;"	a
+hormese2016	kbib.bib	/^@article{hormese2016,$/;"	a
+hu2004	kbib.bib	/^@article{hu2004,$/;"	a
+hui2008	kbib.bib	/^@inproceedings{hui2008,$/;"	j
+hutchison2010	kbib.bib	/^@incollection{hutchison2010,$/;"	I
+ihaka2011	kbib.bib	/^@article{ihaka2011,$/;"	a
+ilbery2004	kbib.bib	/^@article{ilbery2004,$/;"	a
+immergluck2018	kbib.bib	/^@article{immergluck2018,$/;"	a
+inrix2019	kbib.bib	/^@misc{inrix2019,$/;"	n
+int	scripts/01_samples.r	/^int <- st_contains(roads, joined_output, sparse = FALSE) %>%$/;"	g
+int	scripts/03_width.r	/^int <- st_contains(roads_1m, las_rds, sparse = FALSE) %>%$/;"	g
+int	scripts/04_cents.r	/^int <- st_contains(roads, joined_output, sparse = FALSE) %>%$/;"	g
+int	scripts/functions.r	/^      int <- as.numeric(st_crosses(n, s))$/;"	v
+int	scripts/stack.r	/^        int <- as.numeric(st_crosses(n, s))$/;"	v
+int[is.na(int)]	scripts/functions.r	/^      int[is.na(int)] <- 0$/;"	v
+int[is.na(int)]	scripts/stack.r	/^        int[is.na(int)] <- 0$/;"	v
+iooss2017	kbib.bib	/^@incollection{iooss2017,$/;"	I
+itemCommand	scripts/functions.r	/^      itemCommand <- if (missing(marker)) {$/;"	v
+jaakkola2008	kbib.bib	/^@article{jaakkola2008,$/;"	a
+jencks1990	kbib.bib	/^@article{jencks1990,$/;"	a
+jessop2008	kbib.bib	/^@article{jessop2008,$/;"	a
+johnston1983	kbib.bib	/^@book{johnston1983,$/;"	b
+joined_output	scripts/01_samples.r	/^joined_output <- do.call(rbind, joined_output)$/;"	g
+joined_output	scripts/01_samples.r	/^joined_output <- joined_output %>%$/;"	g
+joined_output	scripts/01_samples.r	/^joined_output <- merge(comb, roads_df, by = "road_id")$/;"	g
+joined_output	scripts/01_samples.r	/^joined_output <- split(joined_output, f = joined_output$road_id)$/;"	g
+joined_output	scripts/04_cents.r	/^joined_output <- do.call(rbind, joined_output)$/;"	g
+joined_output	scripts/04_cents.r	/^joined_output <- merge(sampled_las, roads_df, by = "road_id")$/;"	g
+joined_output	scripts/04_cents.r	/^joined_output <- split(joined_output, f = joined_output$road_id)$/;"	g
+joined_output$dists	scripts/01_samples.r	/^joined_output$dists <- dists$/;"	g
+joined_output$dists	scripts/04_cents.r	/^joined_output$dists <- dists$/;"	g
+joined_output$lum	scripts/01_samples.r	/^joined_output$lum <- as.numeric(lum)$/;"	g
+joined_output$lum	scripts/04_cents.r	/^joined_output$lum <- as.numeric(lum)$/;"	g
+joined_output$road	scripts/01_samples.r	/^joined_output$road <- as.numeric(joined_output$road > 0)$/;"	g
+joined_output$road	scripts/01_samples.r	/^joined_output$road <- int$/;"	g
+joined_output$road	scripts/04_cents.r	/^joined_output$road <- as.numeric(joined_output$road > 0)$/;"	g
+joined_output$road	scripts/04_cents.r	/^joined_output$road <- int$/;"	g
+jones1991	kbib.bib	/^@article{jones1991,$/;"	a
+jones1993	kbib.bib	/^@article{jones1993,$/;"	a
+jones1995	kbib.bib	/^@article{jones1995,$/;"	a
+jones1995a	kbib.bib	/^@article{jones1995a,$/;"	a
+jones2013	kbib.bib	/^@article{jones2013,$/;"	a
+jpgs	scripts/01_samples.r	/^jpgs <- Sys.glob("..\/data\/aerial\/*.jpg")$/;"	g
+jpgs	scripts/01_samples.r	/^jpgs <- lapply(jpgs, brick)$/;"	g
+jung2018	kbib.bib	/^@article{jung2018,$/;"	a
+kableExtra	rbib.bib	/^@Manual{kableExtra,$/;"	m
+kahraman2015	kbib.bib	/^@article{kahraman2015,$/;"	a
+kar2012	kbib.bib	/^@article{kar2012,$/;"	a
+karthikeyan2001	kbib.bib	/^@article{karthikeyan2001,$/;"	a
+knuth1984	kbib.bib	/^@article{knuth1984,$/;"	a
+kordjamshidi2015	kbib.bib	/^@article{kordjamshidi2015,$/;"	a
+kramer2015	kbib.bib	/^@article{kramer2015,$/;"	a
+kraus1998	kbib.bib	/^@article{kraus1998,$/;"	a
+kravdal2001	kbib.bib	/^@article{kravdal2001,$/;"	a
+kumar2013	kbib.bib	/^@article{kumar2013,$/;"	a
+laliberte2012	kbib.bib	/^@article{laliberte2012,$/;"	a
+las	scripts/00_clean.r	/^las <- catalog_apply(ctg, ctg_to_df)$/;"	g
+las	scripts/00_clean.r	/^las <- do.call(rbind, las)$/;"	g
+las	scripts/00_clean.r	/^las <- las %>%$/;"	g
+las	scripts/04_cents.r	/^las <- catalog_apply(ctg, ctg_to_df, aerial)$/;"	g
+las	scripts/04_cents.r	/^las <- do.call(rbind, las)$/;"	g
+las	scripts/04_cents.r	/^las <- las %>%$/;"	g
+las	scripts/functions.r	/^          las <- do.call(rbind, las)$/;"	v
+las	scripts/functions.r	/^    las <- lasclip(las, clip_input)$/;"	v
+las	scripts/functions.r	/^  las <- as.data.frame(las)$/;"	v
+las	scripts/functions.r	/^  las <- las %>%$/;"	v
+las	scripts/functions.r	/^  las <- las[is.na(las$sample_id) == FALSE, ]$/;"	v
+las	scripts/functions.r	/^  las <- lasfilter(las, Intensity < p95i * sensitivity)$/;"	v
+las	scripts/functions.r	/^  las <- lasfilter(las, NumberOfReturns == ReturnNumber)$/;"	v
+las	scripts/functions.r	/^  las <- lasfilter(las, Z < p95z * sensitivity)$/;"	v
+las	scripts/functions.r	/^  las <- lasground(las, csf())$/;"	v
+las	scripts/functions.r	/^  las <- lasmergespatial(las, p95i, "p95i")$/;"	v
+las	scripts/functions.r	/^  las <- lasmergespatial(las, p95z, "p95z")$/;"	v
+las	scripts/functions.r	/^  las <- lasnormalize(las, dtm)$/;"	v
+las	scripts/functions.r	/^  las <- readLAS(cluster)$/;"	v
+las	scripts/functions.r	/^  las <- readLAS(x)$/;"	v
+las$p95i	scripts/functions.r	/^  las$p95i <- NULL$/;"	v
+las$p95z	scripts/functions.r	/^  las$p95z <- NULL$/;"	v
+las@data$lum	scripts/functions.r	/^  las@data$lum <- as.numeric(raster::extract(aerial, las))$/;"	v
+las_filter_noise	scripts/functions.r	/^las_filter_noise <- function(cluster, sensitivity = 1) {$/;"	f
+las_height	scripts/03_width.r	/^las_height <- as.data.frame(las_height)$/;"	g
+las_height	scripts/03_width.r	/^las_height <- do.call(rbind, las_height)$/;"	g
+las_height	scripts/03_width.r	/^las_height <- lapply(las_height, height_change)$/;"	g
+las_height	scripts/03_width.r	/^las_height <- las_height %>%$/;"	g
+las_height	scripts/03_width.r	/^las_height <- split(las_rds, las_rds$road_id)$/;"	g
+las_qual	scripts/03_width.r	/^las_qual <- las_rds %>%$/;"	g
+las_rds	scripts/03_width.r	/^las_rds <- catalog_apply(ctg, clip_samples, sample_lines)$/;"	g
+las_rds	scripts/03_width.r	/^las_rds <- do.call(rbind, las_rds)$/;"	g
+las_rds	scripts/03_width.r	/^las_rds <- lapply(las_rds, filter_returns)$/;"	g
+las_rds	scripts/03_width.r	/^las_rds <- las_rds %>%$/;"	g
+las_rds	scripts/03_width.r	/^las_rds <- las_rds[las_rds$NumberOfReturns == 1 &$/;"	g
+las_rds	scripts/03_width.r	/^las_rds <- las_rds[las_rds$road < 2, ]$/;"	g
+las_rds	scripts/03_width.r	/^las_rds <- las_rds[las_rds$road == 1, ]$/;"	g
+las_rds	scripts/03_width.r	/^las_rds <- merge(las_rds, roads_df, by = "road_id")$/;"	g
+las_rds	scripts/03_width.r	/^las_rds <- split(las_rds, las_rds$sample_id)$/;"	g
+las_rds$road	scripts/03_width.r	/^las_rds$road <- as.numeric(las_rds$road > 0)$/;"	g
+las_rds$road	scripts/03_width.r	/^las_rds$road <- int$/;"	g
+lawless2004	kbib.bib	/^@article{lawless2004,$/;"	a
+lawless2006	kbib.bib	/^@article{lawless2006,$/;"	a
+layton2012	kbib.bib	/^@article{layton2012,$/;"	a
+lees2008	kbib.bib	/^@book{lees2008,$/;"	b
+len_inc	scripts/functions.r	/^    len_inc <- increment$/;"	v
+len_ofs	scripts/functions.r	/^        len_ofs <- len_ofs + len_inc$/;"	v
+len_ofs	scripts/functions.r	/^      len_ofs <- len_ofs + len_inc$/;"	v
+len_ofs	scripts/functions.r	/^    len_ofs <- len_inc$/;"	v
+len_seg	scripts/functions.r	/^      len_seg <- euclidean_distance(n1, n2)$/;"	v
+leon1997	kbib.bib	/^@article{leon1997,$/;"	a
+leon1998	kbib.bib	/^@article{leon1998,$/;"	a
+li2012	kbib.bib	/^@article{li2012,$/;"	a
+li2016	kbib.bib	/^@article{li2016,$/;"	a
+lidR	rbib.bib	/^@Manual{lidR,$/;"	m
+lidr_clean	scripts/functions.r	/^lidr_clean <- function(cluster) {$/;"	f
+line	scripts/functions.r	/^      line <- st_cast(pair, "LINESTRING")$/;"	v
+line	scripts/functions.r	/^    line <- st_cast(pair, "LINESTRING")$/;"	v
+line	scripts/stack.r	/^    line <- st_cast(pair, "LINESTRING")$/;"	v
+linear_widths	scripts/04_cents.r	/^linear_widths <- lapply(lm_max_widths, model_comparison)$/;"	g
+linear_widths	scripts/04_cents.r	/^linear_widths <- linear_widths %>%$/;"	g
+linear_widths	scripts/04_cents.r	/^linear_widths <- merge(linear_widths, tot_pts, by = "road_id")$/;"	g
+linestring	scripts/functions.r	/^        linestring <- st_cast(pair, "LINESTRING") %>%$/;"	v
+listEnv	scripts/functions.r	/^      listEnv <- c($/;"	v
+liu	kbib.bib	/^@article{liu,$/;"	a
+liu2017	kbib.bib	/^@inproceedings{liu2017,$/;"	j
+liua	kbib.bib	/^@article{liua,$/;"	a
+lm0	scripts/04_cents.r	/^lm0 <- lm(data = sampled_las, formula = f1)$/;"	g
+lm0	scripts/04_cents.r	/^lm0 <- sampled_las[sampled_las$lm0_dum == 1, ]$/;"	g
+lm0_pred	scripts/04_cents.r	/^lm0_pred <- predict(lm0, sampled_las, type = "response")$/;"	g
+lm1	scripts/02_lm.r	/^lm1 <- lm(data = sampled_las, formula = f1)$/;"	g
+lm1	scripts/04_cents.r	/^lm1 <- cent1_las[cent1_las$lm1_dum == 1, ] %>%$/;"	g
+lm1	scripts/04_cents.r	/^lm1 <- lm(data = cent1_las, formula = f1)$/;"	g
+lm1_mean	scripts/stack.r	/^lm1_mean <- c(2,3,4,7)$/;"	g
+lm1_pred	scripts/02_lm.r	/^lm1_pred <- predict(lm1, sampled_las, type = "response")$/;"	g
+lm1_pred	scripts/04_cents.r	/^lm1_pred <- predict(lm1, cent1_las, type = "response")$/;"	g
+lm2	scripts/04_cents.r	/^lm2 <- cent1_las[cent1_las$lm2_dum == 1, ] %>%$/;"	g
+lm2	scripts/04_cents.r	/^lm2 <- do.call(rbind, lm2)$/;"	g
+lm2	scripts/04_cents.r	/^lm2 <- lm(data = cent1_las, formula = f2)$/;"	g
+lm2	scripts/04_cents.r	/^lm2 <- split(lm2, lm2$road_id)$/;"	g
+lm2_mean	scripts/stack.r	/^lm2_mean <- c(5,9,3,2)$/;"	g
+lm2_pred	scripts/04_cents.r	/^lm2_pred <- predict(lm2, cent1_las, type = "response")$/;"	g
+lm_beta	scripts/functions.r	/^lm_beta <- function(model) {$/;"	f
+lm_compute	scripts/functions.r	/^lm_compute <- function(x, f) tryCatch({$/;"	f
+lm_estimate	scripts/stack.r	/^lm_estimate <- c(5,5,5,5)$/;"	g
+lm_max_widths	scripts/04_cents.r	/^lm_max_widths <- lapply(lm_max_widths, function(x) {$/;"	g
+lm_max_widths	scripts/04_cents.r	/^lm_max_widths <- lapply(lm_max_widths, max_lines, cents = centrelines)$/;"	g
+lm_max_widths	scripts/04_cents.r	/^lm_max_widths <- list(lm0)$/;"	g
+lm_max_widths	scripts/04_cents.r	/^lm_max_widths <- list(lmi, lm1, lm2)$/;"	g
+lmi	scripts/04_cents.r	/^lmi <- cent1_las[cent1_las$I_dum == 1, ] %>%$/;"	g
+lorant2001	kbib.bib	/^@article{lorant2001,$/;"	a
+lu2014	kbib.bib	/^@article{lu2014,$/;"	a
+lum	scripts/01_samples.r	/^lum <- raster::extract(aerial, joined_output)$/;"	g
+lum	scripts/04_cents.r	/^lum <- raster::extract(aerial, joined_output)$/;"	g
+m	scripts/functions.r	/^    m <- lm(formula = f, data = x)$/;"	v
+maas1999	kbib.bib	/^@article{maas1999,$/;"	a
+macintyre1993	kbib.bib	/^@article{macintyre1993,$/;"	a
+magrittr	rbib.bib	/^@Manual{magrittr,$/;"	m
+make_table	scripts/functions.r	/^make_table <- function(df, cap = "", dig = 2, col_names = NA, table_env = "table", ...) {$/;"	f
+malecki2003	kbib.bib	/^@article{malecki2003,$/;"	a
+manthorpe2008	kbib.bib	/^@article{manthorpe2008,$/;"	a
+marks2002	kbib.bib	/^@article{marks2002,$/;"	a
+markup	wclatex.py	/^markup = re.compile(r"\\\\(?:emph|textbf)\\{(.*?)\\}")$/;"	v
+marsden2002	kbib.bib	/^@article{marsden2002,$/;"	a
+martin2006	kbib.bib	/^@article{martin2006,$/;"	a
+mason1999	kbib.bib	/^@article{mason1999,$/;"	a
+math	wclatex.py	/^math = re.compile(r"\\${1,2}.+?\\${1,2}")$/;"	v
+mathal	wclatex.py	/^mathal = re.compile(r"\\\\begin{aligned}.*?\\\\end{aligned}")$/;"	v
+mathew2014	kbib.bib	/^@article{mathew2014,$/;"	a
+matkan2014	kbib.bib	/^@article{matkan2014,$/;"	a
+max_dist	scripts/functions.r	/^max_dist <- function(x) {$/;"	f
+max_lines	scripts/functions.r	/^max_lines <- function(x, cents) {$/;"	f
+mcculloch2001	kbib.bib	/^@article{mcculloch2001,$/;"	a
+mcmillen2010	kbib.bib	/^@article{mcmillen2010,$/;"	a
+meier2014	kbib.bib	/^@book{meier2014,$/;"	b
+mena2005	kbib.bib	/^@article{mena2005,$/;"	a
+miao2014	kbib.bib	/^@article{miao2014,$/;"	a
+mid_point	scripts/03_width.r	/^mid_point <- split(fixed_cents, fixed_cents$rowid)$/;"	g
+mid_point	scripts/functions.r	/^  mid_point <- as.data.frame(mid_point)$/;"	v
+mid_point	scripts/functions.r	/^  mid_point <- cbind(x_mid, y_mid)$/;"	v
+mid_point	scripts/functions.r	/^  mid_point <- mid_point %>%$/;"	v
+mid_points	scripts/03_width.r	/^mid_points <- do.call(rbind, mid_points)$/;"	g
+mid_points	scripts/03_width.r	/^mid_points <- lapply(mid_point, mid_pts)$/;"	g
+mid_points	scripts/03_width.r	/^mid_points <- mid_points %>%$/;"	g
+mid_pts	scripts/functions.r	/^mid_pts <- function(x) {$/;"	f
+mid_rds	scripts/03_width.r	/^mid_rds <- Filter(function(x) dim(x)[1] > 0, mid_rds)$/;"	g
+mid_rds	scripts/03_width.r	/^mid_rds <- split(mid_points, mid_points$road_id)$/;"	g
+minten1999	kbib.bib	/^@article{minten1999,$/;"	a
+mitchell2001	kbib.bib	/^@article{mitchell2001,$/;"	a
+model_comparison	scripts/functions.r	/^model_comparison <- function(model) {$/;"	f
+moore2006	kbib.bib	/^@inproceedings{moore2006,$/;"	j
+mortensen2012	kbib.bib	/^@article{mortensen2012,$/;"	a
+mountain1996	kbib.bib	/^@article{mountain1996,$/;"	a
+mulley2009	kbib.bib	/^@article{mulley2009,$/;"	a
+multipoints	scripts/functions.r	/^        multipoints <- st_multipoint(matrix(perp_segments, ncol = 2))$/;"	v
+mungall2005	kbib.bib	/^@misc{mungall2005,$/;"	n
+muscat2010	kbib.bib	/^@article{muscat2010,$/;"	a
+n	scripts/functions.r	/^        n <- length(pts)$/;"	v
+n	scripts/functions.r	/^  n <- nrow(cent) - 1$/;"	v
+n	scripts/functions.r	/^  n <- nrow(y) - 1$/;"	v
+n	scripts/stack.r	/^n <- nodelines[[2]]$/;"	g
+n	scripts/stack.r	/^n <- nrow(rd) - 1$/;"	g
+n1	scripts/functions.r	/^        n1 <- st_coordinates(n)[1, ]$/;"	v
+n1	scripts/functions.r	/^        n1 <- st_coordinates(s)[1, ]$/;"	v
+n1	scripts/functions.r	/^      n1 <- coords[i, ]$/;"	v
+n1	scripts/functions.r	/^      n1 <- mean(pair[[1]]$Z)$/;"	v
+n1	scripts/functions.r	/^      n1 <- road_node[i, ]$/;"	v
+n1	scripts/stack.r	/^            n1 <- st_coordinates(n)[1,]$/;"	v
+n1	scripts/stack.r	/^            n1 <- st_coordinates(s)[1,]$/;"	v
+n1	scripts/stack.r	/^        n1 <- df[i, ]$/;"	v
+n2	scripts/functions.r	/^        n2 <- st_coordinates(n)[2, ]$/;"	v
+n2	scripts/functions.r	/^        n2 <- st_coordinates(s)[2, ]$/;"	v
+n2	scripts/functions.r	/^      n2 <- coords[i + 1, ]$/;"	v
+n2	scripts/functions.r	/^      n2 <- mean(pair[[2]]$Z)$/;"	v
+n2	scripts/functions.r	/^      n2 <- road_node[i + 1, ]$/;"	v
+n2	scripts/stack.r	/^            n2 <- st_coordinates(n)[2,]$/;"	v
+n2	scripts/stack.r	/^            n2 <- st_coordinates(s)[2,]$/;"	v
+n2	scripts/stack.r	/^        n2 <- df[i + 1, ]$/;"	v
+names(angles)	scripts/03_width.r	/^names(angles) <- c("angle", "road_id")$/;"	g
+names(las_height)	scripts/03_width.r	/^names(las_height) <- c("road_id", "Z")$/;"	g
+names(linear_widths)	scripts/04_cents.r	/^names(linear_widths) <- c($/;"	g
+names(time_taken)	scripts/run_all.r	/^names(time_taken) <- c("time_taken")$/;"	g
+names(tot_pts)	scripts/04_cents.r	/^names(tot_pts) <- c("road_id", "tot_pts")$/;"	g
+narvaez2012	kbib.bib	/^@inproceedings{narvaez2012,$/;"	j
+nicholl2007	kbib.bib	/^@article{nicholl2007,$/;"	a
+noble2006	kbib.bib	/^@article{noble2006,$/;"	a
+noctor2004	kbib.bib	/^@misc{noctor2004,$/;"	n
+nodelines	scripts/functions.r	/^  nodelines <- lapply(X = 1:n, FUN = function(i) {$/;"	v
+nodelines	scripts/stack.r	/^nodelines <- lapply(X = 1:n, FUN = function(i) {$/;"	g
+noland2004	kbib.bib	/^@article{noland2004,$/;"	a
+nonwords	wclatex.py	/^nonwords = re.compile(r"\\s\\W+\\s")$/;"	v
+norm_widths	scripts/stack.r	/^norm_widths <- widths %>%$/;"	g
+normal	scripts/functions.r	/^    normal <- abs(angle[i] - (angle[i - 1]))$/;"	v
+normal	scripts/stack.r	/^    normal <- abs(angle[i] - (angle[i - 1]))$/;"	v
+normal_ang	scripts/functions.r	/^    normal_ang <- rbind(normal_ang, normal)$/;"	v
+normal_ang	scripts/functions.r	/^  normal_ang <- c()$/;"	v
+normal_ang	scripts/functions.r	/^  normal_ang <- cbind($/;"	v
+normal_ang	scripts/stack.r	/^    normal_ang <- rbind(normal_ang, normal)$/;"	v
+normal_ang	scripts/stack.r	/^normal_ang <- c()$/;"	g
+normalise_widths	scripts/stack.r	/^normalise_widths <- function(x, e) {$/;"	f
+numbers	wclatex.py	/^numbers = re.compile(r"\\d+(.\\d*)?")$/;"	v
+nvimcom	rbib.bib	/^@Manual{nvimcom,$/;"	m
+oeppen2002	kbib.bib	/^@article{oeppen2002,$/;"	a
+ofcom2014	kbib.bib	/^@misc{ofcom2014,$/;"	n
+officefornationalstatistics2010	kbib.bib	/^@article{officefornationalstatistics2010,$/;"	a
+officefornationalstatistics2011	kbib.bib	/^@article{officefornationalstatistics2011,$/;"	a
+olah2003	kbib.bib	/^@article{olah2003,$/;"	a
+ons2018	kbib.bib	/^@article{ons2018,$/;"	a
+ons2019	kbib.bib	/^@misc{ons2019,$/;"	n
+openshaw1984	kbib.bib	/^@article{openshaw1984,$/;"	a
+openshaw1984a	kbib.bib	/^@article{openshaw1984a,$/;"	a
+openshaw1995	kbib.bib	/^@article{openshaw1995,$/;"	a
+opposite	scripts/stack.r	/^            opposite <- abs(as.numeric(c1_len) * cos(as.numeric(theta)))$/;"	v
+opt_chunk_buffer(ctg)	scripts/00_clean.r	/^opt_chunk_buffer(ctg) <- 20$/;"	g
+opt_chunk_buffer(ctg_notnorm)	scripts/00_clean.r	/^opt_chunk_buffer(ctg_notnorm) <- 20$/;"	g
+opt_chunk_size(ctg)	scripts/00_clean.r	/^opt_chunk_size(ctg) <- 500$/;"	g
+opt_chunk_size(ctg)	scripts/01_samples.r	/^opt_chunk_size(ctg) <- 500$/;"	g
+opt_chunk_size(ctg)	scripts/03_width.r	/^opt_chunk_size(ctg) <- 500$/;"	g
+opt_chunk_size(ctg_notnorm)	scripts/00_clean.r	/^opt_chunk_size(ctg_notnorm) <- 500$/;"	g
+opt_output_files(ctg)	scripts/00_clean.r	/^opt_output_files(ctg) <- "..\/data\/derived\/ctg\/{ID}_tile"$/;"	g
+opt_output_files(ctg)	scripts/00_clean.r	/^opt_output_files(ctg) <- "..\/data\/derived\/ctg_buff\/{ID}_tile"$/;"	g
+opt_output_files(ctg)	scripts/00_clean.r	/^opt_output_files(ctg) <- "..\/data\/derived\/ctg_clean\/{ID}_clean"$/;"	g
+opt_output_files(ctg_notnorm)	scripts/00_clean.r	/^opt_output_files(ctg_notnorm) <- "..\/data\/derived\/ctg_notnorm\/{ID}_tile"$/;"	g
+ordnancesurvey2019	kbib.bib	/^@misc{ordnancesurvey2019,$/;"	n
+ordnancesurvey2019a	kbib.bib	/^@article{ordnancesurvey2019a,$/;"	a
+osgb	data/aerial/sj7967_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj7968_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj7969_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj7970_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8067_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8068_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8069_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8070_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8167_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8168_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8169_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8170_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8267_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8268_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8269_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8270_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8367_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8368_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8369_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+osgb	data/aerial/sj8370_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.ordnancesurvey.co.uk/xml/namespaces/osgb
+out	scripts/functions.r	/^      out <- paste(itemCommand, x, collapse = "\\n")$/;"	v
+out	scripts/functions.r	/^      out <- sprintf("%s%s%s", listEnv[1], out, listEnv[2])$/;"	v
+out	scripts/functions.r	/^    out <- sprintf("\\n\\n%s\\n \\n", paste("*", x, collapse = "\\n"))$/;"	v
+p	scripts/functions.r	/^    p <- m %>%$/;"	v
+p95i	scripts/functions.r	/^  p95i <- grid_metrics(las, ~ quantile(Intensity, probs = 0.95), 10)$/;"	v
+p95z	scripts/functions.r	/^  p95z <- grid_metrics(las, ~ quantile(Z, probs = 0.95), 10)$/;"	v
+pacman	scripts/functions.r	/^library(pacman)$/;"	l
+pair	scripts/functions.r	/^        pair <- st_combine(c(pts[1], pts[2], pts[3]))$/;"	v
+pair	scripts/functions.r	/^      pair <- samples[c(s, s + 1)]$/;"	v
+pair	scripts/functions.r	/^      pair <- y[c(i, i + 1), ] %>%$/;"	v
+pair	scripts/functions.r	/^    pair <- cent[c(i, i + 1), ] %>%$/;"	v
+pair	scripts/stack.r	/^    pair <- pts[c(i, i + 1), ] %>%$/;"	v
+pair	scripts/stack.r	/^    pair <- rd[c(i, i + 1), ] %>%$/;"	v
+palmer2004	kbib.bib	/^@article{palmer2004,$/;"	a
+parallel	rbib.bib	/^@Manual{parallel,$/;"	m
+parkinson1998	kbib.bib	/^@book{parkinson1998,$/;"	b
+patacchini2007	kbib.bib	/^@article{patacchini2007,$/;"	a
+paton2018	kbib.bib	/^@article{paton2018,$/;"	a
+payne2012	kbib.bib	/^@article{payne2012,$/;"	a
+pbapply	rbib.bib	/^@Manual{pbapply,$/;"	m
+perp_segments	scripts/functions.r	/^        perp_segments <- calc_perp($/;"	v
+peterson2005	kbib.bib	/^@article{peterson2005,$/;"	a
+pickett2001	kbib.bib	/^@article{pickett2001,$/;"	a
+pizam1999	kbib.bib	/^@article{pizam1999,$/;"	a
+pkgs	scripts/functions.r	/^pkgs <- c($/;"	g
+plewis2003	kbib.bib	/^@article{plewis2003,$/;"	a
+point	scripts/functions.r	/^    point <- c($/;"	v
+point	scripts/functions.r	/^    point <- c(p1[1] + x_len * interval, p1[2] + y_len * interval)$/;"	v
+power2005	kbib.bib	/^@article{power2005,$/;"	a
+pred_m	scripts/functions.r	/^    pred_m <- predict(m, x, type = "response")$/;"	v
+pretty2007	kbib.bib	/^@article{pretty2007,$/;"	a
+printList	scripts/functions.r	/^printList <- function(x, out.format = knitr::opts_knit$get("out.format"),$/;"	f
+propper2005	kbib.bib	/^@article{propper2005,$/;"	a
+pts	scripts/functions.r	/^        pts <- st_cast(st_geometry(multipoints), "POINT")$/;"	v
+pts	scripts/stack.r	/^pts <- as.data.frame(cbind(x, y))$/;"	g
+quesnot2015	kbib.bib	/^@inproceedings{quesnot2015,$/;"	j
+raster	rbib.bib	/^@Manual{raster,$/;"	m
+rd	scripts/functions.r	/^  rd <- unique(x$road_id)$/;"	v
+rd	scripts/stack.r	/^rd <- as.data.frame(cbind(x, y))$/;"	g
+rd	scripts/stack.r	/^rd <- rd %>%$/;"	g
+rd_line	scripts/03_width.r	/^rd_line <- st_read("..\/data\/derived\/roads\/roads_line.gpkg", quiet = TRUE) %>%$/;"	g
+rds	scripts/03_width.r	/^rds <- st_read("..\/data\/derived\/roads\/roads.gpkg") %>%$/;"	g
+rds	scripts/functions.r	/^  rds <- unique(model$road_id)$/;"	v
+redfern2003	kbib.bib	/^@article{redfern2003,$/;"	a
+ref_len	scripts/functions.r	/^  ref_len <- euclidean_distance(point, p2)$/;"	v
+ref_points	scripts/functions.r	/^  ref_points <- rbind($/;"	v
+rgdal	rbib.bib	/^@Manual{rgdal,$/;"	m
+rhodes2003	kbib.bib	/^@article{rhodes2003,$/;"	a
+ribeiro	kbib.bib	/^@article{ribeiro,$/;"	a
+richards2009	kbib.bib	/^@article{richards2009,$/;"	a
+richardson2013	kbib.bib	/^@article{richardson2013,$/;"	a
+riva2011	kbib.bib	/^@article{riva2011,$/;"	a
+road	scripts/functions.r	/^  road <- x[x$road == 1, ]$/;"	v
+roadFunction	scripts/stack.r	/^roadFunction <- c("B", "B")$/;"	g
+road_angles	scripts/functions.r	/^road_angles <- function(rd) {$/;"	f
+road_buff	scripts/04_cents.r	/^road_buff <- st_read("..\/data\/derived\/roads\/roads_buff.gpkg")$/;"	g
+road_id	scripts/stack.r	/^road_id <- c("road_1", "road_2", "road_3", "road_4")$/;"	g
+road_lm	scripts/03_width.r	/^road_lm <- fread("..\/data\/derived\/model_data\/linearmodels.csv") %>%$/;"	g
+road_lm	scripts/functions.r	/^  road_lm <- do.call(rbind, road_lm)$/;"	v
+road_lm	scripts/functions.r	/^  road_lm <- lapply(road_lm, filter_samples)$/;"	v
+road_lm	scripts/functions.r	/^  road_lm <- lapply(road_lm, max_dist)$/;"	v
+road_lm	scripts/functions.r	/^  road_lm <- model[!is.na(model$road_id), ]$/;"	v
+road_lm	scripts/functions.r	/^  road_lm <- road_lm %>% compact()$/;"	v
+road_lm	scripts/functions.r	/^  road_lm <- split(road_lm, f = road_lm$road_id)$/;"	v
+road_lm	scripts/functions.r	/^  road_lm <- split(x, f = x$sample_id)$/;"	v
+road_lm	scripts/functions.r	/^  road_lm <- st_join(road_lm, cents)$/;"	v
+road_lm$length	scripts/functions.r	/^  road_lm$length <- as.numeric(st_length(road_lm))$/;"	v
+road_lm90	scripts/03_width.r	/^road_lm90 <- road_lm[road_lm$lm1_dum90 == 1, ]$/;"	g
+road_node	scripts/functions.r	/^    road_node <- st_coordinates(x)$/;"	v
+roads	scripts/00_clean.r	/^roads <- read_sf("..\/data\/derived\/roads\/roads.gpkg")$/;"	g
+roads	scripts/00_clean.r	/^roads <- st_buffer(roads, 1)$/;"	g
+roads	scripts/00_clean.r	/^roads <- st_read("..\/data\/osroads\/oproad_crop.gpkg") %>%$/;"	g
+roads	scripts/01_samples.r	/^roads <- st_read("..\/data\/derived\/roads\/roads.gpkg") %>%$/;"	g
+roads	scripts/03_width.r	/^roads <- merge(roads, angles, by = "road_id")$/;"	g
+roads	scripts/03_width.r	/^roads <- merge(roads, las_height, by = "road_id")$/;"	g
+roads	scripts/03_width.r	/^roads <- merge(roads, las_qual, by = "road_id") %>%$/;"	g
+roads	scripts/03_width.r	/^roads <- st_read("..\/data\/derived\/roads\/roads_line.gpkg")$/;"	g
+roads	scripts/04_cents.r	/^roads <- cent1 %>%$/;"	g
+roads	scripts/04_cents.r	/^roads <- fread("..\/data\/final_data\/final.csv")$/;"	g
+roads	scripts/04_cents.r	/^roads <- merge(roads, linear_widths, by = "road_id")$/;"	g
+roads_1m	scripts/03_width.r	/^roads_1m <- st_read("..\/data\/derived\/roads\/roads.gpkg")$/;"	g
+roads_5m	scripts/03_width.r	/^roads_5m <- st_read("..\/data\/derived\/roads\/roads_line.gpkg") %>%$/;"	g
+roads_buff	scripts/00_clean.r	/^roads_buff <- st_buffer(roads, 30)$/;"	g
+roads_buff	scripts/00_clean.r	/^roads_buff <- st_read("..\/data\/derived\/roads\/roads_buff.gpkg") %>%$/;"	g
+roads_buff_union	scripts/00_clean.r	/^roads_buff_union <- st_union(roads_buff)$/;"	g
+roads_df	scripts/01_samples.r	/^roads_df <- roads %>% st_drop_geometry()$/;"	g
+roads_df	scripts/03_width.r	/^roads_df <- rds %>% st_drop_geometry()$/;"	g
+roads_df	scripts/04_cents.r	/^roads_df <- roads %>% st_drop_geometry()$/;"	g
+roads_line	scripts/00_clean.r	/^roads_line <- roads$/;"	g
+roads_split	scripts/01_samples.r	/^roads_split <- centrelines %>% st_cast("POINT")$/;"	g
+roads_split	scripts/01_samples.r	/^roads_split <- split(roads_split, f = roads_split$road_id)$/;"	g
+roads_split	scripts/03_width.r	/^roads_split <- split(roads_split, roads_split$road_id)$/;"	g
+roads_split	scripts/03_width.r	/^roads_split <- st_read("..\/data\/derived\/roads\/roads_line.gpkg") %>%$/;"	g
+roads_split	scripts/stack.r	/^roads_split <- roads_split[roads_split$road_id == "road_4", ] %>%$/;"	g
+roads_split	scripts/stack.r	/^roads_split <- st_read("..\/data\/derived\/roads\/roads_line.gpkg")$/;"	g
+roadsafetyandenvironment2000	kbib.bib	/^@misc{roadsafetyandenvironment2000,$/;"	n
+roadsafetygb	kbib.bib	/^@misc{roadsafetygb,$/;"	n
+robinson2008	kbib.bib	/^@article{robinson2008,$/;"	a
+robson1994	kbib.bib	/^@book{robson1994,$/;"	b
+robson1994a	kbib.bib	/^@article{robson1994a,$/;"	a
+robson1998	kbib.bib	/^@book{robson1998,$/;"	b
+ropensci2019	kbib.bib	/^@misc{ropensci2019,$/;"	n
+rottensteiner2003	kbib.bib	/^@article{rottensteiner2003,$/;"	a
+row.names(angles)	scripts/03_width.r	/^row.names(angles) <- NULL$/;"	g
+s	scripts/functions.r	/^    s <- s %>% mutate(rowid = row_number())$/;"	v
+s	scripts/functions.r	/^    s <- s[s$rowid %in% distances$rowid, ]$/;"	v
+s	scripts/stack.r	/^s <- samplines[[2]]$/;"	g
+saeedi2009	kbib.bib	/^@article{saeedi2009,$/;"	a
+saito2016	kbib.bib	/^@article{saito2016,$/;"	a
+samp	scripts/functions.r	/^  samp <- Filter(function(x) dim(x)[1] > 0, road_lm)$/;"	v
+samp	scripts/functions.r	/^  samp <- samp %>%$/;"	v
+samp	scripts/functions.r	/^  samp <- split(samp, samp$row_id)$/;"	v
+sampath2008	kbib.bib	/^@article{sampath2008,$/;"	a
+sample_lines	scripts/01_samples.r	/^sample_lines <- do.call(rbind, sample_lines)$/;"	g
+sample_lines	scripts/01_samples.r	/^sample_lines <- lapply(roads_split, compute_samples)$/;"	g
+sample_lines	scripts/01_samples.r	/^sample_lines <- sample_lines %>%$/;"	g
+sample_lines	scripts/03_width.r	/^sample_lines <- st_read("..\/data\/derived\/roads\/sample_lines.gpkg") %>%$/;"	g
+sample_lines	scripts/functions.r	/^        sample_lines <- rbind(sample_lines, linestring)$/;"	v
+sample_lines	scripts/functions.r	/^  sample_lines <- c()$/;"	v
+sample_lines$sample_id	scripts/01_samples.r	/^sample_lines$sample_id <- seq.int(nrow(sample_lines))$/;"	g
+sampled_las	scripts/02_lm.r	/^sampled_las <- fread("..\/data\/derived\/model_data\/sampled_las.csv")$/;"	g
+sampled_las	scripts/02_lm.r	/^sampled_las <- sampled_las[sampled_las$Classification == 2, ]$/;"	g
+sampled_las	scripts/04_cents.r	/^sampled_las <- fread("..\/data\/derived\/model_data\/sampled_las.csv") %>%$/;"	g
+sampled_las$lm0_dum	scripts/04_cents.r	/^sampled_las$lm0_dum <- ifelse(sampled_las$lm0_pred >$/;"	g
+sampled_las$lm0_pred	scripts/04_cents.r	/^sampled_las$lm0_pred <- lm0_pred$/;"	g
+sampled_las$lm1_dum	scripts/02_lm.r	/^sampled_las$lm1_dum <- ifelse(sampled_las$lm1_pred >$/;"	g
+sampled_las$lm1_dum80	scripts/02_lm.r	/^sampled_las$lm1_dum80 <- ifelse(sampled_las$lm1_pred >$/;"	g
+sampled_las$lm1_dum90	scripts/02_lm.r	/^sampled_las$lm1_dum90 <- ifelse(sampled_las$lm1_pred >$/;"	g
+sampled_las$lm1_pred	scripts/02_lm.r	/^sampled_las$lm1_pred <- lm1_pred$/;"	g
+samples	scripts/functions.r	/^  samples <- split(x, x$sample_id)$/;"	v
+samplines	scripts/stack.r	/^samplines <- lapply(X = 1:n, FUN = function(i) {$/;"	g
+scales	rbib.bib	/^@Manual{scales,$/;"	m
+sec:angles	main.tex	/^\\section{Road Angles}\\label{sec:angles}$/;"	l
+sec:data	main.tex	/^\\label{sec:data}$/;"	l
+sec:elev	main.tex	/^\\section{Road Node Elevation Change}\\label{sec:elev}$/;"	l
+sec:lpm	main.tex	/^\\subsection{Linear Probability Models and Road Width}\\label{sec:lpm}$/;"	l
+sec:overview	main.tex	/^\\section{Overview of this Dissertation}\\label{sec:overview}$/;"	l
+sec:overviewlidar	main.tex	/^\\label{sec:overviewlidar}$/;"	l
+sec:qual	main.tex	/^\\section{Surface Quality}\\label{sec:qual}$/;"	l
+sec:road-extraction	main.tex	/^\\label{sec:road-extraction}$/;"	l
+sec:road_width	main.tex	/^\\section{Road Width}\\label{sec:road_width}$/;"	l
+seu1998	kbib.bib	/^@book{seu1998,$/;"	b
+sf	rbib.bib	/^@Article{sf,$/;"	a
+sf	scripts/stack.r	/^library(sf)$/;"	l
+sharafi	kbib.bib	/^@article{sharafi,$/;"	a
+shaw1999	kbib.bib	/^@book{shaw1999,$/;"	b
+shouls1996	kbib.bib	/^@article{shouls1996,$/;"	a
+showtext	rbib.bib	/^@Manual{showtext,$/;"	m
+singh2014	kbib.bib	/^@article{singh2014,$/;"	a
+smadja2010	kbib.bib	/^@article{smadja2010,$/;"	a
+smith1999	kbib.bib	/^@article{smith1999,$/;"	a
+smith2010	kbib.bib	/^@article{smith2010,$/;"	a
+smith2012	kbib.bib	/^@article{smith2012,$/;"	a
+smith2015	kbib.bib	/^@article{smith2015,$/;"	a
+smith2017	kbib.bib	/^@misc{smith2017,$/;"	n
+snooks2002	kbib.bib	/^@article{snooks2002,$/;"	a
+soja1980	kbib.bib	/^@article{soja1980,$/;"	a
+solomon2009	kbib.bib	/^@article{solomon2009,$/;"	a
+sprague1988	kbib.bib	/^@article{sprague1988,$/;"	a
+start_time	scripts/run_all.r	/^start_time <- Sys.time()$/;"	g
+statista2016	kbib.bib	/^@article{statista2016,$/;"	a
+statista2019	kbib.bib	/^@article{statista2019,$/;"	a
+steyvers2000	kbib.bib	/^@article{steyvers2000,$/;"	a
+stradling2008	kbib.bib	/^@book{stradling2008,$/;"	b
+subs:dtm	main.tex	/^\\label{subs:dtm}$/;"	l
+subsec:noise	main.tex	/^\\subsection{Noise Filtering}\\label{subsec:noise}$/;"	l
+subsec:supervised	main.tex	/^\\subsection{Supervised Methods}\\label{subsec:supervised}$/;"	l
+sugumaran2010	kbib.bib	/^@article{sugumaran2010,$/;"	a
+sullivan2006	kbib.bib	/^@article{sullivan2006,$/;"	a
+sullivan2017	kbib.bib	/^@book{sullivan2017,$/;"	b
+surface_qual	scripts/functions.r	/^surface_qual <- function(x) {$/;"	f
+sx	scripts/functions.r	/^  sx <- apply(model$model[-1], 2, sd)$/;"	v
+sy	scripts/functions.r	/^  sy <- apply(model$model[1], 2, sd)$/;"	v
+tab:corr	main.tex	/^\\caption{\\label{tab:corr}Spearman's rank correlation coefficients for all variables in relatio/;"	l
+tab:lidartab	main.tex	/^\\caption{\\label{tab:lidartab}LiDAR Point Cloud Summary Data}$/;"	l
+tab:rd_bends	main.tex	/^\\caption{\\label{tab:rd_bends}Estimated number of bends per road}$/;"	l
+tab:roadfeatures	main.tex	/^\\label{tab:roadfeatures}$/;"	l
+tab:roadstab	main.tex	/^\\caption{\\label{tab:roadstab}OS Roads Data Summary}$/;"	l
+tab:rqi	main.tex	/^\\caption{\\label{tab:rqi}Overall Features Extracted from Roads in the Study Area, in descending/;"	l
+tab:ssd	main.tex	/^\\label{tab:ssd}$/;"	l
+table	wclatex.py	/^table = re.compile(r"\\\\begin{table}.*?\\\\end{table}")$/;"	v
+taylor2000	kbib.bib	/^@article{taylor2000,$/;"	a
+taylor2002	kbib.bib	/^@article{taylor2002,$/;"	a
+thakor2015	kbib.bib	/^@article{thakor2015,$/;"	a
+theta	scripts/functions.r	/^        theta <- abs(ang_deg) - abs(ang_deg_c)$/;"	v
+theta	scripts/stack.r	/^            theta <- ang_deg - ang_deg_c$/;"	v
+theta	scripts/stack.r	/^            theta <- theta - 45 # position relation to perp line$/;"	v
+theuniversityofedinburgh2019	kbib.bib	/^@misc{theuniversityofedinburgh2019,$/;"	n
+thomson2006	kbib.bib	/^@article{thomson2006,$/;"	a
+thomson2008	kbib.bib	/^@article{thomson2008,$/;"	a
+tidyverse	rbib.bib	/^@Manual{tidyverse,$/;"	m
+tidyverse	scripts/stack.r	/^library(tidyverse)$/;"	l
+time_taken	scripts/run_all.r	/^time_taken <- (as.numeric(time_taken))$/;"	g
+time_taken	scripts/run_all.r	/^time_taken <- end_time - start_time$/;"	g
+tot_dists	scripts/functions.r	/^    tot_dists <- rbind(tot_dists, max(distances$distance))$/;"	v
+tot_dists	scripts/functions.r	/^  tot_dists <- c()$/;"	v
+tot_len	scripts/functions.r	/^      tot_len <- tot_len + len_seg$/;"	v
+tot_len	scripts/functions.r	/^    tot_len <- 0$/;"	v
+tot_len	scripts/functions.r	/^    tot_len <- euclidean_distance(p1, p2)$/;"	v
+tot_pts	scripts/04_cents.r	/^    tot_pts <- nrow(x)$/;"	v
+tot_pts	scripts/04_cents.r	/^tot_pts <- do.call(rbind, tot_pts) %>%$/;"	g
+tot_pts	scripts/04_cents.r	/^tot_pts <- lapply(lm2, function(x) {$/;"	g
+tot_width	scripts/functions.r	/^        tot_width <- rbind(tot_width, adjacent)$/;"	v
+tot_width	scripts/functions.r	/^  tot_width <- c()$/;"	v
+tot_width	scripts/stack.r	/^            tot_width <- rbind(tot_width, width)$/;"	v
+tot_width	scripts/stack.r	/^tot_width <- c()$/;"	g
+townsend1979	kbib.bib	/^@book{townsend1979,$/;"	b
+townsend1988	kbib.bib	/^@book{townsend1988,$/;"	b
+tracc2019	kbib.bib	/^@misc{tracc2019,$/;"	n
+transportresearchcentre2008	kbib.bib	/^@book{transportresearchcentre2008,$/;"	b
+true_cents	scripts/functions.r	/^true_cents <- function(x) {$/;"	f
+turok1992	kbib.bib	/^@article{turok1992,$/;"	a
+ukgovernment1981	kbib.bib	/^@misc{ukgovernment1981,$/;"	n
+ukgovernment1997	kbib.bib	/^@misc{ukgovernment1997,$/;"	n
+ukgovernment2011	kbib.bib	/^@misc{ukgovernment2011,$/;"	n
+ukgovernment2019	kbib.bib	/^@misc{ukgovernment2019,$/;"	n
+ukgovernment2019a	kbib.bib	/^@misc{ukgovernment2019a,$/;"	n
+unitednations2016	kbib.bib	/^@article{unitednations2016,$/;"	a
+uschold1996	kbib.bib	/^@article{uschold1996,$/;"	a
+varhandle	rbib.bib	/^@Manual{varhandle,$/;"	m
+velaga2012	kbib.bib	/^@article{velaga2012,$/;"	a
+verma2006	kbib.bib	/^@inproceedings{verma2006,$/;"	j
+viner2004	kbib.bib	/^@article{viner2004,$/;"	a
+viridis	rbib.bib	/^@Manual{viridis,$/;"	m
+viridisLite	rbib.bib	/^@Manual{viridisLite,$/;"	m
+voas2000	kbib.bib	/^@article{voas2000,$/;"	a
+vosselman2000	kbib.bib	/^@article{vosselman2000,$/;"	a
+vosselman2004	kbib.bib	/^@article{vosselman2004,$/;"	a
+vosselman2009	kbib.bib	/^@article{vosselman2009,$/;"	a
+vosselman2009a	kbib.bib	/^@article{vosselman2009a,$/;"	a
+waddell1993	kbib.bib	/^@article{waddell1993,$/;"	a
+wadsworth2010	kbib.bib	/^@article{wadsworth2010,$/;"	a
+wan2007	kbib.bib	/^@inproceedings{wan2007,$/;"	j
+wang2009	kbib.bib	/^@article{wang2009,$/;"	a
+wang2015	kbib.bib	/^@article{wang2015,$/;"	a
+wankhade2011	kbib.bib	/^@article{wankhade2011,$/;"	a
+watt1994	kbib.bib	/^@article{watt1994,$/;"	a
+wc	wclatex.py	/^wc = len(c.split())$/;"	v
+wells2009	kbib.bib	/^@article{wells2009,$/;"	a
+wennemo2008	kbib.bib	/^@article{wennemo2008,$/;"	a
+wesanderson	rbib.bib	/^@Manual{wesanderson,$/;"	m
+wickham2014	kbib.bib	/^@book{wickham2014,$/;"	b
+width	scripts/stack.r	/^            width <- opposite$/;"	v
+widths	scripts/functions.r	/^  widths <- as.data.frame(widths)$/;"	v
+widths	scripts/functions.r	/^  widths <- do.call(rbind, widths)$/;"	v
+widths	scripts/functions.r	/^  widths <- mapply(adjacent_length, samp, cent)$/;"	v
+widths	scripts/functions.r	/^  widths <- widths %>%$/;"	v
+widths	scripts/functions.r	/^  widths <- widths[widths$adjacent > 2 & widths$adjacent < 8, ]$/;"	v
+widths	scripts/stack.r	/^widths <- data.frame(road_id, roadFunction, lm1_mean, lm2_mean, lm_estimate)$/;"	g
+widths$adjacent	scripts/functions.r	/^  widths$adjacent <- as.numeric(unfactor(widths$adjacent))$/;"	v
+wijnands2018	kbib.bib	/^@article{wijnands2018,$/;"	a
+williams2008	kbib.bib	/^@article{williams2008,$/;"	a
+willis2017	kbib.bib	/^@book{willis2017,$/;"	b
+wrigley2003	kbib.bib	/^@article{wrigley2003,$/;"	a
+wu2013	kbib.bib	/^@article{wu2013,$/;"	a
+wwg2016	kbib.bib	/^@article{wwg2016,$/;"	a
+x	scripts/04_cents.r	/^    x <- x[!is.na(x$road_id), ]$/;"	v
+x	scripts/04_cents.r	/^    x <- x[x$length < 8 & x$length > 2, ]$/;"	v
+x	scripts/functions.r	/^        x <- n1[1] - n2[1]$/;"	v
+x	scripts/functions.r	/^      x <- n1[1] - n2[1]$/;"	v
+x	scripts/functions.r	/^    x <- x[distances, ] %>%$/;"	v
+x	scripts/functions.r	/^  x <- (x[[1]] + x[[2]] + x[[3]]) \/ 3$/;"	v
+x	scripts/stack.r	/^            x <- n1[1] - n2[1]$/;"	v
+x	scripts/stack.r	/^            x <- n1[1] - n2[2]$/;"	v
+x	scripts/stack.r	/^        x <- n1[1] - n2[1]$/;"	v
+x	scripts/stack.r	/^  x <- replace(x, x > 100, (100 - (x - 100)))$/;"	v
+x	scripts/stack.r	/^  x <- x \/ e * 100$/;"	v
+x	scripts/stack.r	/^x <- c(1, 2, 3, 1)$/;"	g
+x	scripts/stack.r	/^x <- c(1, 2, 3, 5)$/;"	g
+x$I_dum	scripts/functions.r	/^    x$I_dum <- ifelse(x$lm > quantile(x$lm, .95), 1, 0)$/;"	v
+x$lm	scripts/functions.r	/^      x$lm <- NA$/;"	v
+x$lm	scripts/functions.r	/^      x$lm <- pred_m$/;"	v
+x_len	scripts/functions.r	/^  x_len <- p2[1] - p1[1]$/;"	v
+x_mid	scripts/functions.r	/^  x_mid <- mean(fixed_cents[, 1])$/;"	v
+xn_len	scripts/functions.r	/^  xn_len <- (n \/ ref_len) * (p2[1] - point[1])$/;"	v
+xsi	data/aerial/sj7967_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj7968_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj7969_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj7970_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8067_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8068_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8069_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8070_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8167_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8168_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8169_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8170_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8267_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8268_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8269_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8270_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8367_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8368_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8369_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xsi	data/aerial/sj8370_rgb_250_02.xml	/^<osgb:OSIMSupplierMetadata xmlns:osgb="http:\/\/www.ordnancesurvey.co.uk\/xml\/namespaces\/osgb"/;"	n	uri:http://www.w3.org/2001/XMLSchema-instance
+xu2018	kbib.bib	/^@article{xu2018,$/;"	a
+y	scripts/functions.r	/^        y <- n1[2] - n2[2]$/;"	v
+y	scripts/functions.r	/^      y <- n1[2] - n2[2]$/;"	v
+y	scripts/functions.r	/^    y <- do.call(c, y)$/;"	v
+y	scripts/functions.r	/^    y <- lapply(X = 1:n, FUN = function(i) {$/;"	v
+y	scripts/functions.r	/^    y <- y %>% st_sf()$/;"	v
+y	scripts/functions.r	/^    y <- y %>%$/;"	v
+y	scripts/functions.r	/^    y <- y[as.numeric(st_length(y)) <$/;"	v
+y	scripts/functions.r	/^    y <- y[is.na(rd)]$/;"	v
+y	scripts/functions.r	/^  y <- x %>%$/;"	v
+y	scripts/stack.r	/^            y <- n1[2] - n2[2]$/;"	v
+y	scripts/stack.r	/^        y <- n1[2] - n2[2]$/;"	v
+y	scripts/stack.r	/^y <- c(1, 2, 2, 3)$/;"	g
+y	scripts/stack.r	/^y <- c(2, 1, 1, 3)$/;"	g
+y$road_id	scripts/functions.r	/^    y$road_id <- as.character(rd)$/;"	v
+y_len	scripts/functions.r	/^  y_len <- p2[2] - p1[2]$/;"	v
+y_mid	scripts/functions.r	/^  y_mid <- mean(fixed_cents[, 2])$/;"	v
+yadav2018	kbib.bib	/^@article{yadav2018,$/;"	a
+yn_len	scripts/functions.r	/^  yn_len <- (n \/ ref_len) * (p2[2] - point[2])$/;"	v
+yoon2009	kbib.bib	/^@inproceedings{yoon2009,$/;"	j
+young2009	kbib.bib	/^@article{young2009,$/;"	a
+zhang2003	kbib.bib	/^@article{zhang2003,$/;"	a
+zhang2016	kbib.bib	/^@article{zhang2016,$/;"	a
+zhang2018	kbib.bib	/^@article{zhang2018,$/;"	a
+zhao2012	kbib.bib	/^@inproceedings{zhao2012,$/;"	j
+zlatanova2008	kbib.bib	/^@book{zlatanova2008,$/;"	b
+zotero-103	kbib.bib	/^@article{zotero-103,$/;"	a
+zotero-120	kbib.bib	/^@misc{zotero-120,$/;"	n
+zotero-202	kbib.bib	/^@article{zotero-202,$/;"	a
+zotero-92	kbib.bib	/^@misc{zotero-92,$/;"	n

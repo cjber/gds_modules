@@ -1,0 +1,146 @@
+---
+title: "Research Design Presentation"
+subtitle: "ENVS441: Qualitative Research Methods"
+author: "Cillian Berragan<br /> <br /> <br /> Department of Geography and Planning"
+output:
+  xaringan::moon_reader:
+    css: ["css/style.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "macros.js" 
+---
+
+# Introduction
+
+**Where Do Ethno-Linguistic Groups Meet? How Copresence during Free-Time Is Related to Copresence at Home and at Work**
+
+**Toomet, O. et al. (2015)**
+--
+
+- Analyses ethnic segregation in Tallin, Estonia
+
+- Estonian majority with a mainly Russian speaking minority
+
+- Looks at segregation in work, places of residence, and free time
+
+- Mobile phone data used to track segregation
+
+---
+# Methods Overview
+
+- Language spoken determined through phone SIM settings
+
+- 'Call Detail Records' used, tracks time and location when a call or text made
+
+- When individuals made a call or text in a shared location, at a particular time, this was considered to be co-presence
+
+- Home and work locations inferred from the most frequent location during home and work hours
+
+- Free time activities were determined through proximity to work and home locations
+
+--
+
+$$p _ { i j } = \sum \mathbb { 1 } \left( c _ { j k } \in C _ { i } \right)$$
+
+
+$$h _ { i } = \frac { s _ { i } } { s _ { i } + d _ { i } }$$
+
+
+$$h _ { i } ^ { F } = \alpha _ { 0 } + \overline { \alpha } _ { 1 } \overline { h } _ { i } ^ { R } + \alpha _ { 1 } \rho _ { i } + \overline { \alpha } _ { 2 } \overline { h } _ { i } ^ { W } + \alpha _ { 2 } \omega _ { i } + \beta ^ { \prime } \boldsymbol { X } _ { i } + \epsilon _ { i }$$
+
+---
+class: center
+```{r, include=FALSE}
+library(ENVS450)
+library(knitr)
+library(tidyverse)
+library(kableExtra)
+
+```
+
+# Results
+
+```{r, echo=FALSE, results='asis'}
+
+df <- read.csv(file="data.csv")
+options(knitr.kable.NA = '')
+knitr::kable(df, format = "html") %>% 
+              add_header_above(c(" " = 1, "Place by type (%)" = 4,"Homophily (%) by place" = 2))
+
+```
+
+Work and Home dissimilarity Index: $(DF^W = 0.46)$ and $(DF^R = 0.41)$.
+
+Free-time Dissimilarity Index: $$(DF^F = 0.24)$$
+
+
+--
+
+1. Highest levels of meetings observed at home
+
+2. Higher similarity (meaning segregation) at home and work
+
+3. Free time mixing higher, especially in the city centre
+
+---
+
+background-image: url("./img/fig1.png")
+background-position: 50% 50%
+background-size: 100%
+class: center, bottom, fullscale
+.center[Figure 1: Estonian-Russian Co-presence during free–time by city tract.]
+
+---
+
+# Critique
+
+- Using mobile phone data allows for a large amount of quantitative data to be analysed
+
+- Due to how co-presence is calculated, it more accurately represents the potential for people to meet within a one hour time-frame rather than co-presence
+
+- The affects of co-presence are not considered. Does co prescence lead to improved interactions between groups, or does it increase hostility?
+
+
+###*"More research is needed here." (Toomet, O. et al., 2015).*
+
+
+
+
+---
+
+# Mixed Methods
+
+**Bagheri, N. (2014). Mapping women in Tehran’s public spaces: a geo-visualization perspective.**
+
+**Peters, K., & de Haan, H. (2011). Everyday spaces of inter-ethnic interaction: The meaning of urban public spaces in the Netherlands.**
+
+- How does observed co-presence relate to the public opinion of ethnic divide.
+
+- Incorporate Quantitative GIS (QGIS) methods to produce a mixed methodology
+
+- Qualitative data to compliment the quantitative data
+
+- Directed interview questioning to determine public opinion on the level of co-presence
+
+---
+
+##References
+
+Aitken, S. C., & Kwan, M. P. (2010). GIS as qualitative research: Knowledge, participatory politics and cartographies of affect. In The SAGE Handbook of Qualitative Geography.
+
+Bagheri, N. (2014). What qualitative GIS maps tell and don’t tell: insights from mapping women in Tehran’s public spaces. Journal of Cultural Geography, 31(2), 166–178.
+
+Bagheri, N. (2014). Mapping women in Tehran’s public spaces: a geo-visualization perspective. Gender, Place and Culture, 21(10), 1285–1301. 
+
+Boschmann, E. E., & Cubbon, E. (2014). Sketch Maps and Qualitative GIS: Using Cartographies of Individual Spatial Narratives in Geographic Research. The Professional Geographer, 66(2), 236–248.
+
+Peters, K., & de Haan, H. (2011). Everyday spaces of inter-ethnic interaction: The meaning of urban public spaces in the Netherlands. Leisure/ Loisir, 35(2), 169–190.
+
+Toomet, O., Silm, S., Saluveer, E., Ahas, R., & Tammaru, T. (2015). Where Do Ethno-Linguistic Groups Meet? How Copresence during Free-Time Is Related to Copresence at Home and at Work. PLOS ONE, 10(5), e0126093.
+
+Valentine, G. (2008). Living with difference: Reflections on geographies of encounter. Progress in Human Geography, 32(3), 323–337.
+
+Wilson, M. (2009). Towards A Genealogy of Qualitative GIS. In Qualitative GIS.
